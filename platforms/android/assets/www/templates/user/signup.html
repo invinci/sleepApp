@@ -1,0 +1,78 @@
+<ion-view>
+  <ion-header-bar class="bar-header custom-header">
+    <h1 class="title headerTitle">Sign Up</h1>
+  </ion-header-bar>
+  <ion-content class="custom-content padding">
+    <div class="button-wrapper">
+      <button class="button button-block custom-button1 icon-right ion-chevron-right ink" type="submit" ui-sref="signin">Already have a username & password</button>
+    </div>
+    <form name="signUpForm" ng-submit="signUp(patient)" novalidate>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">First Name</span>
+          <input type="text" placeholder="First Name" name="fName" ng-model="patient.first_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.fName.$error.required && signUpForm.fName.$dirty" >First name is required.</div>
+        <div class="form-error" ng-show="signUpForm.fName.$error.pattern" >First name must be in characters.</div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Last Name</span>
+          <input type="text" placeholder="Last Name" name="lName" ng-model="patient.last_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.lName.$error.required && signUpForm.lName.$dirty" >Last name is required.</div>
+        <div class="form-error" ng-show="signUpForm.lName.$error.pattern" >Last name must be in characters.</div>
+        <div class="btnWrapper">
+          <span class="input-label customItem">Are you the</span>
+            <div class="btnBar">
+              <div class="button-bar">
+                <a class="button button-light  button-block customBtnBar1 ink {{(type == 'Patient') &&  'active' || ''}}" ng-click="setType($event)">Patient</a>
+                <a class="button button-light  button-block customBtnBar1 ink {{(type == 'Caregiver') &&  'active' || ''}}" ng-click="setType($event)">Caregiver</a>
+              </div>
+            </div>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Reference Code</span>
+          <input type="text" placeholder="Reference Code" name="parentId" ng-model="patient.parent" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.parentId.$invalid && !signUpForm.parentId.$pristine" >Reference Code is required.</div>
+
+        <div ng-if="showEMRNumber">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">EMR #</span>
+            <input type="text" placeholder="EMR #" name="emrNumber" ng-model="patient.emr_no" required>
+          </label>
+          <div class="form-error" ng-show="signUpForm.emrNumber.$invalid && !signUpForm.emrNumber.$pristine " >EMR # is required.</div>
+        </div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Email</span>
+          <input type="email" placeholder="Email" name="email" ng-model="patient.email" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.email.$invalid && !signUpForm.email.$pristine" >Email address is required.</div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Username</span>
+          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.username.$error.required && signUpForm.username.$dirty" >Username is required.</div>
+        <div class="form-error" ng-show="signUpForm.username.$error.pattern">Username must be letters and numbers only.</div>
+        <div class="form-error" ng-show="!signUpForm.username.$error.required && !signUpForm.username.$error.pattern && (signUpForm.username.$error.minlength || signUpForm.username.$error.maxlength) && signUpForm.username.$dirty">Username must be between 5 and 15 characters.</div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Password</span>
+          <input type="password" placeholder="Password" name="pass1" id="pass1" ng-model="patient.password" ng-minlength="6" ng-maxlength="15" required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.pass1.$error.required && signUpForm.pass1.$dirty" >Password is required.</div>
+        <div class="form-error" ng-show="!signUpForm.pass1.$error.required && (signUpForm.pass1.$error.minlength || signUpForm.pass1.$error.maxlength) && signUpForm.pass1.$dirty">Password must be between 6 and 15 characters.</div>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Password Confirm</span>
+          <input type="password" placeholder="Password Confirm" name="passwordC" id="passwordC" ng-model="patient.passwordC" required>
+        </label>
+        <div class="form-error" ng-show="patient.passwordC != patient.password">Password doesn't match.</div>
+      </div>
+
+      <div class="button-wrapper">
+        <button class="button button-block custom-button ink" type="submit" ng-disabled="signUpForm.$invalid || patient.passwordC != patient.password">SIGN UP</button>
+      </div>
+    </form>   
+  </ion-content>
+</ion-view>

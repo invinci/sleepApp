@@ -1,0 +1,134 @@
+<ion-view title="Check in" ng-init="checkInDataGet()">
+  <ion-header-bar class="bar-header custom-header">
+    <h1 class="title">Check in</h1>
+    <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:3})"></i>
+  </ion-header-bar>
+    <ion-content has-header="true" has-tabs="true" ng-show="hideCheckInData">
+      <div class="sessionWrapper">
+        <div class="row">
+          <div class="col">
+            <p>{{alreadySubmiited}}</p>
+          </div>
+        </div>
+      </div>
+    </ion-content>
+    <ion-content has-header="true" has-tabs="true" ng-show="showCheckInData">
+    <form ng-submit="saveCheckInData()">
+      <div class="sessionWrapper">
+        <div class="row" ng-show="nodata">
+          <div class="col">
+            <p>{{noDataMessage}}</p>
+          </div>
+        </div>
+      </div>
+      <!-- Daily Metric Start -->
+      <div class="containerWrapper">
+        <div ng-show="dailyMetricAvailable">
+          <div class="row removePadding">
+              <div class="col removePadding">
+                <span class="checkInDailyMetric dailytMetricSize">Daily Metrics Summary</span>
+              </div>
+          </div>
+          <div class="containerDiv1 removePadding" ng-repeat="checkInQuestion in dailyMetricData">
+          	<div class="responsiveCheckInDiv">{{checkInQuestion.goal_question}} </div>
+          	<div class="responsiveCheckInDiv1">
+    	        <div class="toggleBar">
+                <span class="yes">No</span>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="checkInQuestion.checked">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+                <span class="no"> Yes</span>
+              </div>
+          	</div>
+          </div>
+        </div>
+        <!-- Daily Metric End -->
+
+        <!-- General Metric Start -->
+        <div ng-show="generalMetricAvailable">
+          <div class="row removePadding">
+            <div class="col removePadding rowDiv">
+              <span class="checkInDailyMetric dailytMetricSize">General</span>
+            </div>
+          </div>
+          <div class="containerDiv1 removePadding" ng-repeat="generalQuestion in generalQuestionCheckIn">
+            <div class="responsiveCheckInDiv" ng-if="generalQuestion.is_enable == false">{{generalQuestion.title}} </div>
+            <div class="responsiveCheckInDiv1">
+              <div class="toggleBar" ng-if="generalQuestion.is_enable == false">
+                <span class="yes">No</span>
+                <label class="toggle">
+                   <input type="checkbox" ng-model="generalQuestion.checked">
+                   <div class="track">
+                     <div class="handle"></div>
+                   </div>
+                </label>
+                <span class="no"> Yes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- General Metric End -->
+
+        <!-- Static Metric Start -->
+        <div ng-show="staticMetricAvailable">
+          <div class="containerDiv1 removePadding" ng-repeat="otherQuestion in staticQuestions">
+            <div class="responsiveCheckInDiv">{{otherQuestion.title}} </div>
+            <div class="responsiveCheckInDiv1 newClass" ng-if="otherQuestion.title != 'Low Stress?'">
+              <div class="toggleBar">
+                <span class="rateSpan">
+                  <rating ng-model="otherQuestion.rating" max="rating.max"></rating>
+                </span>
+                <span class="smiley" id="smiley{{$index}}">&#9786;</span>
+              </div>
+            </div>
+            <div class="responsiveCheckInDiv1 newClass" ng-if="otherQuestion.title == 'Low Stress?'">
+              <div class="toggleBar">
+                <span class="smiley" id="smiley{{$index}}">&#9786;</span>
+                <span class="rateSpan">
+                  <rating ng-model="otherQuestion.rating" max="rating.max"></rating>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Static Metric End -->
+
+        <!-- Weekly Metric Start -->
+        <div ng-show="weeklyMetricAvailable">
+          <div class="row removePadding">
+              <div class="col removePadding rowDiv">
+                <span class="checkInDailyMetric dailytMetricSize">Weekly Metrics Summary</span>
+              </div>
+          </div>
+
+          <div class="containerDiv1 removePadding" ng-repeat="weeklyQuestion in weeklyMetricData">
+            <div class="responsiveCheckInDiv">{{weeklyQuestion.goal_question}} </div>
+            <div class="responsiveCheckInDiv1 newClass">
+              <div class="toggleBar">
+                <span class="rateSpan">
+                  <rating ng-model="weeklyQuestion.rating" max="rating.max"></rating>
+                </span>  
+                <span class="smiley" id="weekSmiley{{$index}}">&#9786;</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Weekly Metric End -->
+
+        <div class="emptyDiv">
+          &nbsp;
+        </div>
+        <div class="button-wrapper" ng-show="updateButton">
+            <button class="button button-block complete-button ink" type="submit">Update</button>
+        </div>
+      </form>
+        <div class="emptyDiv">
+          &nbsp;
+        </div>
+    </div>
+    </ion-content>
+</ion-view>

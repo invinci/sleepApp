@@ -1,0 +1,44 @@
+<ion-view title="Preferences">
+  <ion-header-bar class="bar-header custom-header">
+    <button class="button button-positive button-clear no-animation backBtn" ng-click="goBackToback()" ng-hide="hideBackButton">
+      <i class="ion-ios-arrow-back"></i>
+    </button>
+    <h1 class="title">Preferences</h1>
+  </ion-header-bar>
+  <ion-content class="custom-content padding">
+    <h3 class="dailyReminderTitle">Daily check in reminder time</h3>
+    <div class="row">
+      <div class="col col-75">
+        <p class="reminderTime">{{reminderTime}}</p>
+      </div>
+      <div class="col">
+        <button class="button button-positive button-clear no-animation editBtn" ng-click="editDailyReminder()">Edit
+        </button>
+      </div>
+    </div>
+    <hr >
+    
+    <h3 class="dailyReminderTitle">Weekly goal check in reminder time</h3>
+    <div class="row">
+      <div class="col">
+        <select class="selectdayItem" ng-options="opt.day for opt in dayOfWeek" ng-model="selectedDay" ng-change="selectedDayValue(selectedDay)">
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <p class="selectdayItem"> {{selectedTime}} <a ng-click="editWeeklyReminderTime()" style="position: absolute; right: 20px;">EDIT</a></span></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <p class="reminderTime">{{weeklyReminderDayTime}}</p>
+      </div>
+    </div>
+    <div class="button-wrapper3">
+      <button class="button button-block complete-button ink" type="submit" ng-click="saveReminder()">Save</button>
+    </div>
+  </ion-content>
+</ion-view>
