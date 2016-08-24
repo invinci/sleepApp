@@ -8,7 +8,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'sleepapp_patient' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating','chart.js', 'ionic-material', 'ionic-timepicker','ionic-durationpicker'])
+angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating','chart.js', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker'])
 
 .run(function($ionicPlatform, $state, $ionicPopup, $timeout, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
@@ -150,57 +150,34 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     templateUrl: 'templates/tabsController.html'
   })
 
-  .state('tabs.assessment', {
+  .state('tabs.checkIn', {
     cache: false,
     url: '/page1',
     views: {
       'tab1': {
-        templateUrl: 'templates/assessment.html',
-        controller: 'assessmentCtrl'
+        templateUrl: 'templates/checkIn.html',
+        controller: 'checkInCtrl'
       }
     }
   })
-
-  .state('tabs.goals', {
+     .state('tabs.jetLag', {
     cache: false,
     url: '/page2',
     views: {
       'tab2': {
-        templateUrl: 'templates/goals.html',
-        controller: 'goalsCtrl'
-      }
-    }
-  })
-
-  .state('tabs.checkIn', {
-    cache: false,
-    url: '/page3',
-    views: {
-      'tab3': {
-        templateUrl: 'templates/checkIn.html',
-        controller: 'checkInCtrl'
+        templateUrl: 'templates/jetLag.html',
+        controller: 'jetLagCtrl'
       }
     }
   })
 
   .state('tabs.stateOfMind', {
     cache: false,
-    url: '/page4',
+    url: '/page3',
     views: {
-      'tab4': {
+      'tab3': {
         templateUrl: 'templates/stateOfMind.html',
         controller: 'stateOfMindCtrl'
-      }
-    }
-  })
-
-  .state('tabs.emergencyCall', {
-    cache: false,
-    url: '/page5',
-    views: {
-      'tab5': {
-        templateUrl: 'templates/emergencyCall.html',
-        controller:'emergencyCallCtrl'
       }
     }
   })
@@ -211,6 +188,8 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     templateUrl: 'templates/user/settings.html',
     controller: 'settingsCtrl'
   })
+  
+ 
 
   // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/welcome');

@@ -46,3 +46,4 @@ var GET_GENERAL_QUESTIONS 	= HOST + '/generalquestions/patientGeneralQuestion';
 var SAVE_PATIENT_CHECK_IN	= HOST + '/checkin/add';
 var UPDATE_PATIENT_CHECK_IN = HOST + '/checkin/update';
 var FIND_ASSESSMENT 		= HOST + '/patients/findOne';
+// var 

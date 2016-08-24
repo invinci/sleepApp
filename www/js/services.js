@@ -184,4 +184,11 @@ angular.module('sleepapp_patient.services', [])
             return promise;
         }
     } 
-});
+})
+
+.factory('jetLagService',   function($q, $http) {
+     return {
+
+        }
+
+    });

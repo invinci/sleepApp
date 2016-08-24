@@ -627,3 +627,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
     background-color: #ef473a;
     color: #fff;}
 /* durationPicker CSS */
+/*added by shilpa*/
+.noPadding{padding: 0 !important;}
+.jetLagdiv {padding:3%;}
+.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px !important; }
