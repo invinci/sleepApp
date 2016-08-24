@@ -108,111 +108,71 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $stateProvider
-
-  .state('welcome', {
-    cache: false,
-    url: '/welcome',
-    templateUrl: 'templates/welcome.html',
-    controller: 'welcomeCtrl'
-  })
-
-  .state('signup', {
-    cache: false,
-    url: '/signup',
-    templateUrl: 'templates/user/signup.html',
-    controller: 'SignUpController'
-  })
-
-  .state('signin', {
-    cache: false,
-    url: '/signin',
-    templateUrl: 'templates/user/signin.html',
-    controller: 'SignInController'
-  })
-
-  .state('forgotpassword', {
-    cache: false,
-    url: '/forgotpassword',
-    templateUrl: 'templates/user/forgotpassword.html',
-    controller: 'ForgotPasswordController'
-  })
-
-  .state('noPatientAssigned', {
-    cache: false,
-    url: '/noPatientAssigned',
-    templateUrl: 'templates/noPatientAssigned.html'
-  })
-
-  .state('tabs', {
-    url: '/tab',
-    cache: false,
-    abstract: true,
-    templateUrl: 'templates/tabsController.html'
-  })
-
-  .state('tabs.assessment', {
-    cache: false,
-    url: '/page1',
-    views: {
-      'tab1': {
-        templateUrl: 'templates/assessment.html',
-        controller: 'assessmentCtrl'
+    .state('welcome', {
+      cache: false,
+      url: '/welcome',
+      templateUrl: 'templates/welcome.html',
+      controller: 'welcomeCtrl'
+    })
+  
+    .state('signup', {
+      cache: false,
+      url: '/signup',
+      templateUrl: 'templates/user/signup.html',
+      controller: 'SignUpController'
+    })
+  
+    .state('signin', {
+      cache: false,
+      url: '/signin',
+      templateUrl: 'templates/user/signin.html',
+      controller: 'SignInController'
+    })
+  
+    .state('forgotpassword', {
+      cache: false,
+      url: '/forgotpassword',
+      templateUrl: 'templates/user/forgotpassword.html',
+      controller: 'ForgotPasswordController'
+    })
+  
+    .state('tabs', {
+      url: '/tab',
+      cache: false,
+      abstract: true,
+      templateUrl: 'templates/tabsController.html'
+    })
+  
+    .state('tabs.checkIn', {
+      cache: false,
+      url: '/page1',
+      views: {
+        'tab1': {
+          templateUrl: 'templates/checkIn.html',
+          controller: 'checkInCtrl'
+        }
       }
-    }
-  })
-
-  .state('tabs.goals', {
-    cache: false,
-    url: '/page2',
-    views: {
-      'tab2': {
-        templateUrl: 'templates/goals.html',
-        controller: 'goalsCtrl'
+    })
+  
+    .state('tabs.stateOfMind', {
+      cache: false,
+      url: '/page3',
+      views: {
+        'tab3': {
+          templateUrl: 'templates/stateOfMind.html',
+          controller: 'stateOfMindCtrl'
+        }
       }
-    }
-  })
+    })
+  
+    .state('settings', {
+      cache: false,
+      url: '/settings/:pageId',
+      templateUrl: 'templates/user/settings.html',
+      controller: 'settingsCtrl'
+    })
 
-  .state('tabs.checkIn', {
-    cache: false,
-    url: '/page3',
-    views: {
-      'tab3': {
-        templateUrl: 'templates/checkIn.html',
-        controller: 'checkInCtrl'
-      }
-    }
-  })
-
-  .state('tabs.stateOfMind', {
-    cache: false,
-    url: '/page4',
-    views: {
-      'tab4': {
-        templateUrl: 'templates/stateOfMind.html',
-        controller: 'stateOfMindCtrl'
-      }
-    }
-  })
-
-  .state('tabs.emergencyCall', {
-    cache: false,
-    url: '/page5',
-    views: {
-      'tab5': {
-        templateUrl: 'templates/emergencyCall.html',
-        controller:'emergencyCallCtrl'
-      }
-    }
-  })
-
-  .state('settings', {
-    cache: false,
-    url: '/settings/:pageId',
-    templateUrl: 'templates/user/settings.html',
-    controller: 'settingsCtrl'
-  })
-
-  // if none of the above states are matched, use this as the fallback
+    // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/welcome');
  
 });

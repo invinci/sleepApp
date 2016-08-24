@@ -21,18 +21,15 @@ angular.module('sleepapp_patient.controllers', [])
 	function onDeviceReady() {
 		screen.unlockOrientation();
 	}
-	$scope.demoCaption2 = "Fill in the information. Copy and paste the reference code from the admin email.";
-	$scope.demoActive2 = true;
 
 	ionicMaterialInk.displayEffect();
 	window.localStorage['ACCESS_TOKEN'] = "";
 	window.localStorage['USER_DATA'] = "";
-	
+
 	var animation = 'bounceInDown';
 	$scope.type = 'Male';
 	$scope.setType = function(event) {
 		$scope.type = angular.element(event.target).text();
-		console.log($scope.type);
 	};
 
 	$scope.patient = {};
@@ -52,16 +49,15 @@ angular.module('sleepapp_patient.controllers', [])
 			maxWidth: 200,
 			showDelay: 0
 		});
-		//console.log("userData = ", userData);
 
 		$scope.patient = userData;
 		$scope.patient.user_type = 2; // Patient
 		//delete $scope.patient.passwordC;
 		var userName = $scope.patient.username;
 		UserService.checkUser(userData).success(function(data) {
-			console.log("data = ", data);
+			//console.log("data = ", data);
 			if (data.status == "success") {
-				console.log(JSON.stringify($scope.patient));
+				//console.log(JSON.stringify($scope.patient));
 				inputString = $scope.patient;
 				inputString.is_status = true;
 				inputString.originalPassword = inputString.password;
@@ -72,26 +68,27 @@ angular.module('sleepapp_patient.controllers', [])
 				encryptedJSON.inputData = ciphertext.toString();
 
 				UserService.signUpUser(encryptedJSON).success(function(data) {
-					console.log("data2 = ", data);
+					//console.log("data2 = ", data);
 					if (data.status == "success") {
 						var user = {};
 						user.username = data.data.username;
 						user.password = inputString.originalPassword;
-						console.log("logInUser  ==  ", user);
+						//console.log("logInUser  ==  ", user);
 						UserService.logInUser(user).success(function(data) {
-							console.log("data3 = ", data);
+							//console.log("data3 = ", data);
 							$ionicLoading.hide();
 							if (data.status == "success") {
 								window.localStorage['ACCESS_TOKEN'] = data.access_token;
-								window.localStorage['USER_DATA'] = JSON.stringify(data.data);
+								window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
 								window.localStorage['USER_DATA'].password = inputString.originalPassword;
+							//console.log("localStorage data = ", window.localStorage['USER_DATA']);
 								var userData = JSON.parse(window.localStorage['USER_DATA']);
 								var inputdata = {};
 								inputdata.id = userData._id;
 								inputdata.device_id = window.localStorage["device_id"];
 								inputdata.platform_type = window.localStorage['PLATFORM'];
 								UserService.saveDeviceId(inputdata).success(function(data, status) {
-									console.log(data);
+									//console.log(data);
 									$state.go("tabs.checkIn");
 									//console.log(userData.user_type);
 									//console.log(window.localStorage["NOTIFICATION_SETTING"]);
@@ -108,7 +105,7 @@ angular.module('sleepapp_patient.controllers', [])
 							}
 						});
 					} else {
-						console.log(data.message);
+						//console.log(data.message);
 						var str = data.message;
 						var res = str.split(",");
 						var PARENT_ID_SERVER_ERROR = res[0].includes("parentCast to ObjectID failed for value");
@@ -128,7 +125,7 @@ angular.module('sleepapp_patient.controllers', [])
 						alertPopup.then(function(res) {});
 					}
 				}).error(function(error, status) {
-					console.log(status);
+					//console.log(status);
 					$ionicLoading.hide();
 					if (status == 401 || status == -1) {
 						showConfirm(animation);
@@ -237,7 +234,7 @@ angular.module('sleepapp_patient.controllers', [])
 			showDelay: 0
 		});
 		UserService.logInUser(user).success(function(data) {
-			console.log("logInUser response = ", data);
+			//console.log("logInUser response = ", data);
 			$ionicLoading.hide();
 			if (data.status == "success") {
 				// Check User Status Active or Inactive
@@ -270,7 +267,7 @@ angular.module('sleepapp_patient.controllers', [])
 								});
 
 							} else {
-								console.log(window.localStorage["NOTIFICATION_SETTING"]);
+								//console.log("NOTIFICATION_SETTING = ", window.localStorage["NOTIFICATION_SETTING"]);
 								if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
 									$state.go("settings");
 								} else {
@@ -332,7 +329,7 @@ angular.module('sleepapp_patient.controllers', [])
 	ionicMaterialInk.displayEffect();
 
 	$scope.forgotPassword = function(user) {
-		console.log(user);
+		//console.log(user);
 		$state.go("signin");
 	}
 
@@ -396,13 +393,13 @@ angular.module('sleepapp_patient.controllers', [])
 		$scope.weeklyReminderDayTime = "Sunday, 12:00 PM";
 		$scope.selectedTime = "12:00 PM";
 		if (n == $scope.selectedDay.day) {
-			console.log("If day is Sunday.");
+			//console.log("If day is Sunday.");
 			currentDate.setHours(12);
 			currentDate.setMinutes(0);
 			currentDate.setSeconds(0);
 			$scope.dateTimeForWeeklyReminder = currentDate;
 		} else {
-			console.log("If day is not Sunday.");
+			//console.log("If day is not Sunday.");
 			if (n == "Monday") {
 				currentDate.setDate(currentDate.getDate() + 6);
 			} else if (n == "Tuesday") {
@@ -421,7 +418,7 @@ angular.module('sleepapp_patient.controllers', [])
 			currentDate.setSeconds(0);
 			$scope.dateTimeForWeeklyReminder = currentDate;
 		}
-		console.log(currentDate);
+		//console.log(currentDate);
 		var hours = currentDate.getHours();
 		var minutes = currentDate.getMinutes();
 		var setreminderTime = hours
@@ -440,8 +437,8 @@ angular.module('sleepapp_patient.controllers', [])
 	} else {
 		$scope.today_at_9_pm = window.localStorage['DAILY_REMINDER_TIME'];
 		$scope.dateTimeForWeeklyReminder = window.localStorage['WEEKLY_REMINDER_TIME_SAVE'];
-		console.log(window.localStorage['TIME_FOR_WEEKLY_REMINDER']);
-		console.log(window.localStorage['WEEKLY_REMINDER_TIME']);
+		//console.log(window.localStorage['TIME_FOR_WEEKLY_REMINDER']);
+		//console.log(window.localStorage['WEEKLY_REMINDER_TIME']);
 		$scope.reminderTime = window.localStorage['REMINDER_TIME'];
 		if (window.localStorage['WEEKLY_REMINDER_TIME']) {
 			var day = window.localStorage['WEEKLY_REMINDER_TIME'];
@@ -520,9 +517,9 @@ angular.module('sleepapp_patient.controllers', [])
 			$scope.selectedTime = $scope.selectedtimeString;
 		}
 		if (n == data.day) {
-			console.log("If Current day, repeat alarm on same day from next week");
+			//console.log("If Current day, repeat alarm on same day from next week");
 			var d = new Date();
-			console.log($scope.TimeSelected);
+			//console.log($scope.TimeSelected);
 			if ($scope.TimeSelected == false) {
 				d.setDate(d.getDate() + 7);
 				d.setHours(12);
@@ -533,7 +530,7 @@ angular.module('sleepapp_patient.controllers', [])
 				d.setMinutes($scope.alreadySelectedTime.getMinutes());
 				d.setSeconds(0);
 			}
-			console.log(d);
+			//console.log(d);
 			$scope.dateTimeForWeeklyReminder = d;
 			var hours = d.getHours();
 			var minutes = d.getMinutes();
@@ -559,12 +556,12 @@ angular.module('sleepapp_patient.controllers', [])
 				n = weekday[newDate.getDay()];
 				matchDay(newDate, n);
 			} else {
-				console.log($scope.alreadySelectedTime);
+				//console.log($scope.alreadySelectedTime);
 				newDate.setHours($scope.alreadySelectedTime.getHours());
 				newDate.setMinutes($scope.alreadySelectedTime.getMinutes());
 				newDate.setSeconds(0);
 				n = weekday[newDate.getDay()];
-				console.log(n);
+				//console.log(n);
 				matchDay(newDate, n);
 			}
 		}
@@ -658,9 +655,9 @@ angular.module('sleepapp_patient.controllers', [])
 			newDate.setDate(newDate.getDate() + 6);
 		}
 
-		console.log(newDate);
+		//console.log(newDate);
 		$scope.dateTimeForWeeklyReminder = newDate;
-		console.log(newDate);
+		//console.log(newDate);
 		var hours = newDate.getHours();
 		var minutes = newDate.getMinutes();
 		var setreminderTime = hours
@@ -748,11 +745,11 @@ angular.module('sleepapp_patient.controllers', [])
 
 
 	$scope.saveReminder = function() {
-		console.log($scope.today_at_9_pm);
+		//console.log($scope.today_at_9_pm);
 		// CALL SET DAILY REMINDER
 		setReminder($scope.today_at_9_pm);
 
-		console.log($scope.dateTimeForWeeklyReminder);
+		//console.log($scope.dateTimeForWeeklyReminder);
 		// CALL SET WEEKLY REMINDER
 		setWeeklyGoalReminder($scope.dateTimeForWeeklyReminder);
 
@@ -801,29 +798,31 @@ angular.module('sleepapp_patient.controllers', [])
 	ionicMaterialInk.displayEffect();
 
 	var userData = JSON.parse(window.localStorage['USER_DATA']);
-	var user = {}; $scope.patient = {};
+	//console.log("check In ctrl userData= ", userData);
+	var user = {};
+	$scope.patient = {};
 	user.username = userData.username;
 	var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
 	var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
 	decryptedOldPassword = decryptedOldPassword.slice(1, -1);
 	user.password = decryptedOldPassword;
-	
-  /* durationPicker Configuration*/
-  $scope.durationConfig = {};
-  $scope.durationConfig = {
-      inputButtonType: 'button-stable',
-      popupTitle: 'Enter Duration',
-      popupSubTitle: 'In minutes & seconds.',
-      popupSaveLabel: 'Set',
-      popupSaveButtonType: 'button-balanced',
-      popupCancelLabel: 'Close',
-      popupCancelButtonType: 'button-assertive',
-      rtl : false
-  };
-  
+
+	/* durationPicker Configuration*/
+	$scope.durationConfig = {};
+	$scope.durationConfig = {
+		inputButtonType: 'button-stable',
+		popupTitle: 'Enter Duration',
+		popupSubTitle: 'In minutes & seconds.',
+		popupSaveLabel: 'Set',
+		popupSaveButtonType: 'button-balanced',
+		popupCancelLabel: 'Close',
+		popupCancelButtonType: 'button-assertive',
+		rtl: false
+	};
+
 	UserService.logInUser(user).success(function(data) {
 		$ionicLoading.hide();
-    if (data.status == "success") {
+		if (data.status == "success") {
 			// Check User Status Active or Inactive
 			if (data.data.user.is_status == true) {
 				window.localStorage['ACCESS_TOKEN'] = data.access_token;
@@ -877,7 +876,7 @@ angular.module('sleepapp_patient.controllers', [])
 	var mm = currentDt.getMonth() + 1;
 	var dd = currentDt.getDate();
 	var yyyy = currentDt.getFullYear();
-	var date = (mm < 10 ? '0'+mm : mm) + '/' + dd + '/' + yyyy;
+	var date = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
 	var dataJSON = {};
 	dataJSON.patient = userData._id;
 
@@ -937,7 +936,7 @@ angular.module('sleepapp_patient.controllers', [])
 		//$scope.weeklyMetricData = []
 		//$scope.weekly_Metric_Data = {};
 		//$scope.daily_metric_data = {};
-    $scope.showCheckInData = true;
+		$scope.showCheckInData = true;
 		// Getting Patient General Questions
 		//$scope.getPatientGeneralQuestions();
 
@@ -990,11 +989,10 @@ angular.module('sleepapp_patient.controllers', [])
 	}
 
 	var inputJsonData = {};
-	inputJsonData.static_metric = [];
-	inputJsonData.weekly_metric = [];
-	inputJsonData.daily_metric = [];
-	inputJsonData.general_metric = [];
-
+	/**
+	 *	function - saveCheckInData : Add CheckIn Data
+	 *	developer : GpSingh
+	 **/
 	$scope.saveCheckInData = function() {
 		$ionicLoading.show({
 			content: 'Loading',
@@ -1003,36 +1001,15 @@ angular.module('sleepapp_patient.controllers', [])
 			maxWidth: 200,
 			showDelay: 0
 		});
-		inputJsonData.patient = userData._id;
+		inputJsonData = $scope.patient;
+		inputJsonData.user_id = userData._id;
 		inputJsonData.checkin_date = date;
-
-		for (var i in $scope.dailyMetricData) {
-			if ($scope.dailyMetricData.hasOwnProperty(i)) {
-				inputJsonData.daily_metric.push($scope.dailyMetricData[i]);
-			}
-		}
-
-		for (var i in $scope.weeklyMetricData) {
-			if ($scope.weeklyMetricData.hasOwnProperty(i)) {
-				inputJsonData.weekly_metric.push($scope.weeklyMetricData[i]);
-			}
-		}
-
-
-		for (var i in $scope.staticQuestions) {
-			if ($scope.staticQuestions.hasOwnProperty(i)) {
-				inputJsonData.static_metric.push($scope.staticQuestions[i]);
-			}
-		}
-
-		for (var i in $scope.generalQuestionCheckIn) {
-			if ($scope.generalQuestionCheckIn.hasOwnProperty(i)) {
-				inputJsonData.general_metric.push($scope.generalQuestionCheckIn[i]);
-			}
-		}
+		inputJsonData.static_metric = [];
+		//console.log("check in data = ", inputJsonData); return;
 		// Save check in on daily basis
-		CheckInService.savePatientCheckIn(inputJsonData).success(function(response) {
+		CheckInService.saveCheckIn(inputJsonData).success(function(response) {
 			$ionicLoading.hide();
+			//console.log("response = ", response);
 			if (response.messageId == 200) {
 				showConfirm(animation);
 				var alertPopup = $ionicPopup.alert({
@@ -1066,8 +1043,8 @@ angular.module('sleepapp_patient.controllers', [])
 			};
 		}, 1)
 	}
-  
-  /*
+
+	/*
 	 * setTime function to set time for fields on CHECK IN screen.
 	 * developer : GpSingh
 	 */
@@ -1182,7 +1159,7 @@ angular.module('sleepapp_patient.controllers', [])
 
 	var caregiverUserData;
 	$scope.user_name = userData.first_name + " " + userData.last_name;
-	
+
 
 	// Set User Type in Charts
 	if (userData.user_type == 3) {
@@ -1282,12 +1259,12 @@ angular.module('sleepapp_patient.controllers', [])
 		$scope.weeklyChartSeries = [];
 		$scope.WeeklyChartData = [];
 		CheckInService.getPatientCheckIn(inputJSONcheckIn).success(function(response) {
-			console.log(response);
+			//console.log(response);
 			$ionicLoading.hide();
 			if (response.messageId == 200) {
 				$scope.totalDays = response.data.length;
 				if ($scope.totalDays == 0) {
-					console.log("Here");
+					//console.log("Here");
 					$scope.NoDataAvailable = true;
 					$scope.DataAvailable = false;
 				} else {

@@ -29,11 +29,11 @@ var PROFILE_PIC       = HOST + 'images/profile/';
 var ENCRYPTION_KEY = "GFYUFGTYGFTYTY64564545acvbvrttyFG@%#%#%#%#TTRR";
 
 /*  SERVICE URLs Starts Here  */
-var LOGIN_URL   				      = HOST + '/adminlogin/authenticate';
-var CHECKUSER_URL   			    = HOST + '/users/checkUser'; // Check if username & email already register or not
-var ADD_USER_DATA_URL   		  = HOST + '/users/signUp'; // Save user data into data during sign up
-var SAVE_DEVICE_ID_URL			  = HOST + '/users/updateUser'
-
+var LOGIN_URL   			= HOST + '/adminlogin/authenticate';
+var CHECKUSER_URL   		= HOST + '/users/checkUser'; // Check if username & email already register or not
+var ADD_USER_DATA_URL   	= HOST + '/users/signUp'; // Save user data into data during sign up
+var SAVE_DEVICE_ID_URL		= HOST + '/users/updateUser'
+var SAVE_CHECK_IN_URL		= HOST + '/checkin/add';
 
 
 
@@ -43,6 +43,6 @@ var FORGOTPASSWORD			= HOST + '';
 var UPDATE_PROFILE			= HOST + '/users/update';
 var GET_PATIENT_CHECK_IN    = HOST + '/checkin/list';
 var GET_GENERAL_QUESTIONS 	= HOST + '/generalquestions/patientGeneralQuestion';
-var SAVE_PATIENT_CHECK_IN	= HOST + '/checkin/add';
+
 var UPDATE_PATIENT_CHECK_IN = HOST + '/checkin/update';
 var FIND_ASSESSMENT 		= HOST + '/patients/findOne';

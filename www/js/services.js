@@ -151,14 +151,14 @@ angular.module('sleepapp_patient.services', [])
             });
             return promise;
         },
-        savePatientCheckIn: function(dataJSON) {
+        saveCheckIn: function(dataJSON) {
             var token = window.localStorage['ACCESS_TOKEN'];
             var AUTH_HEADER = {
                 'Content-Type': 'application/json',
                 'Authorization' : 'Bearer ' + token
             };
             var promise = $http({
-                url: SAVE_PATIENT_CHECK_IN,
+                url: SAVE_CHECK_IN_URL,
                 method: 'POST',
                 data:   dataJSON,
                 headers: AUTH_HEADER
