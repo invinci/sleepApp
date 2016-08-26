@@ -4,20 +4,21 @@
         <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:2})"></i>
     </ion-header-bar>
     <ion-content class="custom-content padding">
-        <form name="jetLagForm">
+        <form name="jetLagForm" ng-submit="saveJetLagData()">
             <div class="list">
-                <!--Time Diffference-->
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Time Diffference</span>
-                    <input type="text" placeholder="Time difference" name="time_difference" ng-model="jetLag.time_difference" ng-Change ="calculateJetLag()" required>
-                </label>
-                <div class="form-error" ng-show="jetLagForm.time_difference.$error.required && jetLagForm.time_difference.$dirty">Time Diffference is required.</div>
-                <!--Travel Date-->
+                   <!--Travel Date-->
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Travel Date</span>
-                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date" required ng-click="openDatePicker()" />
+                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date" ng-Change ="calculateJetLag()" ng-click="openDatePicker()"  required />
                 </label>
                 <div class="form-error" ng-show="jetLagForm.travel_date.$error.required && jetLagForm.travel_date.$dirty">Travel Date is required.</div>
+              
+                    <!--Time Diffference-->
+                 <label class="item item-input item-floating-label">
+                    <span class="input-label">Time Diffference</span>
+                    <input type="text" placeholder="Time difference" name="time_difference" ng-model="jetLag.time_difference" ng-Change ="calculateJetLag()" required />
+                </label>
+                <div class="form-error" ng-show="jetLagForm.time_difference.$error.required && jetLagForm.time_difference.$dirty">Time Diffference is required.</div>
                 <div class="row">
                     <div class="col">&nbsp;</div>
                 </div>
@@ -34,18 +35,29 @@
                             	   <input type="text"  class="jetLaginput"  id="day{{$index + 1}}" ng-model="jetLag.day[$index]" disabled>
                             </div>
                             <div class="col col-25 jetLagdiv">
-                            	<input type="text"  class="jetLaginput" name="date" ng-model="jetLag.date" disabled>
+                            	<input type="text"  class="jetLaginput" id="date{{$index+ 1}}" ng-model="jetLag.date[$index]" disabled>
                             </div>
                             <div class="col col-25 jetLagdiv">
-                            	<input type="text"   class="jetLaginput"  name="time" ng-model="jetLag.time" disabled>
+                            	<input type="text"   class="jetLaginput"  id="time{{$index +1}}" ng-model="jetLag.time[$index]" disabled>
                             </div>
                             <div class="col col-25 jetLagdiv">
-                            	<input type="text"   class="jetLaginput" name="bedtime" ng-model="jetLag.bedtime" disabled>
+                            	<input type="text"   class="jetLaginput" id="bedtime{{$index +1}}" ng-model="jetLag.bedtime[$index]" disabled>
                             </div>
                         </div>
                     </div>
                 </div>
+                 <div class="containerDiv1">
+          <div class="button-wrapper">
+            <button class="button button-block complete-button ink" type="submit">Update</button>
+          </div>
+        </div>
         </form>
+              <div class="containerDiv1">
+          <div class="button-wrapper">
+            <button class="button button-block complete-button ink" ng-click=Reset()>Reset</button>
+          </div>
+        </div>
+
     </ion-content>
 </ion-view>
 

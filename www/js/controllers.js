@@ -1416,44 +1416,45 @@ angular.module('sleepapp_patient.controllers', [])
 })
 
 
-.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker,ionicDatePicker) {
+/*
+ *jet lag calculator controller .
+ * developer : Shilpa Sharma
+ */
+.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker,$state) {
+ 
     var userData = JSON.parse(window.localStorage['USER_DATA']);
-    
-$scope.jetLag = {};
-     var ipObj1 = {
-      callback: function (val) { 
-      $scope.jetLag.travel_date = val;
-      
- // var SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+     $scope.jetLag = {};
+    var ipObj1 = {
+        callback: function(val) {
+            var d = new Date(val);
+            var formatdate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+            $scope.jetLag.travel_date = formatdate;
 
-
-       console.log('Return value from the datepicker popup is : ' + val, new Date(val));
-      },
-      disabledDates: [            //Optional
-        new Date(2016, 2, 16),
-        new Date(2015, 3, 16),
-        new Date(2015, 4, 16),
-        new Date(2015, 5, 16),
-        new Date('Wednesday, August 12, 2015'),
-        new Date("08-16-2016"),
-        new Date(1439676000000)
-      ],
-      from: new Date(2012, 1, 1), //Optional
-      to: new Date(2016, 10, 30), //Optional
-      inputDate: new Date(),      //Optional
-      mondayFirst: true,          //Optional
-      disableWeekdays: [0],       //Optional
-      closeOnSelect: false,       //Optional
-      // templateType: 'popup'       //Optional
+        },
+        disabledDates: [ //Optional
+            // new Date(2016, 2, 16),
+            new Date(2015, 3, 16),
+            new Date(2015, 4, 16),
+            new Date(2015, 5, 16),
+            new Date('Wednesday, August 12, 2015'),
+            new Date("08-16-2016"),
+            new Date(1439676000000)
+        ],
+        from: new Date(), //Optional
+        inputDate: new Date(), //Optional
+        mondayFirst: true, //Optional
+        disableWeekdays: [0], //Optional
+        closeOnSelect: false, //Optional
+        // templateType: 'popup'    //Optional
     };
 
-    $scope.openDatePicker = function(){
-      ionicDatePicker.openDatePicker(ipObj1);
+    $scope.openDatePicker = function() {
+        ionicDatePicker.openDatePicker(ipObj1);
+        $scope.calculateJetLag();
     };
 
     $scope.jetLagData = [{
         "id": "1"
-
     }, {
         "id": "2"
     }, {
@@ -1467,34 +1468,253 @@ $scope.jetLag = {};
     }]
 
 
+
+
     var inputJsonData = {};
     $scope.jetLag = {};
     $scope.jetLag.day = [];
+    $scope.jetLag.date = [];
+    $scope.jetLag.bedtime = [];
+    $scope.jetLag.time = [];
+   
+    /*
+     * jet lag calculator.
+     * developer : Shilpa Sharma
+     */
     $scope.calculateJetLag = function() {
-        console.log("here");
-        var glasses_time;
-        var wakeup;
-        var bedtime;
-        var time_difference;
-        var timeCalculate=[];
-        $scope.Math = window.Math;
-        var userData = JSON.parse(window.localStorage['USER_DATA']);
-        glasses_time = userData.wear_glasses_time;
-        wakeup = userData.planned_wakeup;
-        // console.log(wakeup);
-        bedtime = userData.planned_bedtime;
-        // console.log(bedtime);
 
-        var timeDiffCalculate = {};
+            if ((typeof $scope.jetLag.time_difference !== "undefined") && (typeof $scope.jetLag.travel_date !== "undefined")) {
 
-        timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
-         timeCalculate = (timeDiffCalculate.time_difference) / 2;
-        // console.log($scope.Math.floor(timeCalculate));
-        for(var i=0;i<$scope.Math.floor(timeCalculate);i++)
-        {	
-       $scope.jetLag.day[i] = i+1;
+                var glasses_time;
+                var wakeup;
+                var bedtime;
+                var time_difference;
+                var travel_date = [];
+                var timeCalculate = [];
+                $scope.Math = window.Math;
+                var userData = JSON.parse(window.localStorage['USER_DATA']);
+                glasses_time = userData.wear_glasses_time;
+                var glassesStr = glasses_time;
+                // console.log("glasses_time**************", glasses_time);
+                wakeup = userData.planned_wakeup;
+                bedtime = userData.planned_bedtime;
+                var timeDiffCalculate = {};
+                var travelDateCal = {};
+                travelDateCal.travel_date = $scope.jetLag.travel_date;
+                var get_date = travelDateCal.travel_date;
+                var d = new Date(get_date);
+                var d1 = new Date(get_date);
+                var hoursUpdated = "null";
+                var updatedGlasses = "null";
+                timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
+                timeCalculate = (timeDiffCalculate.time_difference) / 2;
+               // (timeCalculate);
+                var newTimeCalculate = Math.abs(timeCalculate);
+                console.log("newTimeCalculate1",newTimeCalculate);
+                var numberOfDaysToAdd = 0;
+                if (newTimeCalculate > 0) {
+                    var timeStr = '';
+                    timeStr = bedtime;
+                    var glassesStr = '';
+                    glassesStr = glasses_time;
+                    // newTimeCalculate =Math.floor(timeCalculate);
+                    // console.log("newTimeCalculate2",newTimeCalculate);
+                    for (var i = 0; i < Math.floor(newTimeCalculate); i++) {
+                        $scope.jetLag.day[i] = i + 1;
+                        // newTimeCalculate =Math.floor(timeCalculate);
+
+                        d1.setDate(d.getDate() + numberOfDaysToAdd);
+                        var dd = d1.getDate();
+                        var mm = d1.getMonth() + 1;
+                        var y = d1.getFullYear();
+                        var someFormattedDate = (mm + '/' + dd  + '/' + y);
+                        $scope.jetLag.date[i] = someFormattedDate;
+                        ++numberOfDaysToAdd;
+                        ///////set the bed time////////////////////////
+                        if (hoursUpdated == "null") { // if bedtime
+                            // console.log("this is a test");
+                            var parts = timeStr.split(':');
+                            var hours = parseInt(parts[0]);
+                            hours -= 2;
+                            if (hours <= 0) {
+                                // easily flip it by adding 12
+                                hours += 12;
+                                if (parts[1].match(/(AM|am)/)) {
+                                    parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                                    // keep the case
+                                } else {
+                                    if (hours < 12) {
+                                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+                            }
+                            timeStr = hours + ':' + parts[1];
+                            hoursUpdated = hours;
+                        } else {
+                            hours -= 2;
+                            if (hours <= 0) {
+                                // easily flip it by adding 12
+                                hours += 12;
+                                // swap am & pm
+                                if (parts[1].match(/(AM|am)/)) {
+                                    parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                                    // keep the case
+                                } else {
+                                    if (hours < 12) {
+                                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+
+                            } else {
+                                if (parts[1].match(/(AM|am)/)) {
+                                    if (hours < 12) {
+                                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                    // keep the case
+                                } else {
+                                    if (hours < 12) {
+                                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+                            }
+                            timeStr = hours + ':' + parts[1];
+                            hoursUpdated = hours;
+                        } //else  bedtime
+
+                        //////////////glasses time////////////
+                        if (updatedGlasses == "null") { //if glasses time
+                            var parts1 = glassesStr.split(':');
+                            var hours1 = parseInt(parts1[0]);
+                            hours1 -= 2;
+                            if (hours1 <= 0) {
+                                hours1 += 12;
+                                // swap am & pm
+                                if (parts1[1].match(/(AM|am)/)) {
+                                    parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                                    // keep the case
+                                } else {
+                                    if (hours < 12) {
+                                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+                            }
+                            glassesStr = hours1 + ':' + parts1[1];
+                            updatedGlasses = hours1;
+                        } else { //else glasses time
+                            hours1 -= 2;
+                            if (hours1 <= 0) {
+                                // easily flip it by adding 12
+                                hours1 += 12;
+                                // swap am & pm
+                                if (parts1[1].match(/(AM|am)/)) {
+                                    parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+
+                                } else {
+                                    if (hours1 < 12) {
+                                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+
+                            } else {
+                                if (parts1[1].match(/(AM|am)/)) {
+                                    if (hours1 < 12) {
+                                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+
+                                } else {
+                                    if (hours1 < 12) {
+                                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                                    }
+                                }
+                            }
+                            glassesStr = hours1 + ':' + parts1[1];
+                            updatedGlasses = hours1;
+                        }
+
+                        $scope.jetLag.bedtime[i] = timeStr;
+                        $scope.jetLag.time[i] = glassesStr;
+
+
+                    } //for
+                } else {
+                    for (var i = 0; i < 6; i++) {
+                        $scope.jetLag.day[i] = "";
+                        $scope.jetLag.date[i] = "";
+                        $scope.jetLag.bedtime[i] = "";
+                        $scope.jetLag.time[i] = "";
+                    }
+                }
+            } else {
+                for (var i = 0; i < 6; i++) {
+                    $scope.jetLag.day[i] = "";
+                    $scope.jetLag.date[i] = "";
+                    $scope.jetLag.bedtime[i] = "";
+                    $scope.jetLag.time[i] = "";
+                }
+            }
         }
+        /*
+         * save the jet lag calculator controller .
+         * developer : Shilpa Sharma
+         */
+
+    inputJsonData.jetLag = {};
+    inputJsonData.jet_lags = [];
+    $scope.saveJetLagData = function() {
+        $ionicLoading.show({
+            content: 'Loading',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 200,
+            showDelay: 0
+        });
+        inputJsonData.user_id = userData._id;
+        inputJsonData.travel_date = $scope.jetLag.travel_date;
+        inputJsonData.time_difference = $scope.jetLag.time_difference;
+
+        for (var i = 0; i < $scope.jetLag.day.length; i++) {
+            var inputJson = {};
+            inputJson.day = $scope.jetLag.day[i];
+            inputJson.start_date = $scope.jetLag.date[i];
+            inputJson.glasses_time = $scope.jetLag.time[i];
+            inputJson.bedtime = $scope.jetLag.bedtime[i];
+            // console.log("this is Object", inputJson);
+            inputJsonData.jet_lags.push(inputJson);
+
+        }
+        jetLagService.saveJetLagData(inputJsonData).success(function(response) {
+            $ionicLoading.hide();
+            if (response.messageId == 200) {
+                // showConfirm(animation);
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Success!',
+                    template: JET_LAG_SUCCESS,
+
+                });
+                // $state.go('stateOfMind');
+                alertPopup.then(function(res) {
+
+                    $scope.alreadySubmiited = JET_LAG_MESSAGE;
+                });
+            } else {
+                // showConfirm(animation);
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: CHECK_IN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        });
+    }
+    $scope.Reset=function()
+    {
+    	$scope.jetLag.time_difference="";
+    	$scope.jetLag.travel_date = "";
+    	$scope.jetLag.day = "";
+    	$scope.jetLag.date = "";
+    	$scope.jetLag.bedtime = "";
+    	$scope.jetLag.time = "";
+
 
     }
-
 })

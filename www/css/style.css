@@ -1,6 +1,6 @@
 /* Empty. Add your own CSS if you like */
 body{
-	font-size: 16px !important;
+	font-size: 16px ;
 }
 .custom-header{
 	background-color: #3c1e69;
@@ -505,7 +505,7 @@ input[readonly]:not(.cloned-text-input){
 }
 
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"]{
-	font-size: 16px !important;
+	font-size: 14px ;
 }
 .item-input{
 	padding-left: 0px !important;
@@ -630,4 +630,4 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 /*added by shilpa*/
 .noPadding{padding: 0 !important;}
 .jetLagdiv {padding:3%;}
-.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px !important; }
+.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px; }

@@ -19,6 +19,8 @@ var NO_ASSESSMENT_MESSAGE = "No assessments available right now for you.";
 var CHECK_IN_SUCCESS = "Check in data updated.";
 var CHECK_IN_ERROR = "Unable to update check in data.";
 var CHECK_IN_MESSAGE = "You have already submitted your check in data for today.";
+var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";
+var JET_LAG_SUCCESS = "Jet Lag data updated.";
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";
 
@@ -36,8 +38,6 @@ var SAVE_DEVICE_ID_URL			  = HOST + '/users/updateUser'
 
 
 
-
-
 var FIND_PATIENT_FOR_CAREGIVER = HOST + '/users/findPatientByCaregiverId';
 var FORGOTPASSWORD			= HOST + '';
 var UPDATE_PROFILE			= HOST + '/users/update';
@@ -46,4 +46,4 @@ var GET_GENERAL_QUESTIONS 	= HOST + '/generalquestions/patientGeneralQuestion';
 var SAVE_PATIENT_CHECK_IN	= HOST + '/checkin/add';
 var UPDATE_PATIENT_CHECK_IN = HOST + '/checkin/update';
 var FIND_ASSESSMENT 		= HOST + '/patients/findOne';
-// var 
+var SAVE_JET_LAGS          	= HOST +  '/jetLag/add';

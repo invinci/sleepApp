@@ -108,7 +108,6 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   $stateProvider
-
   .state('welcome', {
     cache: false,
     url: '/welcome',

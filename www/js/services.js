@@ -187,8 +187,23 @@ angular.module('sleepapp_patient.services', [])
 })
 
 .factory('jetLagService',   function($q, $http) {
-     return {
-
+    return {
+          saveJetLagData: function(dataJSON) {
+            var token = window.localStorage['ACCESS_TOKEN'];
+            var AUTH_HEADER = {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + token
+            };
+            var promise = $http({
+                url: SAVE_JET_LAGS,
+                method: 'POST',
+                data:   dataJSON,
+                headers: AUTH_HEADER
+            }).success(function(data, status, headers, config) {
+                return data;
+            });
+            return promise;
         }
+ }
 
-    });
+ });
