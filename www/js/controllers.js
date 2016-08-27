@@ -1468,6 +1468,22 @@ angular.module('sleepapp_patient.controllers', [])
     }]
 
 
+$scope.showConfirm = function() {
+   var confirmPopup = $ionicPopup.confirm({
+     title: 'Consume Ice Cream',
+     template: 'Are you sure you want to eat this ice cream?'
+   });
+
+   confirmPopup.then(function(res) {
+     if(res) {
+       console.log('You are sure');
+     } else {
+       console.log('You are not sure');
+     }
+   });
+ };
+
+
 
 
     var inputJsonData = {};
@@ -1510,15 +1526,14 @@ angular.module('sleepapp_patient.controllers', [])
                 timeCalculate = (timeDiffCalculate.time_difference) / 2;
                // (timeCalculate);
                 var newTimeCalculate = Math.abs(timeCalculate);
-                console.log("newTimeCalculate1",newTimeCalculate);
+                // console.log("newTimeCalculate1",newTimeCalculate);
+
                 var numberOfDaysToAdd = 0;
                 if (newTimeCalculate > 0) {
                     var timeStr = '';
                     timeStr = bedtime;
                     var glassesStr = '';
                     glassesStr = glasses_time;
-                    // newTimeCalculate =Math.floor(timeCalculate);
-                    // console.log("newTimeCalculate2",newTimeCalculate);
                     for (var i = 0; i < Math.floor(newTimeCalculate); i++) {
                         $scope.jetLag.day[i] = i + 1;
                         // newTimeCalculate =Math.floor(timeCalculate);
@@ -1535,6 +1550,7 @@ angular.module('sleepapp_patient.controllers', [])
                             // console.log("this is a test");
                             var parts = timeStr.split(':');
                             var hours = parseInt(parts[0]);
+                            // if()
                             hours -= 2;
                             if (hours <= 0) {
                                 // easily flip it by adding 12
@@ -1660,14 +1676,35 @@ angular.module('sleepapp_patient.controllers', [])
 
     inputJsonData.jetLag = {};
     inputJsonData.jet_lags = [];
+    $scope.show=true;
+    $scope.formDisable=false;
     $scope.saveJetLagData = function() {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        // $ionicLoading.show({
+        //     content: 'Loading',
+        //     animation: 'fade-in',
+        //     showBackdrop: true,
+        //     maxWidth: 200,
+        //     showDelay: 0
+        // });
+
+        var confirmPopup = $ionicPopup.confirm({
+			 title: 'confirm',
+			 template: JET_LAG_CONFIRM,
+			});
+
+                 // console.log("*********
+
+        confirmPopup.then(function(res) {
+			 if(res) {
+			 	console.log("res",res);
+			 	var flag=1;
+			 	
+			   console.log('You are sure');
+			 } else {
+			 	console.log("res1",res);
+			   console.log('You are not sure');
+			 }
+			
         inputJsonData.user_id = userData._id;
         inputJsonData.travel_date = $scope.jetLag.travel_date;
         inputJsonData.time_difference = $scope.jetLag.time_difference;
@@ -1682,39 +1719,43 @@ angular.module('sleepapp_patient.controllers', [])
             inputJsonData.jet_lags.push(inputJson);
 
         }
+
+		
+
+			
+	    if(flag == 1){
+
         jetLagService.saveJetLagData(inputJsonData).success(function(response) {
             $ionicLoading.hide();
             if (response.messageId == 200) {
-                // showConfirm(animation);
-                var alertPopup = $ionicPopup.alert({
+        
+                 var alertPopup = $ionicPopup.alert({
                     title: 'Success!',
                     template: JET_LAG_SUCCESS,
-
                 });
-                // $state.go('stateOfMind');
-                alertPopup.then(function(res) {
+                 // $state.go('tabs.stateOfMind');
+                  alertPopup.then(function(res) {
 
                     $scope.alreadySubmiited = JET_LAG_MESSAGE;
                 });
-            } else {
-                // showConfirm(animation);
+                  $scope.show=false;
+                  $scope.formDisable=true;
+                 // console.log("****************", $scope.$invalid);
+            } 
+            else {
+
                 var alertPopup = $ionicPopup.alert({
                     title: 'Warning!',
                     template: CHECK_IN_ERROR,
                 });
                 alertPopup.then(function(res) {});
             }
+
         });
-    }
-    $scope.Reset=function()
-    {
-    	$scope.jetLag.time_difference="";
-    	$scope.jetLag.travel_date = "";
-    	$scope.jetLag.day = "";
-    	$scope.jetLag.date = "";
-    	$scope.jetLag.bedtime = "";
-    	$scope.jetLag.time = "";
-
 
     }
+});
+    }
+
+  
 })
