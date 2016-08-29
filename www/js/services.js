@@ -203,7 +203,47 @@ angular.module('sleepapp_patient.services', [])
                 return data;
             });
             return promise;
+        },
+
+ updateJetLagData:function(dataJSON) {
+            var token = window.localStorage['ACCESS_TOKEN'];
+            // ("token",token);
+            // console.log("id",user_id);
+            console.log("dataJSON",dataJSON);
+            var AUTH_HEADER = {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + token
+            };
+            var promise = $http({
+                url: UPDATE_JET_LAGS,
+                method: 'POST',
+                data:   dataJSON,
+                headers: AUTH_HEADER
+            }).success(function(data, status, headers, config) {
+                return data;
+            });
+            return promise;
+        },
+
+ getJetLagData:function(dataJSON) {
+            var token = window.localStorage['ACCESS_TOKEN'];
+            // console.log("token",token);
+       
+            var AUTH_HEADER = {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + token
+            };
+            var promise = $http({
+                url: GET_JET_LAGS,
+                method: 'POST',
+                data:   dataJSON,
+                headers: AUTH_HEADER
+            }).success(function(data, status, headers, config) {
+                return data;
+            });
+            return promise;
         }
+
  }
 
  });

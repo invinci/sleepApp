@@ -1,10 +1,10 @@
-<ion-view title="jet lag">
+<ion-view title="jet lag" ng-init="getJetLagData()">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Jet Lag</h1>
         <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:2})"></i>
     </ion-header-bar>
     <ion-content class="custom-content padding">
-        <form name="jetLagForm" ng-submit="saveJetLagData()">
+        <form name="jetLagForm" >
             <div class="list">
                 <!--Travel Date-->
                 <label class="item item-input item-floating-label">
@@ -48,13 +48,13 @@
                 <!--Update -->
                 <div class="containerDiv1">
                     <div class="button-wrapper">
-                        <button class="button button-block complete-button ink" type="submit" ng-show="show" ng-model="save">Save</button>
+                        <button class="button button-block complete-button ink" type="submit" ng-click="saveJetLagData()" ng-show="show" ng-model="save">Save</button>
                     </div>
                 </div>
                
                 <div class="containerDiv1">
                     <div class="button-wrapper">
-                        <button class="button button-block complete-button ink" type="submit">Complete</button>
+                        <button class="button button-block complete-button ink" ng-click="updateJetLagData()">Complete</button>
                     </div>
                 </div>
         

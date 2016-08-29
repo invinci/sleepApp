@@ -1420,10 +1420,10 @@ angular.module('sleepapp_patient.controllers', [])
  *jet lag calculator controller .
  * developer : Shilpa Sharma
  */
-.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker,$state) {
- 
+.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state) {
+
     var userData = JSON.parse(window.localStorage['USER_DATA']);
-     $scope.jetLag = {};
+    $scope.jetLag = {};
     var ipObj1 = {
         callback: function(val) {
             var d = new Date(val);
@@ -1468,20 +1468,20 @@ angular.module('sleepapp_patient.controllers', [])
     }]
 
 
-$scope.showConfirm = function() {
-   var confirmPopup = $ionicPopup.confirm({
-     title: 'Consume Ice Cream',
-     template: 'Are you sure you want to eat this ice cream?'
-   });
+    $scope.showConfirm = function() {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Consume Ice Cream',
+            template: 'Are you sure you want to eat this ice cream?'
+        });
 
-   confirmPopup.then(function(res) {
-     if(res) {
-       console.log('You are sure');
-     } else {
-       console.log('You are not sure');
-     }
-   });
- };
+        confirmPopup.then(function(res) {
+            if (res) {
+                console.log('You are sure');
+            } else {
+                console.log('You are not sure');
+            }
+        });
+    };
 
 
 
@@ -1492,7 +1492,7 @@ $scope.showConfirm = function() {
     $scope.jetLag.date = [];
     $scope.jetLag.bedtime = [];
     $scope.jetLag.time = [];
-   
+
     /*
      * jet lag calculator.
      * developer : Shilpa Sharma
@@ -1524,7 +1524,7 @@ $scope.showConfirm = function() {
                 var updatedGlasses = "null";
                 timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
                 timeCalculate = (timeDiffCalculate.time_difference) / 2;
-               // (timeCalculate);
+                // (timeCalculate);
                 var newTimeCalculate = Math.abs(timeCalculate);
                 // console.log("newTimeCalculate1",newTimeCalculate);
 
@@ -1542,7 +1542,7 @@ $scope.showConfirm = function() {
                         var dd = d1.getDate();
                         var mm = d1.getMonth() + 1;
                         var y = d1.getFullYear();
-                        var someFormattedDate = (mm + '/' + dd  + '/' + y);
+                        var someFormattedDate = (mm + '/' + dd + '/' + y);
                         $scope.jetLag.date[i] = someFormattedDate;
                         ++numberOfDaysToAdd;
                         ///////set the bed time////////////////////////
@@ -1676,86 +1676,161 @@ $scope.showConfirm = function() {
 
     inputJsonData.jetLag = {};
     inputJsonData.jet_lags = [];
-    $scope.show=true;
-    $scope.formDisable=false;
+    $scope.show = true;
+    // $scope.formDisable = false;
+    $scope.is_save = true;
+    $scope.is_completed=false;
     $scope.saveJetLagData = function() {
-        // $ionicLoading.show({
-        //     content: 'Loading',
-        //     animation: 'fade-in',
-        //     showBackdrop: true,
-        //     maxWidth: 200,
-        //     showDelay: 0
-        // });
+            $ionicLoading.show({
+                content: 'Loading',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
+            var confirmPopup = $ionicPopup.confirm({
+                title: 'confirm',
+                template: JET_LAG_CONFIRM,
+            });
+            confirmPopup.then(function(res) {
+                if (res) {
+                    console.log("res", res);
+                    var flag = 1;
+                } else {
+                    console.log("res1", res);
+                }
+                inputJsonData.user_id = userData._id;
+                inputJsonData.travel_date = $scope.jetLag.travel_date;
+                inputJsonData.time_difference = $scope.jetLag.time_difference;
+                inputJsonData.is_save = $scope.is_save;
+                for (var i = 0; i < $scope.jetLag.day.length; i++) {
+                    var inputJson = {};
+                    inputJson.day = $scope.jetLag.day[i];
+                    inputJson.start_date = $scope.jetLag.date[i];
+                    inputJson.glasses_time = $scope.jetLag.time[i];
+                    inputJson.bedtime = $scope.jetLag.bedtime[i];
+                    inputJsonData.jet_lags.push(inputJson);
 
-        var confirmPopup = $ionicPopup.confirm({
-			 title: 'confirm',
-			 template: JET_LAG_CONFIRM,
-			});
+                }
+                if (flag == 1) {
+                    jetLagService.saveJetLagData(inputJsonData).success(function(response) {
+                        console.log("response", response);
+                        $ionicLoading.hide();
+                        if (response.messageId == 200) {
 
-                 // console.log("*********
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Success!',
+                                template: JET_LAG_SUCCESS,
+                            });
+                            alertPopup.then(function(res) {
 
-        confirmPopup.then(function(res) {
-			 if(res) {
-			 	console.log("res",res);
-			 	var flag=1;
-			 	
-			   console.log('You are sure');
-			 } else {
-			 	console.log("res1",res);
-			   console.log('You are not sure');
-			 }
-			
-        inputJsonData.user_id = userData._id;
-        inputJsonData.travel_date = $scope.jetLag.travel_date;
-        inputJsonData.time_difference = $scope.jetLag.time_difference;
 
-        for (var i = 0; i < $scope.jetLag.day.length; i++) {
-            var inputJson = {};
-            inputJson.day = $scope.jetLag.day[i];
-            inputJson.start_date = $scope.jetLag.date[i];
-            inputJson.glasses_time = $scope.jetLag.time[i];
-            inputJson.bedtime = $scope.jetLag.bedtime[i];
-            // console.log("this is Object", inputJson);
-            inputJsonData.jet_lags.push(inputJson);
+                                $scope.alreadySubmiited = JET_LAG_MESSAGE;
+                                $state.go("tabs.stateOfMind");
+                            });
+                            $scope.show = false;
 
+                        } else {
+
+                            var alertPopup = $ionicPopup.alert({
+                                title: 'Warning!',
+                                template: CHECK_IN_ERROR,
+                            });
+                            alertPopup.then(function(res) {});
+                        }
+
+                    });
+
+                }
+            });
         }
-
-		
-
-			
-	    if(flag == 1){
-
-        jetLagService.saveJetLagData(inputJsonData).success(function(response) {
-            $ionicLoading.hide();
-            if (response.messageId == 200) {
+        /*
+         * get the jet lag calculator controller .
+         * developer : Shilpa Sharma
+         */
+    $scope.show = true;
+    $scope.formDisable = false;
+    $scope.jetLagId = '';
+    // inputJsonData.user_id = userData._id;
+    console.log("**********",userData._id);
+    $scope.getJetLagData = function() {
+        var inputJson = {};
+        inputJson.user_id = userData._id;
+        inputJson.is_completed=false;
         
-                 var alertPopup = $ionicPopup.alert({
-                    title: 'Success!',
-                    template: JET_LAG_SUCCESS,
-                });
-                 // $state.go('tabs.stateOfMind');
-                  alertPopup.then(function(res) {
+        jetLagService.getJetLagData(inputJson).success(function(response) {
+            console.log("response",response);
+            // return;
+            if (response.messageId == 200) {
+            $scope.jetLagId = response.data[0]._id;
+                for (var i = 0; i < response.data[0].jet_lags.length; i++) {
+                    $scope.jetLag.travel_date = response.data[0].travel_date;
+                    $scope.jetLag.time_difference = response.data[0].time_difference;
+                    $scope.jetLag.day[i] = response.data[0].jet_lags[i].day;
+                    $scope.jetLag.date[i] = response.data[0].jet_lags[i].start_date;
+                    $scope.jetLag.time[i] = response.data[0].jet_lags[i].glasses_time;
+                    $scope.jetLag.bedtime[i] = response.data[0].jet_lags[i].bedtime;
+                    $scope.show = false;
+                    $scope.formDisable = true;
+                }
+            } else {
+                console.log("Error.");
+            }
 
-                    $scope.alreadySubmiited = JET_LAG_MESSAGE;
-                });
-                  $scope.show=false;
-                  $scope.formDisable=true;
-                 // console.log("****************", $scope.$invalid);
-            } 
-            else {
+        })
 
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Warning!',
-                    template: CHECK_IN_ERROR,
+    }
+
+    /*
+     * update the jet lag calculator controller .
+     * developer : Shilpa Sharma
+     */
+    var updateJson = {};
+    var is_completed = false;
+    $scope.show = false;
+    $scope.updateJetLagData = function() {
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'confirm',
+            template: JET_LAG_COMPLETE,
+        });
+        confirmPopup.then(function(res) {
+            if (res) {
+                console.log("res", res);
+                var flag1 = 1;
+            } else {
+                console.log("res1", res);
+            }
+            updateJson._id = $scope.jetLagId;
+            updateJson.is_completed = true;
+            updateJson.is_save=false;
+            console.log("updatejson",updateJson);
+            if (flag1 == 1) {
+                jetLagService.updateJetLagData(updateJson).success(function(response) {
+                    if (response.messageId == 200) {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Success!',
+                            template: JET_LAG_COMPLETE_SUCCESS,
+                        });
+                        alertPopup.then(function(res) {
+
+                            $scope.alreadySubmiited = JET_LAG_MESSAGE;
+                        });
+                        $scope.show = true;
+
+                    } else {
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Warning!',
+                            template: CHECK_IN_ERROR,
+                        });
+                        alertPopup.then(function(res) {});
+                    }
+
                 });
-                alertPopup.then(function(res) {});
             }
 
         });
-
     }
+
+
+
 });
-    }
-
-  
-})
