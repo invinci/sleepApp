@@ -209,7 +209,7 @@ angular.module('sleepapp_patient.services', [])
             var token = window.localStorage['ACCESS_TOKEN'];
             // ("token",token);
             // console.log("id",user_id);
-            console.log("dataJSON",dataJSON);
+            // console.log("dataJSON",dataJSON);
             var AUTH_HEADER = {
                 'Content-Type': 'application/json',
                 'Authorization' : 'Bearer ' + token
