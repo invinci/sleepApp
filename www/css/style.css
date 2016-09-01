@@ -616,6 +616,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 	text-align: right !important;
 }
 .fullWidth{width: 100%;}
+.form-error-right {color: #D33F3D; font-size: 13px; float: right;}
 
 /* durationPicker CSS */
 .rateSpan .item-button-right{border:none;}

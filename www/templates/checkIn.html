@@ -13,7 +13,7 @@
       </div>
     </ion-content>
     <ion-content has-header="true" has-tabs="true" ng-show="showCheckInData">
-    <form ng-submit="saveCheckInData()">
+    <form ng-submit="saveCheckInData()" name="checkInForm">
       <div class="sessionWrapper">
         <div class="row" ng-show="nodata">
           <div class="col">
@@ -37,6 +37,7 @@
                     <span class="rateSpan">
                       <input type="text" placeholder="HH:MM" ng-model="patient.bedtime" required class="reminderTime" ng-click="setTime(1)" name="bedtime" />
                     </span>
+										<div class="form-error-right" ng-show="checkInForm.bedtime.$error.required && checkInForm.bedtime.$dirty" >required.</div>
                   </div>
                 </div>
               </div>
@@ -47,6 +48,7 @@
                     <span class="rateSpan">
                       <input type="text" placeholder="HH:MM" ng-model="patient.wake_up" required class="reminderTime" ng-click="setTime(2)" name="wake_up" />
                     </span>
+										<div class="form-error-right" ng-show="checkInForm.bedtime.$error.required && checkInForm.bedtime.$dirty" >required.</div>
                   </div>
                 </div>
               </div>
