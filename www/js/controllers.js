@@ -21,8 +21,6 @@ angular.module('sleepapp_patient.controllers', [])
     function onDeviceReady() {
         screen.unlockOrientation();
     }
-    $scope.demoCaption2 = "Fill in the information. Copy and paste the reference code from the admin email.";
-    $scope.demoActive2 = true;
 
     ionicMaterialInk.displayEffect();
     window.localStorage['ACCESS_TOKEN'] = "";
@@ -798,6 +796,7 @@ angular.module('sleepapp_patient.controllers', [])
 
 
 .controller('checkInCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker) {
+
     ionicMaterialInk.displayEffect();
 
     var userData = JSON.parse(window.localStorage['USER_DATA']);
@@ -991,11 +990,10 @@ angular.module('sleepapp_patient.controllers', [])
     }
 
     var inputJsonData = {};
-    inputJsonData.static_metric = [];
-    inputJsonData.weekly_metric = [];
-    inputJsonData.daily_metric = [];
-    inputJsonData.general_metric = [];
-
+    /**
+     *  function - saveCheckInData : Add CheckIn Data
+     *  developer : GpSingh
+     **/
     $scope.saveCheckInData = function() {
         $ionicLoading.show({
             content: 'Loading',
@@ -1004,36 +1002,15 @@ angular.module('sleepapp_patient.controllers', [])
             maxWidth: 200,
             showDelay: 0
         });
-        inputJsonData.patient = userData._id;
+        inputJsonData = $scope.patient;
+        inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
-
-        for (var i in $scope.dailyMetricData) {
-            if ($scope.dailyMetricData.hasOwnProperty(i)) {
-                inputJsonData.daily_metric.push($scope.dailyMetricData[i]);
-            }
-        }
-
-        for (var i in $scope.weeklyMetricData) {
-            if ($scope.weeklyMetricData.hasOwnProperty(i)) {
-                inputJsonData.weekly_metric.push($scope.weeklyMetricData[i]);
-            }
-        }
-
-
-        for (var i in $scope.staticQuestions) {
-            if ($scope.staticQuestions.hasOwnProperty(i)) {
-                inputJsonData.static_metric.push($scope.staticQuestions[i]);
-            }
-        }
-
-        for (var i in $scope.generalQuestionCheckIn) {
-            if ($scope.generalQuestionCheckIn.hasOwnProperty(i)) {
-                inputJsonData.general_metric.push($scope.generalQuestionCheckIn[i]);
-            }
-        }
+        inputJsonData.static_metric = [];
+        //console.log("check in data = ", inputJsonData); return;
         // Save check in on daily basis
-        CheckInService.savePatientCheckIn(inputJsonData).success(function(response) {
+        CheckInService.saveCheckIn(inputJsonData).success(function(response) {
             $ionicLoading.hide();
+            //console.log("response = ", response);
             if (response.messageId == 200) {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
@@ -1055,6 +1032,8 @@ angular.module('sleepapp_patient.controllers', [])
             }
         });
     }
+
+    
 
     // animate pop up dailog
     function showConfirm(animation) {

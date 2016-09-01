@@ -11,7 +11,7 @@
         <!--Username-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required>
+          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15"  autofocus="autofocus" required>
         </label>
         <div class="form-error" ng-show="signUpForm.username.$error.required && signUpForm.username.$dirty" >Username is required.</div>
         <div class="form-error" ng-show="signUpForm.username.$error.pattern">Username must be letters and numbers only.</div>
@@ -128,6 +128,7 @@
               <span class="rateSpan">
                 <input type="text" placeholder="HH:MM" ng-model="patient.planned_bedtime" required class="reminderTime" ng-click="editTime(1)" name="planned_bedtime" />
               </span>
+              <div class="form-error-right" ng-show="signUpForm.planned_bedtime.$error.required && signUpForm.planned_bedtime.$dirty" >required.</div>
             </div>
           </div>
         </div>
@@ -138,6 +139,7 @@
               <span class="rateSpan">
                 <input type="text" placeholder="HH:MM" ng-model="patient.planned_wakeup" required class="reminderTime" ng-click="editTime(2)" name="planned_wakeup" />
               </span>
+              <div class="form-error-right" ng-show="signUpForm.planned_wakeup.$error.required && signUpForm.planned_wakeup.$dirty" >required.</div>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@
       <div class="list">
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="Username" name="username" ng-model="user.username" required>
+          <input type="text" placeholder="Username" name="username" ng-model="user.username" autofocus="autofocus" required>
         </label>
         <div class="form-error" ng-show="signinForm.username.$invalid && !signinForm.username.$pristine" >Username is required.</div>
         <label class="item item-input item-floating-label">

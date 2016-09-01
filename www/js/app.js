@@ -136,11 +136,6 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     controller: 'ForgotPasswordController'
   })
 
-  .state('noPatientAssigned', {
-    cache: false,
-    url: '/noPatientAssigned',
-    templateUrl: 'templates/noPatientAssigned.html'
-  })
 
   .state('tabs', {
     url: '/tab',
