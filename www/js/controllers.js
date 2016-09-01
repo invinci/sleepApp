@@ -1482,17 +1482,12 @@ angular.module('sleepapp_patient.controllers', [])
             }
         });
     };
-
-
-
-
     var inputJsonData = {};
     $scope.jetLag = {};
     $scope.jetLag.day = [];
     $scope.jetLag.date = [];
     $scope.jetLag.bedtime = [];
     $scope.jetLag.time = [];
-
     /*
      * jet lag calculator.
      * developer : Shilpa Sharma
@@ -1510,8 +1505,8 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.Math = window.Math;
             var userData = JSON.parse(window.localStorage['USER_DATA']);
             glasses_time = userData.wear_glasses_time;
-            var glassesStr = glasses_time;
-            // console.log("glasses_time**************", glasses_time);
+            // var glassesStr = glasses_time;
+            console.log("glasses_time**************", glasses_time);
             wakeup = userData.planned_wakeup;
             bedtime = userData.planned_bedtime;
             var timeDiffCalculate = {};
@@ -1525,19 +1520,67 @@ angular.module('sleepapp_patient.controllers', [])
             timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
             timeCalculate = (timeDiffCalculate.time_difference) / 2;
             // (timeCalculate);
-            var newTimeCalculate = Math.abs(timeCalculate);
-            // console.log("newTimeCalculate1",newTimeCalculate);
+            // var newTimeCalculate = Math.abs(timeCalculate);
+            var newTimeCalculate = Math.floor(timeCalculate);
+            console.log("newTimeCalculate1", newTimeCalculate);
 
             var numberOfDaysToAdd = 0;
             if (newTimeCalculate > 0) {
                 var timeStr = '';
-                timeStr = bedtime;
+                var timeStr2 = '';
                 var glassesStr = '';
                 glassesStr = glasses_time;
-                for (var i = 0; i < Math.floor(newTimeCalculate); i++) {
+
+                // timeStr = bedtime;
+                timeStr = bedtime;
+                console.log("bedtime", timeStr);
+                timeStr2 = timeStr;
+                glassesStr2 = glassesStr;
+
+                /*Get Twenty hours format starts here*/
+                var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
+                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+                var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+                if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
+                    gethours = gethours + 12;
+                } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
+                    gethours = gethours - 12;
+                }
+
+                var sHours = gethours.toString();
+                // var sMinutes = getminutes.toString();
+
+                if (gethours < 10) {
+                    sHours = "0" + sHours;
+                }
+                var t24hoursFormat = sHours;
+                // console.log("t24hoursFormat",t24hoursFormat);
+
+
+                var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
+                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+                var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+                if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
+                    gethours1 = gethours1 + 12;
+                } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
+                    gethours1 = gethours1 - 12;
+                }
+
+                var sHours1 = gethours1.toString();
+                // var sMinutes = getmint24hoursFormatutes.toString();
+
+                if (gethours1 < 10) {
+                    sHours1 = "0" + sHours1;
+                }
+               var t24hoursFormat1 = sHours1;
+                console.log("t24hoursFormat", t24hoursFormat1);
+                /*Get Twenty hours format ends here*/
+                console.log("bed time", timeStr);
+                for (var i = 0; i < newTimeCalculate; i++) {
                     $scope.jetLag.day[i] = i + 1;
                     // newTimeCalculate =Math.floor(timeCalculate);
-
                     d1.setDate(d.getDate() + numberOfDaysToAdd);
                     var dd = d1.getDate();
                     var mm = d1.getMonth() + 1;
@@ -1547,32 +1590,51 @@ angular.module('sleepapp_patient.controllers', [])
                     ++numberOfDaysToAdd;
                     ///////set the bed time////////////////////////
                     if (hoursUpdated == "null") { // if bedtime
-                        // console.log("this is a test");
+                        console.log("this is a test");
                         var parts = timeStr.split(':');
+                        console.log("parts", parts);
                         var hours = parseInt(parts[0]);
                         // if()
                         hours -= 2;
+                        t24hoursFormat -= 2;
+                        console.log("hours1", hours);
                         if (hours <= 0) {
                             // easily flip it by adding 12
                             hours += 12;
+                            // t24hoursFormat += 12;
+
                             if (parts[1].match(/(AM|am)/)) {
+                                console.log("first if part");
                                 parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
                                 // keep the case
                             } else {
                                 if (hours < 12) {
+                                    console.log("first else part");
                                     parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
                             }
                         }
+                        // alert(t24hoursFormat);
+                        if (t24hoursFormat < 12 && t24hoursFormat > 0) {
+                            // alert("in test");
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
                         timeStr = hours + ':' + parts[1];
+                        console.log("timestr", timeStr);
                         hoursUpdated = hours;
+
                     } else {
                         hours -= 2;
+                        t24hoursFormat -= 2;
+
+                        console.log("else part", hours);
                         if (hours <= 0) {
                             // easily flip it by adding 12
                             hours += 12;
+                            console.log("hours in else part second", hours);
                             // swap am & pm
                             if (parts[1].match(/(AM|am)/)) {
+                                console.log("second if part");
                                 parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
                                 // keep the case
                             } else {
@@ -1583,17 +1645,33 @@ angular.module('sleepapp_patient.controllers', [])
 
                         } else {
                             if (parts[1].match(/(AM|am)/)) {
+                                console.log("second else part");
                                 if (hours < 12) {
                                     parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
                                 // keep the case
-                            } else {
+                            } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
+                                // alert("am condition");
+                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+
+                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
+                                // alert("yes");
+                                // noon condition
+                                parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                                // alert(parts[1]);
+                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
+                                // alert("no");
+                                //night condition
+                                parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
+
+                            } else if (parts[1].match(/(AM|am)/)) {
                                 if (hours < 12) {
                                     parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
                             }
                         }
                         timeStr = hours + ':' + parts[1];
+                        console.log("second timestr", timeStr);
                         hoursUpdated = hours;
                     } //else  bedtime
 
@@ -1602,6 +1680,7 @@ angular.module('sleepapp_patient.controllers', [])
                         var parts1 = glassesStr.split(':');
                         var hours1 = parseInt(parts1[0]);
                         hours1 -= 2;
+                        t24hoursFormat1 -= 2;
                         if (hours1 <= 0) {
                             hours1 += 12;
                             // swap am & pm
@@ -1614,10 +1693,17 @@ angular.module('sleepapp_patient.controllers', [])
                                 }
                             }
                         }
+                        if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
+                            // alert("in test");
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+
                         glassesStr = hours1 + ':' + parts1[1];
                         updatedGlasses = hours1;
+
                     } else { //else glasses time
                         hours1 -= 2;
+                        t24hoursFormat1 -= 2;
                         if (hours1 <= 0) {
                             // easily flip it by adding 12
                             hours1 += 12;
@@ -1632,12 +1718,26 @@ angular.module('sleepapp_patient.controllers', [])
                             }
 
                         } else {
+
                             if (parts1[1].match(/(AM|am)/)) {
                                 if (hours1 < 12) {
                                     parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
 
-                            } else {
+                            } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
+                                // alert("am condition");
+                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+
+                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
+                                // noon condition
+                                parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                                // alert(parts[1]);
+
+                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
+                                //night condition
+                                parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
+
+                            } else if (parts1[1].match(/(AM|am)/)) {
                                 if (hours1 < 12) {
                                     parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
@@ -1677,7 +1777,7 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.show = true;
     $scope.completeShow = false;
     $scope.formDisable = false;
-     $scope.jetLagId = '';
+    $scope.jetLagId = '';
     // console.log("**********", userData._id);
     $scope.getJetLagData = function() {
             var inputJson = {};

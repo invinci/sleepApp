@@ -20,10 +20,10 @@ var CHECK_IN_SUCCESS = "Check in data updated.";
 var CHECK_IN_ERROR = "Unable to update check in data.";
 var CHECK_IN_MESSAGE = "You have already submitted your check in data for today.";
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";
-var JET_LAG_SUCCESS = "Jet Lag data save complete.";
+var JET_LAG_SUCCESS = "Jet Lag  save completely.";
 var JET_LAG_CONFIRM ='Are you sure you want to save jet lag information?.';
-var JET_LAG_COMPLETE ='Are you sure you want to update jet lag information?';
-var JET_LAG_COMPLETE_SUCCESS='Jet lag data is Completed.';
+var JET_LAG_COMPLETE ='Are you sure you want to Complete jet lag information?';
+var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is Completed.';
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";
 
