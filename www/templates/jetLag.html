@@ -9,7 +9,7 @@
                 <!--Travel Date-->
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Travel Date</span>
-                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date" ng-Change="calculateJetLag()" ng-click="openDatePicker()" autofocus="autofocus" required  ng-disabled="formDisable"/>
+                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date" ng-Change="calculateJetLag()" ng-click="openDatePicker()"    ng-disabled="formDisable" autofocus  readonly required/>
                 </label>
                 <div class="form-error" ng-show="jetLagForm.travel_date.$error.required && jetLagForm.travel_date.$dirty">Travel Date is required.</div>
                 <!--Time Diffference-->

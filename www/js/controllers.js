@@ -803,10 +803,14 @@ angular.module('sleepapp_patient.controllers', [])
     var user = {};
     $scope.patient = {};
     user.username = userData.username;
+    // console.log("user.username", user.username);
     var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+    // console.log("decryptedData", decryptedData);
     var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
     decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+    // console.log("decryptedOldPassword", decryptedOldPassword);
     user.password = decryptedOldPassword;
+    // console.log("user.password", user.password);
 
     /* durationPicker Configuration*/
     $scope.durationConfig = {};
@@ -1010,7 +1014,7 @@ angular.module('sleepapp_patient.controllers', [])
         // Save check in on daily basis
         CheckInService.saveCheckIn(inputJsonData).success(function(response) {
             $ionicLoading.hide();
-            //console.log("response = ", response);
+            console.log("response = ", response);
             if (response.messageId == 200) {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
@@ -1033,7 +1037,7 @@ angular.module('sleepapp_patient.controllers', [])
         });
     }
 
-    
+
 
     // animate pop up dailog
     function showConfirm(animation) {
@@ -1115,64 +1119,133 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('stateOfMindCtrl', function($scope, $stateParams, UserService, CheckInService, $ionicLoading) {
+.controller('stateOfMindCtrl', function($scope, $state, $stateParams, UserService, CheckInService, $ionicLoading, ionicMaterialInk, $timeout, $ionicPopup, stateOfMindService) {
     var userData = JSON.parse(window.localStorage['USER_DATA']);
     var user = {};
-    user.username = userData.username;
+    var inputString={};
     user.password = userData.password;
-
-    UserService.logInUser(user).success(function(data) {
-        if (data.status == "success") {
-            // Check User Status Active or Inactive
-            if (data.data.is_status == true) {
-                window.localStorage['ACCESS_TOKEN'] = data.access_token;
-                window.localStorage['USER_DATA'] = JSON.stringify(data.data);
-                var userData = JSON.parse(window.localStorage['USER_DATA']);
-            } else {
-                showConfirm(animation);
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Error!',
-                    template: LOGIN_STATUS_ERROR,
-                });
-                alertPopup.then(function(res) {
-                    $state.go("signin");
-                });
-            }
-        } else {
-            showConfirm(animation);
-            var alertPopup = $ionicPopup.alert({
-                title: 'Error!',
-                template: LOGIN_ERROR,
-            });
-            alertPopup.then(function(res) {
-                $state.go("signin");
-            });
-        }
-    }).error(function(error, status) {
-        $ionicLoading.hide();
-        if (status == 401 || status == -1) {
-            showConfirm(animation);
-            var alertPopup = $ionicPopup.alert({
-                title: 'Error!',
-                template: LOGIN_ERROR,
-            });
-            alertPopup.then(function(res) {});
-        }
-    });
-
-
-    var caregiverUserData;
+    user.username = userData.username;
+    var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+    var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+    decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+    user.password = decryptedOldPassword;
     $scope.user_name = userData.first_name + " " + userData.last_name;
+
+    $scope.findCheckIndata = function() {
+        $ionicLoading.show({
+            content: 'Loading',
+            animation: 'fade-in',
+            showBackdrop: true,
+            maxWidth: 200,
+            showDelay: 0
+        });
+        var inputJson = {};
+        inputJson.user_id = userData._id;
+        // console.log("inputjson", inputJson);
+        stateOfMindService.findCheckIndata(inputJson).success(function(response) {
+            $ionicLoading.hide();
+         console.log("response", response);
+            if (response.messageId == 200) {
+                if (response.data.length != 0) {
+                    
+                  // console.log(response.data);
+                  var sq  = new Array();
+                  var energy = new Array();
+                  var happy=new Array();
+                  var relaxed=new Array();
+                  var alcohol=new Array();
+                  console.log(response.data.length);
+                    for (var i = 0; i < response.data.length; i++) {
+// 
+// console.log("i",i);var
+// var sleep_quality={};
+                        // console.log(response.data[i]);
+                        // console.log("$scope.sleep_quality",response.data[i].sleep_quality);
+                        // console.log("$scope.energy",response.data[i].energy);
+                        
+                        // inputString.sleep_quality = response.data[i].sleep_quality;
+                        sq.push(response.data[i].sleep_quality);
+                        energy.push(response.data[i].energy);
+                        happy.push(response.data[i].happy);
+                        relaxed.push(response.data[i].relaxed);
+                        alcohol.push(response.data[i].alcohol);
+                        
+                        // inputString.energy = response.data[i].energy;
+                        
+                        // console.log("inputString.energy",inputString.energy);
+                        // inputString.happy=response.data[i].happy;
+                        // console.log("inputString.happy",inputString.happy);
+                        // inputString.relaxed=response.data[i].relaxed;
+                        // console.log("inputString.relaxed",inputString.relaxed);
+                        // inputString.alcohol=response.data[i].alcohol;
+                        // console.log("inputString.alcohol",inputString.alcohol);
+                        // inputString.medication=response.data[i].medication;
+                        //  console.log("inputString.medication",inputString.medication);
+
+                    }
+                       console.log("$scope.sleep_quality",sq);
+                    console.log("$scope.energy",energy);
+
+              $scope.labels = ["sleep quality", "February", "March", "April", "May", "June", "July"];
+              $scope.series = ['Sleep Quantity', 'Energy','happy','relaxed','alcohol'];
+              $scope.data = [
+                  sq,
+                  // [28, 48, 40, 19, 86, 27, 90]
+                  energy,
+                  happy,
+                  relaxed,
+                  alcohol
+              ];
+              console.log("data",$scope.data)
+              $scope.onClick = function(points, evt) {
+                  console.log(points, evt);
+              };
+              $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+              // var data=$scope.data=response.data;
+                        $scope.options = {
+                  scales: {
+                      yAxes: [{
+                          id: 'y-axis-1',
+                          title:"sleep_quality",
+                          type: 'linear',
+                          data:response.data[0].sleep_quality,
+                          display: true,
+                          position: 'left'
+                      }, {
+                          id: 'y-axis-2',
+                          title:"energy",
+                          type: 'linear',
+                          display: true,
+                          position: 'right'
+                      }]
+                  }
+                  };
+                   
+                    console.log("$scope.sleep_quality",sq);
+                    console.log("$scope.energy",energy);
+
+                }
+            } else {
+                console.log("Error.");
+            }
+
+        });
+    }
+
+
+
+    // var caregiverUserData;
+
 
 
     // Set User Type in Charts
-    if (userData.user_type == 3) {
-        $scope.User_Type = "Patient";
-    } else if (userData.user_type == 4) {
-        $scope.User_Type = "Caregiver";
-    }
+    // if (userData.user_type == 3) {
+    //     $scope.User_Type = "Patient";
+    // } else if (userData.user_type == 4) {
+    //     $scope.User_Type = "Caregiver";
+    // }
 
-    $scope.noDataMessage = NO_DATA;
+    // $scope.noDataMessage = NO_DATA;
     $scope.showAppointmentDiv = false;
     $scope.showDailyMetricDiv = false;
     $scope.showDailyMetricCharts = false;
@@ -1202,6 +1275,7 @@ angular.module('sleepapp_patient.controllers', [])
     // Set Appointment Date End
 
     // Show Loader 
+    return;
 
     $scope.getStateofMindData = function() {
         $ionicLoading.show({
@@ -1392,6 +1466,18 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
     $scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
+
+    // animate pop up dailog
+    function showConfirm(animation) {
+        $timeout(function() {
+            var popupElements = document.getElementsByClassName("popup-container");
+            if (popupElements.length) {
+                var popupElement = angular.element(popupElements[0]);
+                popupElement.addClass('animated')
+                popupElement.addClass(animation)
+            };
+        }, 1)
+    }
 })
 
 
@@ -1447,20 +1533,6 @@ angular.module('sleepapp_patient.controllers', [])
     }]
 
 
-    $scope.showConfirm = function() {
-        var confirmPopup = $ionicPopup.confirm({
-            title: 'Consume Ice Cream',
-            template: 'Are you sure you want to eat this ice cream?'
-        });
-
-        confirmPopup.then(function(res) {
-            if (res) {
-                console.log('You are sure');
-            } else {
-                console.log('You are not sure');
-            }
-        });
-    };
     var inputJsonData = {};
     $scope.jetLag = {};
     $scope.jetLag.day = [];
@@ -1565,25 +1637,25 @@ angular.module('sleepapp_patient.controllers', [])
                     ++numberOfDaysToAdd;
                     ///////set the bed time////////////////////////
                     if (hoursUpdated == "null") { // if bedtime
-                        console.log("this is a test");
+                        // console.log("this is a test");
                         var parts = timeStr.split(':');
-                        console.log("parts", parts);
+                        // console.log("parts", parts);
                         var hours = parseInt(parts[0]);
                         // if()
                         hours -= 2;
                         t24hoursFormat -= 2;
-                        console.log("hours1", hours);
+                        // console.log("hours1", hours);
                         if (hours <= 0) {
                             // easily flip it by adding 12
                             hours += 12;
                             // t24hoursFormat += 12;
                             if (parts[1].match(/(AM|am)/)) {
-                                console.log("first if part");
+                                // console.log("first if part");
                                 parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
                                 // keep the case
                             } else {
                                 if (hours < 12) {
-                                    console.log("first else part");
+                                    // console.log("first else part");
                                     parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
                             }
@@ -1594,21 +1666,21 @@ angular.module('sleepapp_patient.controllers', [])
                             parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                         }
                         timeStr = hours + ':' + parts[1];
-                        console.log("timestr", timeStr);
+                        // console.log("timestr", timeStr);
                         hoursUpdated = hours;
 
                     } else {
                         hours -= 2;
                         t24hoursFormat -= 2;
 
-                        console.log("else part", hours);
+                        // console.log("else part", hours);
                         if (hours <= 0) {
                             // easily flip it by adding 12
                             hours += 12;
                             console.log("hours in else part second", hours);
                             // swap am & pm
                             if (parts[1].match(/(AM|am)/)) {
-                                console.log("second if part");
+                                // console.log("second if part");
                                 parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
                                 // keep the case
                             } else {
@@ -1619,7 +1691,7 @@ angular.module('sleepapp_patient.controllers', [])
 
                         } else {
                             if (parts[1].match(/(AM|am)/)) {
-                                console.log("second else part");
+                                // console.log("second else part");
                                 if (hours < 12) {
                                     parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
                                 }
@@ -1645,7 +1717,7 @@ angular.module('sleepapp_patient.controllers', [])
                             }
                         }
                         timeStr = hours + ':' + parts[1];
-                        console.log("second timestr", timeStr);
+                        // console.log("second timestr", timeStr);
                         hoursUpdated = hours;
                     } //else  bedtime
 
@@ -1779,7 +1851,7 @@ angular.module('sleepapp_patient.controllers', [])
             })
         }
         /*
-         * save the jet lag calculator controller .
+         * save the jet lag calculator controller.
          * developer : Shilpa Sharma
          */
     inputJsonData.jetLag = {};

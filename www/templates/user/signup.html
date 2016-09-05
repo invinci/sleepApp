@@ -11,7 +11,7 @@
         <!--Username-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15"  autofocus="autofocus" required>
+          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required autofocus/>
         </label>
         <div class="form-error" ng-show="signUpForm.username.$error.required && signUpForm.username.$dirty" >Username is required.</div>
         <div class="form-error" ng-show="signUpForm.username.$error.pattern">Username must be letters and numbers only.</div>

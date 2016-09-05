@@ -52,3 +52,4 @@ var FIND_ASSESSMENT 		= HOST + '/patients/findOne';
 var SAVE_JET_LAGS          	= HOST +  '/jetLag/add';
 var UPDATE_JET_LAGS         = HOST + '/jetLag/updateJetLagData';
 var GET_JET_LAGS			= HOST	+'/jetLag/findJetLagData';
+var GET_CHECK_IN            = HOST +'/stateOfMind/findCheckIndata';

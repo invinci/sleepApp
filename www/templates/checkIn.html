@@ -1,221 +1,228 @@
 <ion-view title="Check in" ng-init="checkInDataGet()">
-  <ion-header-bar class="bar-header custom-header">
-    <h1 class="title">Check in</h1>
-    <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:3})"></i>
-  </ion-header-bar>
+    <ion-header-bar class="bar-header custom-header">
+        <h1 class="title">Check in</h1>
+        <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:3})"></i>
+    </ion-header-bar>
     <ion-content has-header="true" has-tabs="true" ng-show="hideCheckInData">
-      <div class="sessionWrapper">
-        <div class="row">
-          <div class="col">
-            <p>{{alreadySubmiited}}</p>
-          </div>
+        <div class="sessionWrapper">
+            <div class="row">
+                <div class="col">
+                    <p>{{alreadySubmiited}}</p>
+                </div>
+            </div>
         </div>
-      </div>
     </ion-content>
     <ion-content has-header="true" has-tabs="true" ng-show="showCheckInData">
-    <form ng-submit="saveCheckInData()" name="checkInForm">
-      <div class="sessionWrapper">
-        <div class="row" ng-show="nodata">
-          <div class="col">
-            <p>{{noDataMessage}}</p>
-          </div>
-        </div>
-      </div>
-      <!-- Daily Checkins Start -->
-      <div class="containerWrapper">
-        <div>
-							<div class="row removePadding">
-									<div class="col checkInTitle">
-										<span class="dailytMetricSize">{{findPatientCheckIn.checkin_date}}</span>
-									</div>
-							</div>
-							<div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
-              <div class="containerDiv1 removePadding">
-                <div class="responsiveCheckInDiv"> Bedtime </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.bedtime" required class="reminderTime" ng-click="setTime(1)" name="bedtime" />
-                    </span>
-										<div class="form-error-right" ng-show="checkInForm.bedtime.$error.required && checkInForm.bedtime.$dirty" >required.</div>
-                  </div>
+        <form name="checkInForm" ng-submit="saveCheckInData()">
+            <div class="sessionWrapper">
+                <div class="row" ng-show="nodata">
+                    <div class="col">
+                        <p>{{noDataMessage}}</p>
+                    </div>
                 </div>
-              </div>
-              <div class="containerDiv1 removePadding">
-                <div class="responsiveCheckInDiv">Wake Up </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.wake_up" required class="reminderTime" ng-click="setTime(2)" name="wake_up" />
+            </div>
+            <!-- Daily Checkins Start -->
+            <div class="containerWrapper">
+                <div>
+                    <div class="row removePadding">
+                        <div class="col checkInTitle">
+                            <span class="dailytMetricSize">{{findPatientCheckIn.checkin_date}}</span>
+                        </div>
+                    </div>
+                    <div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
+                    <div class="containerDiv1 removePadding">
+                        <div class="responsiveCheckInDiv itemInput"> Bedtime </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.bedtime" required class="reminderTime" ng-click="setTime(1)" name="bedtime" readonly="true" />
                     </span>
-										<div class="form-error-right" ng-show="checkInForm.bedtime.$error.required && checkInForm.bedtime.$dirty" >required.</div>
-                  </div>
-                </div>
-              </div>
-              <div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv">Glasses on </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" class="reminderTime" name="wear_glasses_time" ng-click="setTime(3)" />
+                                <div class="form-error-right" ng-show="checkInForm.bedtime.$error.required && checkInForm.bedtime.$dirty">required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding">
+                        <div class="responsiveCheckInDiv itemInput">Wake Up </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.wake_up" required class="reminderTime" ng-click="setTime(2)" name="wake_up" readonly="true"/>
                     </span>
-                  </div>
-                </div>
-              </div>
-              <div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv">Out Of Bed </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.out_of_bed" class="reminderTime" name="out_of_bed" ng-click="setTime(4)" />
+                                <div class="form-error-right" ng-show="checkInForm.wake_up.$error.required && checkInForm.wake_up.$dirty">required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv itemInput">Glasses on </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" class="reminderTime" name="wear_glasses_time" ng-click="setTime(3)" readonly="true" required/>
                     </span>
-                  </div>
-                </div>
-              </div>
-              <div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv">Up at night? </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.up_at_night" class="reminderTime" name="up_at_night" ng-click="setTime(5)" />
+                                <div class="form-error-right" ng-show="checkInForm.wear_glasses_time.$error.required && checkInForm.wear_glasses_time.$dirty">
+                                    required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv itemInput">Out Of Bed </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.out_of_bed" class="reminderTime" name="out_of_bed" ng-click="setTime(4)" readonly="true" required/>
+                    </span>
+                                <div class="form-error-right" ng-show="checkInForm.out_of_bed.$error.required && checkInForm.out_of_bed.$dirty">required.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv">Up at night? </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.up_at_night" class="reminderTime" name="up_at_night" ng-click="setTime(5)" readonly="true"/>
                       <ionic-durationpicker idp-config="durationConfig" idp-output="patient.up_at_night_duration"></ionic-durationpicker>
                     </span>
-                  </div>
-                </div>
-              </div>
-							<div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv">Nap </div>
-                <div class="responsiveCheckInDiv1 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv">Nap </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)"  readonly="true"/>
                       <ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
                     </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="containerDiv1 removePadding2">
+                <div class="responsiveCheckInDiv2title">Nap </div>
+                <div class="responsiveCheckInDiv2 newClass">
+                  <div class="toggleBar">
+                    <div class="rateSpan">
+                      <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)" />
+                      <ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
+                    </div>
+                  </div>
+                </div>
+              </div>-->
+                </div>
+                <!-- Daily Checkins End -->
+                <hr class="lightHRs" />
+                <!-- Static Metric Start -->
+                <div>
+                    <div class="containerDiv1 removePadding" ng-repeat="sq in staticQuestions">
+                        <div class="responsiveCheckInDiv">{{sq.title}} </div>
+                        <div class="responsiveCheckInDiv1 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                  <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' "></rating>
+                  <rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' "></rating>
+                  <rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' "></rating>
+                  <rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' "></rating>
+                  <rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' "></rating>
+                </span>
+                                <span class="smiley" id="smiley{{$index}}">&#9786;</span>
+                            </div>
+                        </div>
+                        <!--<div class="responsiveCheckInDiv1 newClass" ng-if="staticQuestion.title == 'Low Stress?'">-->
+                        <!--  <div class="toggleBar">-->
+                        <!--    <span class="smiley" id="smiley{{$index}}">&#9786;</span>-->
+                        <!--    <span class="rateSpan">-->
+                        <!--      <rating ng-model="patient.rating" max="rating.max"></rating>-->
+                        <!--    </span>-->
+                        <!--  </div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col"></div>
+                </div>
+                <!-- Static Metric End -->
+                <hr class="lightHRs" />
+                <!-- Weekly Metric Start -->
+                <div>
+                    <div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
+                    <div class="containerDiv1 removePadding">
+                        <div class="responsiveCheckInDiv2title"> Food </div>
+                        <div class="responsiveCheckInDiv2 newClass">
+                            <div class="toggleBar">
+                                <div class="rateSpan">
+                                    <input type="text" placeholder="HH:MM" ng-model="patient.food1" class="reminderTime fullWidth" ng-click="setTime(6)" name="food1" readonly="true" />
+                                </div>
+                                <div class="rateSpan">
+                                    <input type="text" placeholder="HH:MM" ng-model="patient.food2" class="reminderTime fullWidth" ng-click="setTime(7)" name="food2" readonly="true" />
+                                </div>
+                                <div class="rateSpan">
+                                    <input type="text" placeholder="HH:MM" ng-model="patient.food3" class="reminderTime fullWidth" ng-click="setTime(8)" name="food3" readonly="true" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="containerDiv1 removePadding2">
+              <div class="responsiveCheckInDiv2title">Nap </div>
+              <div class="responsiveCheckInDiv2 newClass">
+                <div class="toggleBar">
+                  <div class="rateSpan">
+                    <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)" />
+                    <ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
                   </div>
                 </div>
               </div>
-							<!--<div class="containerDiv1 removePadding2">
-								<div class="responsiveCheckInDiv2title">Nap </div>
-								<div class="responsiveCheckInDiv2 newClass">
-									<div class="toggleBar">
-										<div class="rateSpan">
-											<input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)" />
-											<ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
-										</div>
-									</div>
-								</div>
-							</div>-->
-          </div>
-        <!-- Daily Checkins End -->
-        <hr class="lightHRs" />
-        <!-- Static Metric Start -->
-        <div>
-          <div class="containerDiv1 removePadding" ng-repeat="sq in staticQuestions">
-            <div class="responsiveCheckInDiv">{{sq.title}} </div>
-            <div class="responsiveCheckInDiv1 newClass">
-              <div class="toggleBar">
-                <span class="rateSpan">
-                  <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' "></rating>
-									<rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' "></rating>
-									<rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' "></rating>
-									<rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' "></rating>
-									<rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' "></rating>
-                </span>
-                <span class="smiley" id="smiley{{$index}}">&#9786;</span>
-              </div>
-            </div>
-            <!--<div class="responsiveCheckInDiv1 newClass" ng-if="staticQuestion.title == 'Low Stress?'">-->
-            <!--  <div class="toggleBar">-->
-            <!--    <span class="smiley" id="smiley{{$index}}">&#9786;</span>-->
-            <!--    <span class="rateSpan">-->
-            <!--      <rating ng-model="patient.rating" max="rating.max"></rating>-->
-            <!--    </span>-->
-            <!--  </div>-->
-            <!--</div>-->
-          </div>
-        </div>
-        <div class="row">
-              <div class="col"></div>
-          </div>
-        <!-- Static Metric End -->
-        <hr class="lightHRs" />
-        <!-- Weekly Metric Start -->
-        <div>
-            <div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
-						<div class="containerDiv1 removePadding">
-							<div class="responsiveCheckInDiv2title"> Food </div>
-							<div class="responsiveCheckInDiv2 newClass">
-								<div class="toggleBar">
-									<div class="rateSpan">
-										<input type="text" placeholder="HH:MM" ng-model="patient.food1" required class="reminderTime fullWidth" ng-click="setTime(6)" name="food1" />
-									</div>
-									<div class="rateSpan">
-										<input type="text" placeholder="HH:MM" ng-model="patient.food2" required class="reminderTime fullWidth" ng-click="setTime(7)" name="food2" />
-									</div>
-									<div class="rateSpan">
-										<input type="text" placeholder="HH:MM" ng-model="patient.food3" required class="reminderTime fullWidth" ng-click="setTime(8)" name="food3" />
-									</div>
-								</div>
-							</div>
-						</div>
-						<!--<div class="containerDiv1 removePadding2">
-							<div class="responsiveCheckInDiv2title">Nap </div>
-							<div class="responsiveCheckInDiv2 newClass">
-								<div class="toggleBar">
-									<div class="rateSpan">
-										<input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)" />
-										<ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
-									</div>
-								</div>
-							</div>
-						</div>-->
-              <div class="containerDiv1 removePadding">
-                <div class="responsiveCheckInDiv2title">Caffeine </div>
-                <div class="responsiveCheckInDiv2 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
-                      <input type="number" placeholder="03" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" /><br/>
+            </div>-->
+                    <div class="containerDiv1 removePadding">
+                        <div class="responsiveCheckInDiv2title">Caffeine </div>
+                        <div class="responsiveCheckInDiv2 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
+                      <input type="number" placeholder="03" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1"/><br/>
                     </span>
-                    <span class="rateSpan">
+                                <span class="rateSpan">
                       <input type="number" placeholder="03" ng-model="patient.caffeine2" class="reminderTime borderBottom" name="caffeine2" /><br/>
                     </span>
-                    <span class="rateSpan">
+                                <span class="rateSpan">
                       <input type="number" placeholder="03" ng-model="patient.caffeine3" class="reminderTime borderBottom" name="caffeine3" />
                     </span>
-                  </div>
-                </div>
-              </div>
-              <div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv2title">Medication </div>
-                <div class="responsiveCheckInDiv2 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv2title">Medication </div>
+                        <div class="responsiveCheckInDiv2 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
                       <input type="number" placeholder="01" ng-model="patient.medication" class="reminderTime borderBottom" name="medication" />
                     </span>
-                  </div>
-                </div>
-              </div>
-              <div class="containerDiv1 removePadding2">
-                <div class="responsiveCheckInDiv2title">Alcohol (1 serving = 30ml) </div>
-                <div class="responsiveCheckInDiv2 newClass">
-                  <div class="toggleBar">
-                    <span class="rateSpan">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="containerDiv1 removePadding2">
+                        <div class="responsiveCheckInDiv2title">Alcohol (1 serving = 30ml) </div>
+                        <div class="responsiveCheckInDiv2 newClass">
+                            <div class="toggleBar">
+                                <span class="rateSpan">
                       <input type="number" placeholder="01" ng-model="patient.alcohol" class="reminderTime borderBottom" name="alcohol" />
                     </span>
-                  </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-          </div>
-        </div>
-        <!-- Weekly Metric End -->
+                <div class="containerDiv1 removePadding">
+                    <span class="itemText">All Fields marked with Red color are mandatory.</span>
+                </div>
+            </div>
+            <!-- Weekly Metric End -->
+            <div class="emptyDiv">&nbsp;</div>
+            <div class="containerDiv1">
+                <div class="button-wrapper">
+                    <button class="button button-block complete-button ink" type="submit" ng-disabled="checkInForm.$invalid">Save</button>
+                </div>
+            </div>
+        </form>
         <div class="emptyDiv">&nbsp;</div>
-        <div class="containerDiv1">
-          <div class="button-wrapper">
-            <button class="button button-block complete-button ink" type="submit">Save</button>
-          </div>
         </div>
-      </form>
-      <div class="emptyDiv">&nbsp;</div>
-    </div>
     </ion-content>
 </ion-view>

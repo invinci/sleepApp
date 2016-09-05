@@ -246,4 +246,24 @@ angular.module('sleepapp_patient.services', [])
 
  }
 
- });
+ })
+.factory('stateOfMindService',   function($q, $http) {
+    return {
+          findCheckIndata: function(dataJSON) {
+            var token = window.localStorage['ACCESS_TOKEN'];
+            var AUTH_HEADER = {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + token
+            };
+            var promise = $http({
+                url: GET_CHECK_IN,
+                method: 'POST',
+                data:   dataJSON,
+                headers: AUTH_HEADER
+            }).success(function(data, status, headers, config) {
+                return data;
+            });
+            return promise;
+        }
+    }
+})
