@@ -634,4 +634,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px; }
 .itemInput {color:  #CD5C5C;}
 .itemText{ font-size:14px; color: #CD5C5C !important;}
+.chartSecond{padding-top:2px !important;}
+.alignCenter{text-align:center;}
 

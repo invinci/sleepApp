@@ -119,14 +119,14 @@ angular.module('sleepapp_patient.services', [])
 
 .factory('CheckInService',   function($q, $http) {
     return {
-        getPatientCheckIn: function(dataJSON) {
+        findCheckinData: function(dataJSON) {
             var token = window.localStorage['ACCESS_TOKEN'];
             var AUTH_HEADER = {
                 'Content-Type': 'application/json',
                 'Authorization' : 'Bearer ' + token
             };
             var promise = $http({
-                url: GET_PATIENT_CHECK_IN,
+                url: COUNT_CHECK_IN,
                 method: 'POST',
                 data:   dataJSON,
                 headers: AUTH_HEADER
@@ -264,6 +264,8 @@ angular.module('sleepapp_patient.services', [])
                 return data;
             });
             return promise;
-        }
-    }
+        },
+    
+}
+    
 })
