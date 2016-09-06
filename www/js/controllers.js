@@ -803,14 +803,10 @@ angular.module('sleepapp_patient.controllers', [])
     var user = {};
     $scope.patient = {};
     user.username = userData.username;
-    // console.log("user.username", user.username);
     var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
-    // console.log("decryptedData", decryptedData);
     var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
     decryptedOldPassword = decryptedOldPassword.slice(1, -1);
-    // console.log("decryptedOldPassword", decryptedOldPassword);
     user.password = decryptedOldPassword;
-    // console.log("user.password", user.password);
 
     /* durationPicker Configuration*/
     $scope.durationConfig = {};
@@ -930,41 +926,110 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.showCheckInData = false;
     $scope.hideCheckInData = true;
+    $scope.checkInDisable = false;
+    $scope.CheckIn = true;
     // Check in Init Function
     $scope.checkInDataGet = function() {
-        var inputJson = {};
-        inputJson.user_id = userData._id;
+            var inputJson = {};
+            inputJson.user_id = userData._id;
+            inputJson.checkin_date = date;
+            console.log("inputJson", inputJson);
 
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
-        CheckInService.findCheckinData(inputJson).success(function(response) {
-            console.log("response.data", response.data);
-            if (response.messageId == 200) {
-                // console.log("response", response.data.length);
-                if (response.data.length <= 1) {
+            $ionicLoading.show({
+                content: 'Loading',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
+            CheckInService.findCheckinData(inputJson).success(function(response) {
+                console.log("response.data", response.data);
+                if (response.messageId == 200) {
+                    if (response.data.length <= 1) {
+                        console.log("--------------if");
+                        // console.log(response.data[0]);
+                        $scope.showCheckInData = true;
+                        $scope.patient.bedtime = response.data[0].bedtime;
+                        $scope.patient.wake_up = response.data[0].wake_up;
+                        $scope.patient.wear_glasses_time = response.data[0].wear_glasses_time;
+                        $scope.patient.out_of_bed = response.data[0].out_of_bed;
+                        $scope.patient.up_at_night = response.data[0].up_at_night;
+                        $scope.patient.up_at_night_duration = response.data[0].up_at_night_duration;
+                        $scope.patient.nap = response.data[0].nap;
+                        $scope.patient.nap_duration = response.data[0].nap_duration;
+                        $scope.patient.sleep_quality = response.data[0].sleep_quality;
+                        $scope.patient.sleep_enough = response.data[0].sleep_enough;
+                        $scope.patient.energy = response.data[0].energy;
+                        $scope.patient.happy = response.data[0].happy;
+                        $scope.patient.relaxed = response.data[0].relaxed;
+                        $scope.patient.food1 = response.data[0].food1;
+                        $scope.patient.food2 = response.data[0].food2;
+                        $scope.patient.food3 = response.data[0].food3;
+                        $scope.patient.caffeine1 = response.data[0].caffeine1;
+                        $scope.patient.caffeine2 = response.data[0].caffeine2;
+                        $scope.patient.caffeine3 = response.data[0].caffeine3;
+                        $scope.patient.medication = response.data[0].medication;
+                        $scope.patient.alcohol = response.data[0].alcohol;
 
-                    // console.log("success");
+                    } else if (response.data.length <= 2) {
+                        console.log("----------------else if");
+                        $scope.showCheckInData = true;
+                        $scope.checkInDisable = true;
+                        $scope.CheckIn = false;
+                        $scope.patient.bedtime = response.data[0].bedtime;
+                        $scope.patient.wake_up = response.data[0].wake_up;
+                        $scope.patient.wear_glasses_time = response.data[0].wear_glasses_time;
+                        $scope.patient.out_of_bed = response.data[0].out_of_bed;
+                        $scope.patient.up_at_night = response.data[0].up_at_night;
+                        $scope.patient.up_at_night_duration = response.data[0].up_at_night_duration;
+                        $scope.patient.nap = response.data[0].nap;
+                        $scope.patient.nap_duration = response.data[0].nap_duration;
+                        $scope.patient.sleep_quality = response.data[0].sleep_quality;
+                        $scope.patient.sleep_enough = response.data[0].sleep_enough;
+                        $scope.patient.energy = response.data[0].energy;
+                        $scope.patient.happy = response.data[0].happy;
+                        $scope.patient.relaxed = response.data[0].relaxed;
+                        $scope.patient.food1 = response.data[0].food1;
+                        $scope.patient.food2 = response.data[0].food2;
+                        $scope.patient.food3 = response.data[0].food3;
+                        $scope.patient.caffeine1 = response.data[0].caffeine1;
+                        $scope.patient.caffeine2 = response.data[0].caffeine2;
+                        $scope.patient.caffeine3 = response.data[0].caffeine3;
+                        $scope.patient.medication = response.data[0].medication;
+                        $scope.patient.alcohol = response.data[0].alcohol;
 
-                    $scope.showCheckInData = true;
-                    $scope.hideCheckInData = false;
+                    }
                 }
-             else {
-                 $scope.showCheckInData = false;
-                $scope.hideCheckInData = true;
-                $scope.alreadySubmiited = CHECK_IN_MESSAGE;
-                // console.log("error");
-            }
+                // else
+                // {
+                //     $scope.showCheckInData=false;
+                // }
+            });
+
+
         }
+///////////////get the privious date////////////
+    $scope.myClick = function() {
+        // $scope.checkInDataGet();
+        var date = $scope.findPatientCheckIn.checkin_date;
+        console.log(date);
+        var d = new Date(date);
+        console.log("*************",d);
+        // console.log(d.getMonth());
+        d.setDate(d.getDate() - 1);
+        console.log("************8",d);
+        // console.log(d.getMonth());
+         var formatdate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+          console.log("**************",formatdate);
+         // d = formatdate;
+        document.write('<br>1 days ago was: ' + d.toLocaleString());
 
-        });
-
-
+        $scope.findPatientCheckIn.checkin_date=d;
+        console.log("********************",$scope.findPatientCheckIn.checkin_date);
+        // $state.go('tabs.checkIn');
+        // $scope.checkInDataGet();
     }
+
 
     $scope.getPatientGeneralQuestions = function() {
         CheckInService.listPatientGeneralQuestions(dataJSON).success(function(response) {
@@ -1171,8 +1236,8 @@ angular.module('sleepapp_patient.controllers', [])
 
 
                     // console.log(response.data);
-                    var sq = new Array();
-                    var energy = new Array();
+                    var sq = [];
+                    var energy = [];
                     var happy = new Array();
                     var relaxed = new Array();
                     var alcohol = new Array();
@@ -1196,27 +1261,37 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("$scope.sleep_quality", sq);
                     console.log("$scope.energy", energy);
                     ////////////////////////////////////////////////////////////
-                             google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
+                    //                        google.charts.load('current', {'packages':['corechart']});
+                    // google.charts.setOnLoadCallback(drawChart);
 
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-           // 'date', 'sleep_quality', 'Energy'
-          checkin_date, sq, energy
-   
-        ]);
+                    // // function drawChart() {
+                    // //   var data = google.visualization.arrayToDataTable([
+                    // //      ['energy','sleep quality'],
+                    // //      sq, energy
 
-        var options = {
-          title: 'Sleep Quality',
-          curveType: 'function',
-          legend: { position: 'bottom' }
-        };
+                    // //   ]);
+                    //    function drawChart() {
+                    //   var data = google.visualization.arrayToDataTable([
+                    //     ['Sales','Expenses'],
+                    //       sq, energy
 
-        var chart = new google.visualization.LineChart(document.getElementById('line'));
+                    //     // ['2005',  1170,      460],
+                    //     // ['2006',  660,       1120],
+                    //     // ['2007',  1030,      540]
+                    //   ]);
 
-        chart.draw(data, options);
-        console.log("charts",chart);
-      }
+                    //   var options = {
+                    //     title: 'Sleep Quality',
+                    //     curveType: 'function',
+                    //     legend: { position: 'bottom' },
+                    //     colors: ['black','blue']
+                    //   };
+
+                    //   var chart = new google.visualization.LineChart(document.getElementById('line'));
+
+                    //   chart.draw(data, options);
+                    //   console.log("charts",chart);
+                    // }
 
                     $scope.labels = [checkin_date];
                     $scope.series = ['relaxed', 'alcohol', 'medication'];
