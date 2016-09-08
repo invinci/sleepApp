@@ -1,3 +1,4 @@
+ <!-- <script src="js/loader.js"></script> -->
 <ion-view title="Check in" ng-init="checkInDataGet(0)">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Check in</h1>
@@ -23,7 +24,7 @@
                         <div class="col checkInTitle" ng-show="checkinDateOne">
                             <span class="dailytMetricSize">{{newDate}}</span>
                         </div>
-                        <ion-icon class="ion-chevron-right" ng-click="checkInDataGet(0,newDate)" ng-show="CheckInOne"></ion-icon>
+                        <ion-icon class="ion-chevron-right" ng-click="checkInDataGet(2,newDate)" ng-show="CheckInOne" ></ion-icon>
                     </div>
                     <div class="card" ng-show="hideCheckInData">
                         <div class="item item-text-wrap">
@@ -99,6 +100,7 @@
                             </div>
                         </div>
                     </div>
+                     <input type="hidden" ng-model="patient.checkin_count" />
                     <!--<div class="containerDiv1 removePadding2">
                 <div class="responsiveCheckInDiv2title">Nap </div>
                 <div class="responsiveCheckInDiv2 newClass">

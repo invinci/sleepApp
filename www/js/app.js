@@ -8,7 +8,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'sleepapp_patient' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating','chart.js', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker'])
+angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker'])
 
 .run(function($ionicPlatform, $state, $ionicPopup, $timeout, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
@@ -36,10 +36,12 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     
     window.localStorage['PLATFORM'] = ionic.Platform.platform();
     /* PUSH NOTIFICATIONS CONFIGURATION as on ngCordova-- start */
-      var push = PushNotification.init({
-        android: {senderID: "780443469261"},
-        ios: {alert: "true",badge: "false",sound: "true"}
-      });
+      if (PushNotification) {
+        var push = PushNotification.init({
+          android: {senderID: "780443469261"},
+          ios: {alert: "true",badge: "false",sound: "true"}
+        });
+      }
       push.on('registration', function(data) {
         window.localStorage["device_id"] =  data.registrationId;
       });
