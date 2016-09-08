@@ -1,17 +1,8 @@
-<ion-view title="Check in" ng-init="checkInDataGet()">
+<ion-view title="Check in" ng-init="checkInDataGet(0)">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Check in</h1>
         <i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:3})"></i>
     </ion-header-bar>
-    <ion-content has-header="true" has-tabs="true" ng-show="hideCheckInData">
-        <div class="sessionWrapper">
-            <div class="row">
-                <div class="col">
-                    <p>{{alreadySubmiited}}</p>
-                </div>
-            </div>
-        </div>
-    </ion-content>
     <ion-content has-header="true" has-tabs="true" ng-show="showCheckInData">
         <form name="checkInForm" ng-submit="saveCheckInData()">
             <div class="sessionWrapper">
@@ -23,16 +14,21 @@
             </div>
             <!-- Daily Checkins Start -->
             <div class="containerWrapper">
-
                 <div>
-
                     <div class="row removePadding">
-                     <ion-icon class="ion-chevron-left" ng-click="myClick()"  ></ion-icon>
-                        <div class="col checkInTitle">
-                          <!-- <ion-icon name="arrow-back"></ion-icon> -->
+                        <ion-icon class="ion-chevron-left" ng-click="checkInDataGet(1,newDate)" ng-disabled="noClick"></ion-icon>
+                        <div class="col checkInTitle" ng-show="checkinDate">
                             <span class="dailytMetricSize">{{findPatientCheckIn.checkin_date}}</span>
                         </div>
-                         <ion-icon class="ion-chevron-right" ng-show="CheckIn"></ion-icon>
+                        <div class="col checkInTitle" ng-show="checkinDateOne">
+                            <span class="dailytMetricSize">{{newDate}}</span>
+                        </div>
+                        <ion-icon class="ion-chevron-right" ng-click="checkInDataGet(0,newDate)" ng-show="CheckInOne"></ion-icon>
+                    </div>
+                    <div class="card" ng-show="hideCheckInData">
+                        <div class="item item-text-wrap">
+                            <p>{{alreadySubmiited}}</p>
+                        </div>
                     </div>
                     <div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
                     <div class="containerDiv1 removePadding">
@@ -97,8 +93,8 @@
                         <div class="responsiveCheckInDiv1 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)"  readonly="true" ng-disabled="checkInDisable"/>
-                      <ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration" ng-disabled="checkInDisable" ></ionic-durationpicker>
+                      <input type="text" placeholder="HH:MM" ng-model="patient.nap" class="reminderTime" name="nap" ng-click="setTime(9)"  readonly="true"/>
+                      <ionic-durationpicker idp-config="durationConfig" idp-output="patient.nap_duration"></ionic-durationpicker>
                     </span>
                             </div>
                         </div>
@@ -124,11 +120,11 @@
                         <div class="responsiveCheckInDiv1 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                  <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' " ng-disabled="checkInDisable"></rating>
-                  <rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' " ng-disabled="checkInDisable" ></rating>
-                  <rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' " ng-disabled="checkInDisable"></rating>
-                  <rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' " ng-disabled="checkInDisable"></rating>
-                  <rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' " ng-disabled="checkInDisable"></rating>
+                  <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' "></rating>
+                  <rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' " ></rating>
+                  <rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' " ></rating>
+                  <rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' "></rating>
+                  <rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' " ></rating>
                 </span>
                                 <span class="smiley" id="smiley{{$index}}">&#9786;</span>
                             </div>
@@ -156,7 +152,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <div class="rateSpan">
-                                    <input type="text" placeholder="HH:MM" ng-model="patient.food1" class="reminderTime fullWidth" ng-click="setTime(6)" name="food1" readonly="true" ng-disabled="checkInDisable"/>
+                                    <input type="text" placeholder="HH:MM" ng-model="patient.food1" class="reminderTime fullWidth" ng-click="setTime(6)" name="food1" readonly="true" ng-disabled="checkInDisable" />
                                 </div>
                                 <div class="rateSpan">
                                     <input type="text" placeholder="HH:MM" ng-model="patient.food2" class="reminderTime fullWidth" ng-click="setTime(7)" name="food2" readonly="true" ng-disabled="checkInDisable" />

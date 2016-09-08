@@ -505,7 +505,7 @@ input[readonly]:not(.cloned-text-input){
 }
 
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"]{
-	font-size: 14px ;
+	font-size: 12px ;
 }
 .item-input{
 	padding-left: 0px !important;

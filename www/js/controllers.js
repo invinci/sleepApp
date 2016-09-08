@@ -880,7 +880,6 @@ angular.module('sleepapp_patient.controllers', [])
     var date = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
     var dataJSON = {};
     dataJSON.patient = userData._id;
-
     $scope.findPatientCheckIn = {};
     $scope.findPatientCheckIn.patient = userData._id;
     $scope.findPatientCheckIn.checkin_date = date;
@@ -924,110 +923,120 @@ angular.module('sleepapp_patient.controllers', [])
         "rating": 0
     }];
 
+    /*
+     *Check in Init Function .
+     * developer : Shilpa Sharma
+     */
     $scope.showCheckInData = false;
-    $scope.hideCheckInData = true;
+    $scope.hideCheckInData = false;
     $scope.checkInDisable = false;
     $scope.CheckIn = true;
-    // Check in Init Function
-    $scope.checkInDataGet = function() {
-            var inputJson = {};
-            inputJson.user_id = userData._id;
-            inputJson.checkin_date = date;
-            console.log("inputJson", inputJson);
+    $scope.CheckInOne = false;
+    $scope.checkinDate = false;
+    $scope.checkinDateOne = false;
+    $scope.noClick = false;
+    $scope.checkInDataGet = function(num, holderDate) {
+            $scope.checkinDate = true;
+            if (num == 1) {
+                console.log(holderDate);
+                var d = new Date(holderDate);
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate() - 1;
+                var yyyy = d.getFullYear();
+                var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
+                // $scope.newDate = formatdate;
+                var inputJsonData = {};
+                inputJsonData.user_id = userData._id;
+                inputJsonData.checkin_date = formatdate;
+                console.log("inputJsonData", inputJsonData);
+                CheckInService.findCheckinData(inputJsonData).success(function(response) {
+                    console.log("response", response);
+                    if (response.data.length == 0) {
+                        $scope.noClick = true;
+                        $scope.checkinDate = false;
+                        $scope.checkinDateOne = true;
+                        
+                    } else if (response.messageId == 200) {
+                        $scope.newDate = formatdate;
+                        if (response.data.length <= 1) {
+                            console.log("--------------if");
+                            $scope.showCheckInData = true;
+                            $scope.hideCheckInData = false;
+                            $scope.CheckInOne = false;
+                            $scope.checkinDate = false;
+                            $scope.patient = response.data[0];
+                        } else if (response.data.length <= 2) {
+                            console.log("----------------else if");
+                            $scope.showCheckInData = true;
+                            $scope.hideCheckInData = true;
+                            $scope.checkInDisable = true;
+                            $scope.CheckIn = false;
+                            $scope.CheckInOne = true;
+                            $scope.checkinDate = false;
+                            $scope.checkinDateOne = true;
+                            $scope.patient = response.data[0];
+                            $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                        }
+                    }
 
-            $ionicLoading.show({
-                content: 'Loading',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0
-            });
-            CheckInService.findCheckinData(inputJson).success(function(response) {
-                console.log("response.data", response.data);
-                if (response.messageId == 200) {
-                    if (response.data.length <= 1) {
-                        console.log("--------------if");
-                        // console.log(response.data[0]);
-                        $scope.showCheckInData = true;
-                        $scope.patient.bedtime = response.data[0].bedtime;
-                        $scope.patient.wake_up = response.data[0].wake_up;
-                        $scope.patient.wear_glasses_time = response.data[0].wear_glasses_time;
-                        $scope.patient.out_of_bed = response.data[0].out_of_bed;
-                        $scope.patient.up_at_night = response.data[0].up_at_night;
-                        $scope.patient.up_at_night_duration = response.data[0].up_at_night_duration;
-                        $scope.patient.nap = response.data[0].nap;
-                        $scope.patient.nap_duration = response.data[0].nap_duration;
-                        $scope.patient.sleep_quality = response.data[0].sleep_quality;
-                        $scope.patient.sleep_enough = response.data[0].sleep_enough;
-                        $scope.patient.energy = response.data[0].energy;
-                        $scope.patient.happy = response.data[0].happy;
-                        $scope.patient.relaxed = response.data[0].relaxed;
-                        $scope.patient.food1 = response.data[0].food1;
-                        $scope.patient.food2 = response.data[0].food2;
-                        $scope.patient.food3 = response.data[0].food3;
-                        $scope.patient.caffeine1 = response.data[0].caffeine1;
-                        $scope.patient.caffeine2 = response.data[0].caffeine2;
-                        $scope.patient.caffeine3 = response.data[0].caffeine3;
-                        $scope.patient.medication = response.data[0].medication;
-                        $scope.patient.alcohol = response.data[0].alcohol;
 
-                    } else if (response.data.length <= 2) {
-                        console.log("----------------else if");
-                        $scope.showCheckInData = true;
-                        $scope.checkInDisable = true;
-                        $scope.CheckIn = false;
-                        $scope.patient.bedtime = response.data[0].bedtime;
-                        $scope.patient.wake_up = response.data[0].wake_up;
-                        $scope.patient.wear_glasses_time = response.data[0].wear_glasses_time;
-                        $scope.patient.out_of_bed = response.data[0].out_of_bed;
-                        $scope.patient.up_at_night = response.data[0].up_at_night;
-                        $scope.patient.up_at_night_duration = response.data[0].up_at_night_duration;
-                        $scope.patient.nap = response.data[0].nap;
-                        $scope.patient.nap_duration = response.data[0].nap_duration;
-                        $scope.patient.sleep_quality = response.data[0].sleep_quality;
-                        $scope.patient.sleep_enough = response.data[0].sleep_enough;
-                        $scope.patient.energy = response.data[0].energy;
-                        $scope.patient.happy = response.data[0].happy;
-                        $scope.patient.relaxed = response.data[0].relaxed;
-                        $scope.patient.food1 = response.data[0].food1;
-                        $scope.patient.food2 = response.data[0].food2;
-                        $scope.patient.food3 = response.data[0].food3;
-                        $scope.patient.caffeine1 = response.data[0].caffeine1;
-                        $scope.patient.caffeine2 = response.data[0].caffeine2;
-                        $scope.patient.caffeine3 = response.data[0].caffeine3;
-                        $scope.patient.medication = response.data[0].medication;
-                        $scope.patient.alcohol = response.data[0].alcohol;
+                });
+            } else if (num == 0) {
+                var inputJson = {};
+                inputJson.user_id = userData._id;
+                inputJson.checkin_date = date;
+                $scope.newDate = date;
+                console.log("inputJson", inputJson);
+                CheckInService.findCheckinData(inputJson).success(function(response) {
+                    console.log("response", response);
+                    if (response.data == '') {
+                        console.log("blank");
+                    }
+                    if (response.messageId == 200) {
+                        if (response.data.length <= 1) {
+                            console.log("--------------if");
+                            $scope.showCheckInData = true;
+                            $scope.hideCheckInData = false;
+                            // $scope.CheckIn = false;
+                            $scope.CheckInOne = false;
+                            $scope.checkinDateOne = false;
+                            $scope.patient = response.data[0];
+                        } else if (response.data.length <= 2) {
+                            console.log("----------------else if");
+                            $scope.showCheckInData = true;
+                            $scope.checkInDisable = true;
+                            $scope.hideCheckInData = true;
+                            $scope.checkinDate = true;
+                            $scope.CheckIn = false;
+                            $scope.CheckInOne = false;
+                            $scope.checkinDateOne = false;
+                            $scope.patient = response.data[0];
+                            $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                        }
 
                     }
-                }
-                // else
-                // {
-                //     $scope.showCheckInData=false;
-                // }
-            });
 
-
+                    // } else {
+                    //     $scope.showCheckInData = true;
+                    // }
+                });
+            }
         }
-///////////////get the privious date////////////
-    $scope.myClick = function() {
-        // $scope.checkInDataGet();
+        ///////////////get the privious date////////////
+    $scope.myClick = function(id) {
+        $scope.id = userData._id;
+        console.log("$scope.id", $scope.id);
         var date = $scope.findPatientCheckIn.checkin_date;
         console.log(date);
         var d = new Date(date);
-        console.log("*************",d);
-        // console.log(d.getMonth());
-        d.setDate(d.getDate() - 1);
-        console.log("************8",d);
-        // console.log(d.getMonth());
-         var formatdate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
-          console.log("**************",formatdate);
-         // d = formatdate;
+        console.log(d.getDate());
+        (d.getDate() - 1);
+        var formatdate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
+        console.log(formatdate);
         document.write('<br>1 days ago was: ' + d.toLocaleString());
-
-        $scope.findPatientCheckIn.checkin_date=d;
-        console.log("********************",$scope.findPatientCheckIn.checkin_date);
-        // $state.go('tabs.checkIn');
+        $scope.findPatientCheckIn.checkin_date = d;
         // $scope.checkInDataGet();
+
     }
 
 
@@ -1069,6 +1078,7 @@ angular.module('sleepapp_patient.controllers', [])
                     $scope.alreadySubmiited = CHECK_IN_MESSAGE;
                 } else {
                     $scope.showCheckInData = true;
+                    CheckIn
                     $scope.hideCheckInData = false;
                 }
             } else {
@@ -1094,7 +1104,7 @@ angular.module('sleepapp_patient.controllers', [])
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
-        //console.log("check in data = ", inputJsonData); return;
+        console.log("check in data = ", inputJsonData);
         // Save check in on daily basis
         CheckInService.saveCheckIn(inputJsonData).success(function(response) {
             $ionicLoading.hide();
@@ -1106,8 +1116,10 @@ angular.module('sleepapp_patient.controllers', [])
                     template: CHECK_IN_SUCCESS,
                 });
                 alertPopup.then(function(res) {
-                    $scope.showCheckInData = false;
+                    $scope.showCheckInData = true;
                     $scope.hideCheckInData = true;
+                    $scope.checkInDisable = true;
+                    $scope.CheckIn = false;
                     $scope.alreadySubmiited = CHECK_IN_MESSAGE;
                 });
             } else {
@@ -1139,12 +1151,17 @@ angular.module('sleepapp_patient.controllers', [])
      * setTime function to set time for fields on CHECK IN screen.
      * developer : GpSingh
      */
+
     $scope.setTime = function(num) {
         var ipObj1 = {
+
             callback: function(val) { //Mandatory
                 if (typeof(val) === 'undefined') {
                     console.log('Time not selected');
                 } else {
+                    if ($scope.patient === undefined) {
+                        $scope.patient = {};
+                    }
                     var selectedTime = new Date(val * 1000);
                     var d = new Date(selectedTime);
                     var d2 = new Date();
@@ -1173,6 +1190,7 @@ angular.module('sleepapp_patient.controllers', [])
                     var timeString = hours + ":" + minutes + " " + ampm;
                     var timeString2 = hours2 + ":" + minutes + " " + ampm2;
                     if (num == 1) {
+
                         $scope.patient.bedtime = timeString;
                     } else if (num == 2) {
                         $scope.patient.wake_up = timeString;
@@ -1191,7 +1209,9 @@ angular.module('sleepapp_patient.controllers', [])
                     } else if (num == 9) {
                         $scope.patient.nap = timeString;
                     }
+
                 }
+                // console.log($scope.patient);
             },
             //inputTime: 50400, //Optional
             format: 12, //Optional
@@ -1325,7 +1345,7 @@ angular.module('sleepapp_patient.controllers', [])
                         }
                     };
                     ///////////////////////////////
-                    $scope.labels1 = [checkin_date];
+                    $scope.labels1 = [];
                     $scope.series1 = ['Sleep Quantity', 'Energy', 'happy'];
                     $scope.data1 = [
                         sq,
@@ -1358,7 +1378,7 @@ angular.module('sleepapp_patient.controllers', [])
                         }
                     };
                     //////////////////////////////////////////////////////////////////////////////////////////
-                    $scope.labels2 = [checkin_date];
+                    $scope.labels2 = [];
                     $scope.series2 = ['sleep enough'];
                     $scope.data2 = [
                         sleep_enough,
