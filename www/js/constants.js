@@ -24,7 +24,7 @@ var JET_LAG_SUCCESS = "Jet Lag  save completely.";
 var JET_LAG_CONFIRM ='Are you sure you want to save jet lag information?.';
 var JET_LAG_COMPLETE ='Are you sure you want to Complete jet lag information?';
 var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is Completed.';
-var NO_CHECK_IN='No  previous Check In available';
+var NO_CHECK_IN='No  previous Check In available. ';
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";
 

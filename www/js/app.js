@@ -109,6 +109,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
   // display tabs at bottom in device
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
+  google.charts.load('current', { 'packages': ['corechart'] });
   $stateProvider
   .state('welcome', {
     cache: false,

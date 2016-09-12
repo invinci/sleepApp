@@ -17,14 +17,11 @@
             <div class="containerWrapper">
                 <div>
                     <div class="row removePadding">
-                        <ion-icon class="ion-chevron-left" ng-click="checkInDataGet(1,newDate)" ng-disabled="noClick"></ion-icon>
-                        <div class="col checkInTitle" ng-show="checkinDate">
-                            <span class="dailytMetricSize">{{findPatientCheckIn.checkin_date}}</span>
-                        </div>
+                        <div class="ion-chevron-left"  ng-click="checkInDataGet(1,newDate)" ng-show="noClick" ></div>
                         <div class="col checkInTitle" ng-show="checkinDateOne">
                             <span class="dailytMetricSize">{{newDate}}</span>
                         </div>
-                        <ion-icon class="ion-chevron-right" ng-click="checkInDataGet(2,newDate)" ng-show="CheckInOne" ></ion-icon>
+                     <div class="ion-chevron-right" ng-click="checkInDataGet(2,newDate)" ng-show="CheckInOne"></div>
                     </div>
                     <div class="card" ng-show="hideCheckInData">
                         <div class="item item-text-wrap">

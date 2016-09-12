@@ -882,7 +882,7 @@ angular.module('sleepapp_patient.controllers', [])
     dataJSON.patient = userData._id;
     $scope.findPatientCheckIn = {};
     $scope.findPatientCheckIn.patient = userData._id;
-    $scope.findPatientCheckIn.checkin_date = date;
+    $scope.newDate = date;
 
     $scope.generalQuestionCheckIn = [{
         "id": 1,
@@ -923,6 +923,18 @@ angular.module('sleepapp_patient.controllers', [])
         "rating": 0
     }];
 
+    $scope.next = function() {
+        $ionicSlideBoxDelegate.next();
+    };
+    $scope.previous = function() {
+        $ionicSlideBoxDelegate.previous();
+    };
+
+    // Called each time the slide changes
+    $scope.slideChanged = function(index) {
+        $scope.slideIndex = index;
+    };
+
     /*
      *Check in Init Function .
      * developer : Shilpa Sharma
@@ -933,120 +945,132 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.CheckIn = true;
     $scope.CheckInOne = false;
     $scope.checkinDate = false;
-    $scope.checkinDateOne = false;
-    $scope.noClick = false;
+    $scope.checkinDateOne = true;
+    $scope.noClick = true;
+    // $scope.CheckInArrowDisable = false;
     $scope.checkInDataGet = function(num, holderDate) {
-            $scope.checkinDate = true;
-            if (num == 1 || num == 2) {
+        $scope.CheckInOne = true;
+        // $scope.CheckInArrowDisable=true;
+        if (num == 1 || num == 2) {
+            var d = new Date(holderDate);
+            if (num == 1) {
                 var d = new Date(holderDate);
-                if (num == 1) {
-                    var d = new Date(holderDate);
-                    var mm = d.getMonth() + 1;
-                    var dd = d.getDate() - 1;
-                } else if (num == 2) {
-                    // console.log("second 2");
-                    var d = new Date(holderDate);
-                    var mm = d.getMonth() + 1;
-                    var dd = d.getDate() + 1;
-                }
-                // console.log("DDDDDDDDDDd",d);
-                var yyyy = d.getFullYear();
-                var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
-                // $scope.newDate = formatdate;
-                var inputJsonData = {};
-                inputJsonData.user_id = userData._id;
-                inputJsonData.checkin_date = formatdate;
-                // console.log("inputJsonData", inputJsonData);
-                CheckInService.findCheckinData(inputJsonData).success(function(response) {
-                     console.log("response", response);
-                    if (response.data.length == 0) {
-                        if (num == 1) {
-                            // console.log("second 1");
-                            $scope.noClick = true;
-                            $scope.checkinDate = false;
-                            $scope.checkinDateOne = true;
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sorry!',
-                                template: NO_CHECK_IN,
-                            });
-                        } else if (num == 2) {
-                            // console.log("second 2");
-                            $scope.noClick = true;
-                            $scope.checkinDate = false;
-                            $scope.checkinDateOne = true;
-                            var alertPopup = $ionicPopup.alert({
-                                title: 'Sorry!',
-                                template: CHECK_IN_MESSAGE,
-                            });
-                            $scope.CheckInOne = false;
-
-                        }
-                    } else if (response.messageId == 200) {
-                        $scope.newDate = formatdate;
-                        if (response.data.length <= 1) {
-                            // console.log("--------------if");
-                            $scope.showCheckInData = true;
-                            $scope.hideCheckInData = false;
-                            $scope.CheckIn=true;
-                            $scope.CheckInOne = false;
-                            $scope.checkinDate = false;
-                            $scope.patient = response.data[0];
-                        } else if (response.data.length <= 2) {
-                            // console.log("----------------else if");
-                            $scope.showCheckInData = true;
-                            $scope.hideCheckInData = true;
-                            $scope.checkInDisable = true;
-                            $scope.CheckIn = false;
-                            $scope.CheckInOne = true;
-                            $scope.checkinDate = false;
-                            $scope.checkinDateOne = true;
-                            $scope.patient = response.data[0];
-                            $scope.alreadySubmiited = CHECK_IN_MESSAGE;
-                        }
-                    }
-                });
-            } else if (num == 0) {
-                var inputJson = {};
-                inputJson.user_id = userData._id;
-                inputJson.checkin_date = date;
-                $scope.newDate = date;
-                CheckInService.findCheckinData(inputJson).success(function(response) {
-                     console.log("response", response);
-                    if (response.data.length == 0) {
-                        // console.log("blank data");
-                        $scope.CheckIn = true;
-                    }
-                    if (response.messageId == 200) {
-                        // console.log("count",response.data[0].checkin_count);
-                        if (response.data.length <= 1) {
-                             console.log("--------------if");
-                             // console.log("count",response.data[0].checkin_count);
-                            $scope.showCheckInData = true;
-                            $scope.hideCheckInData = false;
-                            $scope.CheckIn = true;
-                            $scope.CheckInOne = false;
-                            $scope.checkinDateOne = false;
-                            $scope.patient = response.data[0];
-
-                        } else if (response.data.length <= 2) {
-
-                             console.log("----------------else if");
-                             // response.data[0].checkin_count = 2;
-                             // console.log("count",response.data[0].checkin_count);
-                            $scope.showCheckInData = true;
-                            $scope.checkInDisable = true;
-                            $scope.hideCheckInData = true;
-                            $scope.checkinDate = true;
-                            $scope.CheckIn = false;
-                            $scope.CheckInOne = false;
-                            $scope.checkinDateOne = false;
-                            $scope.patient = response.data[0];
-                            $scope.alreadySubmiited = CHECK_IN_MESSAGE;
-                        }
-                    }
-                });
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate() - 1;
+            } else if (num == 2) {
+                // console.log("second 2");
+                var d = new Date(holderDate);
+                var mm = d.getMonth() + 1;
+                var dd = d.getDate() + 1;
             }
+            console.log("DDDDDDDDDDd", d);
+            var yyyy = d.getFullYear();
+            var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
+            // $scope.newDate = formatdate;
+            var inputJsonData = {};
+            inputJsonData.user_id = userData._id;
+            inputJsonData.checkin_date = formatdate;
+            // console.log("inputJsonData", inputJsonData);
+            CheckInService.findCheckinData(inputJsonData).success(function(response) {
+                console.log("response***********************", response);
+                $scope.checkinDateOne = true;
+                if (response.data.length == 0) {
+                    if (num == 1) {
+                        console.log("num", num);
+                        $scope.noClick = false;
+                        $scope.CheckInOne = true;
+                        // $scope.checkinDate = false;
+                        $scope.checkinDateOne = true;
+                        $scope.CheckInArrowDisable = true;
+
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Sorry!',
+                            template: NO_CHECK_IN,
+                            // $scope.noClick = false;
+                        });
+                        // alertPopup.then(function(res) {
+                        //     $scope.noClick = false;
+                        // });
+                        $scope.noClick = false;
+                        // $scope.CheckInArrowDisable=true;
+
+                    } else if (num == 2) {
+                        console.log("second 2");
+                        $scope.noClick = true;
+                        $scope.checkinDateOne = true;
+                        $scope.CheckInOne = false;
+
+                    }
+                } else if (response.messageId == 200) {
+                    $scope.newDate = formatdate;
+                    console.log($scope.newDate);
+                    if (response.data.length <= 1) {
+                        console.log("--------------if one");
+                        $scope.showCheckInData = true;
+                        $scope.hideCheckInData = false;
+                        $scope.CheckIn = true;
+                        $scope.CheckInOne = false;
+                        // $scope.checkinDate = false;
+                        $scope.patient = response.data[0];
+                    } else if (response.data.length <= 2) {
+                        console.log("----------------else if one");
+                        $scope.showCheckInData = true;
+                        $scope.hideCheckInData = true;
+                        $scope.checkInDisable = true;
+                        $scope.CheckIn = false;
+                        $scope.CheckInOne = true;
+                        // $scope.checkinDate = false;
+                        $scope.checkinDateOne = true;
+                        $scope.noClick = true;
+                        $scope.patient = response.data[0];
+                        $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                    }
+                }
+            });
+        } else if (num == 0) {
+            var inputJson = {};
+            inputJson.user_id = userData._id;
+            inputJson.checkin_date = $scope.newDate;
+            console.log("**********************", inputJson.checkin_date);
+            // $scope.newDate = date;
+            CheckInService.findCheckinData(inputJson).success(function(response) {
+                console.log("response", response);
+                if (response.data.length == 0) {
+                    // console.log("blank data");
+                    $scope.CheckIn = true;
+                }
+                if (response.messageId == 200) {
+                    $scope.newDate = date;
+                    console.log("scope.newDate", $scope.newDate);
+                    $scope.checkinDateOne = true; // console.log("count",response.data[0].checkin_count);
+                    if (response.data.length <= 1) {
+                        console.log("--------------if two");
+                        // console.log("count",response.data[0].checkin_count);
+                        $scope.showCheckInData = true;
+                        $scope.hideCheckInData = false;
+                        $scope.CheckIn = true;
+                        $scope.CheckInOne = false;
+                        // $scope.checkinDateOne = false;
+                        $scope.patient = response.data[0];
+
+                    } else if (response.data.length <= 2) {
+
+                        console.log("----------------else if two");
+
+                        $scope.showCheckInData = true;
+                        $scope.checkInDisable = true;
+                        $scope.hideCheckInData = true;
+                        // $scope.checkinDate = true;
+                        $scope.CheckIn = false;
+                        $scope.CheckInOne = false;
+                        $scope.checkinDateOne = true;
+                        $scope.patient = response.data[0];
+                        $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                    }
+                }
+            });
         }
+    }
     $scope.getPatientGeneralQuestions = function() {
         CheckInService.listPatientGeneralQuestions(dataJSON).success(function(response) {
             if (response.messageId == 200) {
@@ -1097,7 +1121,7 @@ angular.module('sleepapp_patient.controllers', [])
     var inputJsonData = {};
     /**
      *  function - saveCheckInData : Add CheckIn Data
-     *  developer : GpSingh
+     *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
         $ionicLoading.show({
@@ -1111,33 +1135,44 @@ angular.module('sleepapp_patient.controllers', [])
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
-        inputJsonData.checkin_count= $scope.patient.checkin_count;
+        inputJsonData.checkin_count = $scope.patient.checkin_count;
         console.log("check in data = ", inputJsonData);
-        console.log("**********************",inputJsonData.checkin_count);
-if (inputJsonData.checkin_count == 1) {
-    console.log("**********************",inputJsonData.checkin_count);
-    inputJsonData.checkin_count +=1 ;
+        console.log("**********************", inputJsonData.checkin_count);
+        if (inputJsonData.checkin_count == 1) {
+            console.log("**********************", inputJsonData.checkin_count);
+            inputJsonData.checkin_count += 1;
 
-}
+
+        }
 
         // Save check in on daily basis
         CheckInService.saveCheckIn(inputJsonData).success(function(response) {
             $ionicLoading.hide();
-            console.log("response = ", response.data.length);
+            console.log("response saveeee= ", response.data);
             if (response.messageId == 200) {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Success!',
                     template: CHECK_IN_SUCCESS,
                 });
+             if(response.data.checkin_count <= 2)
+                {
+                    console.log("check in count");
+console.log("response.data.checkin_count",response.data.checkin_count);
+                    $scope.checkIn=false;
+                    console.log("check in count",$scope.checkIn);
+                    $scope.checkInDisable=true;
+                }
+                
                 alertPopup.then(function(res) {
-                    $scope.showCheckInData = true;
-                    $scope.hideCheckInData = true;
-                    $scope.checkInDisable = true;
-                    $scope.CheckIn = false;
+                  
                     $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                    // $state.reload('tabs.jetLag');
                 });
-            } else {
+            }
+                
+                
+             else {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Warning!',
@@ -1146,6 +1181,7 @@ if (inputJsonData.checkin_count == 1) {
                 alertPopup.then(function(res) {});
             }
         });
+        // $state.reload('tabs.checkIn');
     }
 
 
@@ -1265,7 +1301,7 @@ if (inputJsonData.checkin_count == 1) {
         // console.log($scope.patient.checkin_count);
         // console.log(inputJson.checkin_count);
         // return;
-         console.log("inputjson", inputJson);
+        console.log("inputjson", inputJson);
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
             $ionicLoading.hide();
             // console.log("response", response);
@@ -1282,76 +1318,82 @@ if (inputJsonData.checkin_count == 1) {
                     var checkin_date = new Array();
                     console.log(response.data.checkin_date);
                     // response.data.checkin_date;
-                    for (var i = 0; i < response.data.length; i++)
-                     {
-                        if(response.data[i].checkin_count == 2)
-                        {
-                        console.log(response.data[i].checkin_count);
-                        sq.push(response.data[i].sleep_quality);
-                        energy.push(response.data[i].energy);
-                        happy.push(response.data[i].happy);
-                        relaxed.push(response.data[i].relaxed);
-                        alcohol.push(response.data[i].alcohol);
-                        medication.push(response.data[i].medication);
-                        sleep_enough.push(response.data[i].sleep_enough);
-                        // console.log("checkin", response.data[i].checkin_date);
-                        checkin_date.push(response.data[i].checkin_date);
-                    
-}
+                    for (var i = 0; i < response.data.length; i++) {
+                        if (response.data[i].checkin_count == 2) {
+                            console.log(response.data[i].checkin_count);
+                            sq.push(response.data[i].sleep_quality);
+                            energy.push(response.data[i].energy);
+                            happy.push(response.data[i].happy);
+                            relaxed.push(response.data[i].relaxed);
+                            alcohol.push(response.data[i].alcohol);
+                            medication.push(response.data[i].medication);
+                            sleep_enough.push(response.data[i].sleep_enough);
+                            // console.log("checkin", response.data[i].checkin_date);
+                            checkin_date.push(response.data[i].checkin_date);
+
+                        }
                     }
                     console.log("$scope.sleep_quality", sq);
                     console.log("$scope.energy", energy);
-                    console.log("checkin date",checkin_date);
+                    console.log("checkin date", checkin_date);
 
 
 
 
 
 
-                      ////////////////////////////////////////////////////////////////////////////////////////////
-                    google.charts.load('current', { 'packages': ['corechart'] });
+                    ////////////////////////////////////////////////////////////////////////////////////////////
+                    //google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
 
                     function drawChart() {
                         var data = google.visualization.arrayToDataTable([
-                       ['Date','Happy','Relaxed','Sleep enough'],
-                            [checkin_date[0],happy[0], relaxed[0],sleep_enough[0]],
-                            [checkin_date[1],happy[1], relaxed[1],sleep_enough[1]],
-                            [checkin_date[2],happy[2], relaxed[2],sleep_enough[2]],
-                            [checkin_date[3],happy[3], relaxed[3],sleep_enough[3]]
+                            ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
+                            [checkin_date[0], happy[0], relaxed[0], sleep_enough[0]],
+                            [checkin_date[1], happy[1], relaxed[1], sleep_enough[1]],
+                            [checkin_date[2], happy[2], relaxed[2], sleep_enough[2]],
+                            [checkin_date[3], happy[3], relaxed[3], sleep_enough[3]],
+                            [checkin_date[4], happy[4], relaxed[4], sleep_enough[4]]
                         ]);
 
                         var options = {
                             title: 'Sleep Quality',
+                            legend: { position: 'bottom' },
                             curveType: 'function',
-                            legend: { position: 'bottom' }
+                            width: 275,
+                            chartArea: { left: 0, right: 10 },
+                            height: 200,
+
+
+
                         };
 
                         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
 
                         chart.draw(data, options);
                     }
+
                     //////////////////////////////////////////////////////////////////////
-                    // google.charts.load("current", { packages: ["line"] });
                     google.charts.setOnLoadCallback(drawChart1);
 
                     function drawChart1() {
                         var data = google.visualization.arrayToDataTable([
-                             ['Date','energy','sleep quality'],
-                            [checkin_date[0],sq[0], energy[0]],
-                            [checkin_date[1],sq[1], energy[1]],
-                            [checkin_date[2],sq[2], energy[2]],
-                            [checkin_date[3],sq[3], energy[3]]
+                            ['Date', 'energy', 'sleep quality'],
+                            [checkin_date[0], sq[0], energy[0]],
+                            [checkin_date[1], sq[1], energy[1]],
+                            [checkin_date[2], sq[2], energy[2]],
+                            [checkin_date[3], sq[3], energy[3]]
                         ]);
-
                         var options = {
-                            title: 'Sleep as input',
+                            title: 'Sleep as Input',
                             curveType: 'function',
+                            width: 275,
+                            chartArea: { left: 0, right: 10 },
+                            height: 200,
                             legend: { position: 'bottom' }
                         };
 
-                         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                        // var chart = new google.charts.Line(document.getElementById('chart_div'));
+                        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
                         chart.draw(data, options);
                     }
                     ////////////////////////////////////////////////////////////
@@ -1395,9 +1437,9 @@ if (inputJsonData.checkin_count == 1) {
                         medication
                     ];
                     // console.log("data", $scope.data)
-                        // $scope.onClick = function(points, evt) {
-                        //     console.log(points, evt);
-                        // };
+                    // $scope.onClick = function(points, evt) {
+                    //     console.log(points, evt);
+                    // };
                     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
                     // var data=$scope.data=response.data;
                     $scope.options = {
@@ -1428,9 +1470,9 @@ if (inputJsonData.checkin_count == 1) {
 
                     ];
                     // console.log("data", $scope.data1)
-                        // $scope.onClick1 = function(points1, evt1) {
-                        //     console.log(points1, evt1);
-                        // };
+                    // $scope.onClick1 = function(points1, evt1) {
+                    //     console.log(points1, evt1);
+                    // };
                     $scope.datasetOverride1 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
                     // var data=$scope.data=response.data;
                     $scope.options1 = {
