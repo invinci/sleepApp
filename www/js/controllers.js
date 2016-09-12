@@ -947,7 +947,7 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.checkinDate = false;
     $scope.checkinDateOne = true;
     $scope.noClick = true;
-    // $scope.CheckInArrowDisable = false;
+    $scope.CheckInArrowDisable = false;
     $scope.checkInDataGet = function(num, holderDate) {
         $scope.CheckInOne = true;
         // $scope.CheckInArrowDisable=true;
@@ -972,7 +972,7 @@ angular.module('sleepapp_patient.controllers', [])
             inputJsonData.checkin_date = formatdate;
             // console.log("inputJsonData", inputJsonData);
             CheckInService.findCheckinData(inputJsonData).success(function(response) {
-                console.log("response***********************", response);
+                console.log("response", response);
                 $scope.checkinDateOne = true;
                 if (response.data.length == 0) {
                     if (num == 1) {
@@ -1071,6 +1071,10 @@ angular.module('sleepapp_patient.controllers', [])
             });
         }
     }
+
+
+
+
     $scope.getPatientGeneralQuestions = function() {
         CheckInService.listPatientGeneralQuestions(dataJSON).success(function(response) {
             if (response.messageId == 200) {
@@ -1330,16 +1334,40 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                             sleep_enough.push(response.data[i].sleep_enough);
                             // console.log("checkin", response.data[i].checkin_date);
                             checkin_date.push(response.data[i].checkin_date);
-
                         }
                     }
-                    console.log("$scope.sleep_quality", sq);
-                    console.log("$scope.energy", energy);
-                    console.log("checkin date", checkin_date);
+                    // console.log("$scope.sleep_quality", sq);
+                    // console.log("$scope.energy", energy);
+                    // console.log("checkin date", checkin_date);
 
+   var dataCharts = new Array();
+   var dataCharts2 = new Array();
+    var dataCharts3 = new Array();
 
+for(var j=0;j< checkin_date.length;j++)
+{
+     var dataCharts = new Array();
+dataCharts.push(checkin_date[j]);
+// console.log("data",dataCharts);
+dataCharts.push(happy[j]);
+// console.log("data",dataCharts);
+dataCharts.push(relaxed[j]);
+// console.log("data",dataCharts);
+dataCharts.push(sleep_enough[j]);
+// dataCharts.push(checkin_date[j]);
+    dataCharts2[j] = dataCharts;
+    // dataCharts3.j  = dataCharts2;
 
+}
+ console.log("data",dataCharts2);
 
+ var dataCharts3 = new Array();
+for(var k=0; j< dataCharts2;k++){
+    dataCharts3.push(dataCharts2[k]);
+    
+}
+console.log(console.log(dataCharts3));
+// return false;
 
 
                     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -1348,7 +1376,8 @@ console.log("response.data.checkin_count",response.data.checkin_count);
 
                     function drawChart() {
                         var data = google.visualization.arrayToDataTable([
-                            ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
+                             ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
+                         // [dataCharts3[0]]
                             [checkin_date[0], happy[0], relaxed[0], sleep_enough[0]],
                             [checkin_date[1], happy[1], relaxed[1], sleep_enough[1]],
                             [checkin_date[2], happy[2], relaxed[2], sleep_enough[2]],
@@ -1360,8 +1389,7 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                             title: 'Sleep Quality',
                             legend: { position: 'bottom' },
                             curveType: 'function',
-                            width: 275,
-                            chartArea: { left: 0, right: 10 },
+                            chartArea: { left: 0, right: 10 ,width: '100%'},
                             height: 200,
 
 
@@ -1372,6 +1400,8 @@ console.log("response.data.checkin_count",response.data.checkin_count);
 
                         chart.draw(data, options);
                     }
+
+                    // return false;
 
                     //////////////////////////////////////////////////////////////////////
                     google.charts.setOnLoadCallback(drawChart1);
@@ -1387,8 +1417,7 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                         var options = {
                             title: 'Sleep as Input',
                             curveType: 'function',
-                            width: 275,
-                            chartArea: { left: 0, right: 10 },
+                            chartArea: { left: 0, right: 10,width:'100%'},
                             height: 200,
                             legend: { position: 'bottom' }
                         };
@@ -1436,10 +1465,7 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                         alcohol,
                         medication
                     ];
-                    // console.log("data", $scope.data)
-                    // $scope.onClick = function(points, evt) {
-                    //     console.log(points, evt);
-                    // };
+
                     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
                     // var data=$scope.data=response.data;
                     $scope.options = {
@@ -1501,7 +1527,7 @@ console.log("response.data.checkin_count",response.data.checkin_count);
 
 
                     ];
-                    console.log("data", $scope.data1);
+                    // console.log("data", $scope.data1);
                     $scope.datasetOverride2 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
                     // var data=$scope.data=response.data;
                     $scope.options2 = {
