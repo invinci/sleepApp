@@ -2137,11 +2137,12 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                     console.log("Error.");
                 }
             })
-        }
-        /*
-         * save the jet lag calculator controller.
-         * developer : Shilpa Sharma
-         */
+    }
+        
+    /*
+     * save the jet lag calculator controller.
+     * developer : Shilpa Sharma
+     */
     inputJsonData.jetLag = {};
     inputJsonData.jet_lags = [];
     $scope.is_save = true;
@@ -2169,7 +2170,7 @@ console.log("response.data.checkin_count",response.data.checkin_count);
             }
             $ionicLoading.hide();
             var confirmPopup = $ionicPopup.confirm({
-                title: 'confirm',
+                title: 'Confirm',
                 template: JET_LAG_CONFIRM,
             });
             confirmPopup.then(function(res) {
