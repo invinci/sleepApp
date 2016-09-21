@@ -17,13 +17,13 @@
             <div class="containerWrapper">
                 <div>
                     <div class="row removePadding">
-                        <div class="ion-chevron-left"  ng-click="checkInDataGet(1,newDate)" ng-show="noClick" ></div>
+                        <div class="ion-chevron-left"  ng-click="checkInDataGet(1,newDate)" ng-show="CheckInPrevious" ></div>
                         <div class="col checkInTitle" ng-show="checkinDateOne">
                             <span class="dailytMetricSize">{{newDate}}</span>
                         </div>
-                     <div class="ion-chevron-right" ng-click="checkInDataGet(2,newDate)" ng-show="CheckInOne"></div>
+                     <div class="ion-chevron-right" ng-click="checkInDataGet(2,newDate)" ng-show="CheckInNext"></div>
                     </div>
-                    <div class="card" ng-show="hideCheckInData">
+                    <div class="card" ng-show="isAlreadySubmitted">
                         <div class="item item-text-wrap">
                             <p>{{alreadySubmiited}}</p>
                         </div>
@@ -178,13 +178,13 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="03" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" ng-disabled="checkInDisable"/><br/>
+                      <input type="number" placeholder="00" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" ng-disabled="checkInDisable"/><br/>
                     </span>
                                 <span class="rateSpan">
-                      <input type="number" placeholder="03" ng-model="patient.caffeine2" class="reminderTime borderBottom" name="caffeine2" ng-disabled="checkInDisable" /><br/>
+                      <input type="number" placeholder="00" ng-model="patient.caffeine2" class="reminderTime borderBottom" name="caffeine2" ng-disabled="checkInDisable" /><br/>
                     </span>
                                 <span class="rateSpan">
-                      <input type="number" placeholder="03" ng-model="patient.caffeine3" class="reminderTime borderBottom" name="caffeine3" ng-disabled="checkInDisable"/>
+                      <input type="number" placeholder="00" ng-model="patient.caffeine3" class="reminderTime borderBottom" name="caffeine3" ng-disabled="checkInDisable"/>
                     </span>
                             </div>
                         </div>
@@ -194,7 +194,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="01" ng-model="patient.medication" class="reminderTime borderBottom" name="medication" ng-disabled="checkInDisable" />
+                      <input type="number" placeholder="00" ng-model="patient.medication" class="reminderTime borderBottom" name="medication" ng-disabled="checkInDisable" />
                     </span>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="01" ng-model="patient.alcohol" class="reminderTime borderBottom" name="alcohol" ng-disabled="checkInDisable" />
+                      <input type="number" placeholder="00" ng-model="patient.alcohol" class="reminderTime borderBottom" name="alcohol" ng-disabled="checkInDisable" />
                     </span>
                             </div>
                         </div>
