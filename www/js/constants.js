@@ -23,7 +23,7 @@ var CHECK_IN_SAVE		= "Check in data has been submitted.";
 var CHECK_IN_UPDATE		= "Check in data has been updated.";
 var CHECK_IN_ERROR		= "Unable to update check in data.";
 var CHECK_IN_MESSAGE	= "You have already submitted your check-ins for today.";
-var NO_CHECK_IN			= "No Check-in data available. ";
+var NO_CHECK_IN			= "No check-in data available for this date.";
 
 // jet lag messages
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";

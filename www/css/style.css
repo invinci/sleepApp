@@ -422,6 +422,7 @@ h4{
 	margin: 0px !important;
 	margin-top: 10px !important;
 	border-radius: 0px !important;
+	text-align: center;
 }
 .card .item{
 	padding: 5px !important;
@@ -636,4 +637,5 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .itemText{ font-size:14px; color: #CD5C5C !important;}
 .chartSecond{padding-top:2px !important;}
 .alignCenter{text-align:center;}
-
+.msgBox{border: 0px solid #3C1E69;background-color: #ebe8f0;padding: 10px 3px;}
+.msgBox p{color: #3C1E69 !important;}
