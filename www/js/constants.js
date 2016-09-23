@@ -19,11 +19,14 @@ var ASSESSMENT_SUBMITTED_MESSAGE = "You have already submitted your assessment."
 var NO_ASSESSMENT_MESSAGE = "No assessments available right now for you.";
 
 // check in messages
-var CHECK_IN_SAVE		= "Check in data has been submitted.";
-var CHECK_IN_UPDATE		= "Check in data has been updated.";
-var CHECK_IN_ERROR		= "Unable to update check in data.";
-var CHECK_IN_MESSAGE	= "You have already submitted your check-ins for today.";
-var NO_CHECK_IN			= "No check-in data available for this date.";
+var CHECK_IN_SAVE				= "Check in data has been submitted.";
+var CHECK_IN_UPDATE				= "Check in data has been updated.";
+var CHECK_IN_ERROR				= "Unable to update check in data.";
+var CHECK_IN_MESSAGE			= "You have submitted your allowed number(2) of check-ins for today.";
+var NO_CHECK_IN					= "No check-in data available for this date.";
+var ONE_CHECK_IN_MESSAGE		= "You have submitted 1(2) check-ins for today.";
+var PREV_ONE_CHECK_IN_MESSAGE	= "You have submitted 1(2) check-ins for today. Check-ins cannot be submitted for previous days.";
+var PREV_ALL_CHECK_IN_MESSAGE	= "You have submitted your allowed number(2) of check-ins for today. Check-ins cannot be submitted for previous days.";
 
 // jet lag messages
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";

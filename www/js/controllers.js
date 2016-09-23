@@ -993,56 +993,51 @@ angular.module('sleepapp_patient.controllers', [])
             CheckInService.findCheckinData(inputJsonData).success(function(response) {
                 $scope.checkinDateOne = true;
                 hideLoader();
-                /* if not data is available for check-in*/
-                if (response.data.length == 0) {
-                    if(formatdate==$scope.todayDate){
+                if (response.messageId == 200) {
+                    if(formatdate == $scope.todayDate){
                         console.log(">>> it's today.");
                         $scope.CheckIn = true;
                         $scope.isMessage = false;
                         $scope.isDataAvailable = true;
                         $scope.CheckInNext = false;
+                        $scope.checkInDisable = false;
                         showTodayCheckIns(response);
                     }else{
-                        $scope.patient = '';
-                        $scope.isMessage = true;
-                        $scope.boxMessageText = NO_CHECK_IN;
-                        $scope.checkInDisable = true;
-                        $scope.isDataAvailable = false;
-                        //var alertPopup = $ionicPopup.alert({
-                        //    title: 'Sorry!',
-                        //    template: NO_CHECK_IN,
-                        //});
-                    }
-                } else if (response.messageId == 200) {
-                    $scope.newDate = formatdate;
-                    console.log($scope.newDate);
-                    $scope.isDataAvailable = true;
-                    if (response.data.length <= 1) {
-                        console.log("--------------if one");
-                        $scope.showCheckInData = true;
-                        $scope.CheckIn = true;
-                        $scope.CheckInOne = false;
-                        $scope.patient = response.data[0];
-                    } else if (response.data.length <= 2) {
-                        console.log("----------------else if one");
-                        $scope.showCheckInData = true;
-                        $scope.isMessage = true;
-                        $scope.checkInDisable = true;
-                        $scope.CheckIn = false;
-                        $scope.CheckInOne = true;
-                        $scope.checkinDateOne = true;
-                        $scope.patient = response.data[0];
-                        $scope.boxMessageText = CHECK_IN_MESSAGE;
+                        /* if not data is available for check-in */
+                        if (response.data.length == 0) {
+                            $scope.patient = {};
+                            $scope.isMessage = true;
+                            $scope.boxMessageText = NO_CHECK_IN;
+                            $scope.checkInDisable = true;
+                            $scope.isDataAvailable = false;
+                        } else {
+                            $scope.newDate = formatdate;
+                            $scope.isDataAvailable = true;
+                            $scope.patient = response.data[0];
+                            $scope.showCheckInData = true;
+                            $scope.CheckIn = false;
+                            $scope.isMessage = true;
+                            $scope.checkInDisable = true;
+                            if (response.data.length == 1) {
+                                console.log("-- not today, but 1");
+                                $scope.boxMessageText = PREV_ONE_CHECK_IN_MESSAGE;
+                            } else if (response.data.length == 2) {
+                                console.log("-- not today, but 2");
+                                $scope.boxMessageText = PREV_ALL_CHECK_IN_MESSAGE;
+                            }
+                        }
                     }
                 }
+                
+                
             });
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
             inputJson.checkin_date = $scope.newDate;
-        console.log('inputJson = ', inputJson);
+            //console.log('inputJson = ', inputJson);
             CheckInService.findCheckinData(inputJson).success(function(response) {
-        console.log("findCheckinData... ", response);
+            console.log("findCheckinData... ", response);
                 if (response.messageId == 200) {
                     showTodayCheckIns(response);
                 }
@@ -1064,12 +1059,15 @@ angular.module('sleepapp_patient.controllers', [])
         console.log("response.data.length = ", response.data.length);
         if (response.data.length == 0) {
             $scope.CheckIn = true;
+            $scope.patient = {};
         }else if (response.data.length == 1) {
             console.log("in 1");
             $scope.isMessage = false;
             $scope.CheckIn = true;
             $scope.CheckInOne = false;
             $scope.patient = response.data[0];
+            $scope.isMessage = true;
+            $scope.boxMessageText = ONE_CHECK_IN_MESSAGE;
         } else if (response.data.length == 2) {
             console.log("in 2");
             $scope.checkInDisable = true;
@@ -1197,7 +1195,6 @@ angular.module('sleepapp_patient.controllers', [])
      * setTime function to set time for fields on CHECK IN screen.
      * developer : GpSingh
      */
-
     $scope.setTime = function(num) {
         var ipObj1 = {
 
@@ -1236,7 +1233,10 @@ angular.module('sleepapp_patient.controllers', [])
                     var timeString = hours + ":" + minutes + " " + ampm;
                     var timeString2 = hours2 + ":" + minutes + " " + ampm2;
                     if (num == 1) {
+                        console.log('in num 1');
                         $scope.patient.bedtime = timeString;
+                        console.log('timeString = ', timeString);
+                        console.log('$scope.patient.bedtime = ', $scope.patient.bedtime);
                     } else if (num == 2) {
                         $scope.patient.wake_up = timeString;
                     } else if (num == 3) {
@@ -1254,7 +1254,6 @@ angular.module('sleepapp_patient.controllers', [])
                     } else if (num == 9) {
                         $scope.patient.nap = timeString;
                     }
-
                 }
                 // console.log($scope.patient);
             },
