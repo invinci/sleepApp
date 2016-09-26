@@ -639,3 +639,5 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .alignCenter{text-align:center;}
 .msgBox{border: 0px solid #3C1E69;background-color: #ebe8f0;padding: 10px 3px;}
 .msgBox p{color: #3C1E69 !important;}
+.timezoneDropdown{width: 100%; min-height: 40px;background: transparent;color: #999;border-color: #ccc;}
+.tz-row, .tz-col{padding: 0px !important;}

@@ -1765,8 +1765,32 @@ angular.module('sleepapp_patient.controllers', [])
  *jet lag calculator controller .
  * developer : Shilpa Sharma
  */
-.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state) {
-
+.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state, $http) {
+    
+    $scope.timezones = {};
+    $scope.timezones = [
+            {"key":"-12", "value":"-12"},
+            {"key":"-10", "value":"-10"},
+            {"key":"-8", "value":"-8"},
+            {"key":"-6", "value":"-6"},
+            {"key":"-4", "value":"-4"},
+            {"key":"-2", "value":"-2"},
+            {"key":"0", "value":"0"},
+            {"key":"+2", "value":"2"},
+            {"key":"+4", "value":"4"},
+            {"key":"+6", "value":"6"},
+            {"key":"+8", "value":"8"},
+            {"key":"+10", "value":"10"},
+            {"key":"+12", "value":"12"}
+    ];
+    $scope.ifJetLagFilled = false;
+    /*
+    $http.get('json/timezones-even.json').success(function(data) {
+        //console.log('timezones = ', data);
+        $scope.timezones = data;
+    });
+    */
+    
     var userData = JSON.parse(window.localStorage['USER_DATA']);
     $scope.jetLag = {};
     var ipObj1 = {
@@ -1824,19 +1848,16 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : Shilpa Sharma
      */
     $scope.calculateJetLag = function() {
-
+        console.log("$scope.jetLag = ", $scope.jetLag);
+        //console.log("$scope.jetLag time_difference = ", $scope.jetLag.time_difference;
         if ((typeof $scope.jetLag.time_difference !== "undefined") && (typeof $scope.jetLag.travel_date !== "undefined")) {
 
-            var glasses_time;
-            var wakeup;
-            var bedtime;
-            var time_difference;
+            var glasses_time, wakeup, bedtime, time_difference;
             var travel_date = [];
             var timeCalculate = [];
             $scope.Math = window.Math;
             var userData = JSON.parse(window.localStorage['USER_DATA']);
             glasses_time = userData.wear_glasses_time;
-            // var glassesStr = glasses_time;
             console.log("glasses_time**************", glasses_time);
             wakeup = userData.planned_wakeup;
             bedtime = userData.planned_bedtime;
@@ -2084,6 +2105,7 @@ angular.module('sleepapp_patient.controllers', [])
                     $scope.jetLag.time[i] = "";
                 }
             }
+            $scope.ifJetLagFilled = true;
         } else {
             for (var i = 0; i < 6; i++) {
                 $scope.jetLag.day[i] = "";
@@ -2091,6 +2113,7 @@ angular.module('sleepapp_patient.controllers', [])
                 $scope.jetLag.bedtime[i] = "";
                 $scope.jetLag.time[i] = "";
             }
+            $scope.ifJetLagFilled = false;
         }
     }
 

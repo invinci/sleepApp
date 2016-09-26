@@ -1,4 +1,3 @@
- <!-- <script src="js/loader.js"></script> -->
 <ion-view title="jet lag" ng-init="getJetLagData()">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Jet Lag</h1>
@@ -14,27 +13,40 @@
                 </label>
                 <div class="form-error" ng-show="jetLagForm.travel_date.$error.required && jetLagForm.travel_date.$dirty">Travel Date is required.</div>
                 <!--Time Diffference-->
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Time Diffference</span>
-                    <input type="text" placeholder="Time difference" name="time_difference" ng-model="jetLag.time_difference" ng-Change="calculateJetLag()" required  ng-disabled="formDisable" />
-                </label>
+                <!--<label class="item item-input item-floating-label">-->
+                    <!--<span class="input-label">Time Diffference</span>-->
+                    <!--<input type="text" placeholder="Time difference" name="time_difference" ng-model="jetLag.time_difference" ng-Change="calculateJetLag()" required  ng-disabled="formDisable" />-->
+                <!--</label>-->
+                <div class="row">
+                    <div class="col">&nbsp;</div>
+                </div>
+                <div class="row tz-row">
+                    <div class="col tz-col">
+                        <select ng-model="jetLag.time_difference" ng-Change="calculateJetLag()" class="form-control timezoneDropdown" name="time_difference" id="timezone" required>
+                            <option value="" disabled>Select a timezone difference</option>
+                            <!--<option ng-repeat="tz in timezones" value ="{{tz}}" ng-selected="(tz.text == patient.timezone.text)">{{tz.abbr}} (UTC {{tz.offset}})</option>-->
+                            <option ng-repeat="tz in timezones" value ="{{tz.value}}" ng-selected="">{{tz.key}} </option>
+                        </select>
+                    </div>
+                </div>
                 <div class="form-error" ng-show="jetLagForm.time_difference.$error.required && jetLagForm.time_difference.$dirty">Time Diffference is required.</div>
                 <div class="row">
                     <div class="col">&nbsp;</div>
                 </div>
-                <div class="row noPadding">
+                <label class="note-label">Note : If you are moving to a timezone which is not listed above, you can select the nearest timezone difference.</label>
+                <div class="row noPadding" ng-if="ifJetLagFilled">
                     <div class="col noPadding">
                         <div class="row">
-                            <div class="col col-25">Day</div>
-                            <div class="col col-25">Date</div>
+                            <div class="col col-20">Day</div>
+                            <div class="col">Date</div>
                             <div class="col col-25">Glasses Time</div>
-                            <div class="col col-25">Bedtime</div>
+                            <div class="col col-25">Bed Time</div>
                         </div>
                         <div class="row noPadding" ng-repeat="jetLags in jetLagData">
-                            <div class="col col-25 jetLagdiv">
+                            <div class="col col-20 jetLagdiv">
                                 <input type="text" class="jetLaginput" id="day{{$index + 1}}" ng-model="jetLag.day[$index]" disabled>
                             </div>
-                            <div class="col col-25 jetLagdiv">
+                            <div class="col jetLagdiv">
                                 <input type="text" class="jetLaginput" id="date{{$index+ 1}}" ng-model="jetLag.date[$index]" disabled>
                             </div>
                             <div class="col col-25 jetLagdiv">
@@ -47,22 +59,21 @@
                     </div>
                 </div>
                 <!--Update -->
-                <div class="containerDiv1">
+                <div class="containerDiv1" ng-if="ifJetLagFilled">
                     <div class="button-wrapper">
                         <button class="button button-block complete-button ink" type="submit" ng-click="saveJetLagData()" ng-show="show" ng-model="save">Save</button>
                     </div>
                 </div>
-                 <div class="containerDiv1">
+                <div class="containerDiv1" ng-if="ifJetLagFilled">
                     <div class="button-wrapper">
                         <button class="button button-block complete-button ink" ng-click="resetJetLagData()" ng-show="show">Reset</button>
                     </div>
                 </div>
-                <div class="containerDiv1">
+                <div class="containerDiv1" ng-if="ifJetLagFilled">
                     <div class="button-wrapper">
                         <button class="button button-block complete-button ink" ng-click="updateJetLagData()" ng-show="completeShow">Complete</button>
                     </div>
                 </div>
-        
         </form>
     </ion-content>
 </ion-view>
