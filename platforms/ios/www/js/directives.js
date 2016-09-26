@@ -1,4 +1,4 @@
-angular.module('BH_patient.directives', [])
+angular.module('sleepapp_patient.directives', [])
 
 /* directive to display default image if image url is not available */
 .directive('errSrc', function() {
@@ -17,3 +17,4 @@ angular.module('BH_patient.directives', [])
     }
   }
 })
+
