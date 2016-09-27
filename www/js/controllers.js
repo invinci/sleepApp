@@ -1775,7 +1775,7 @@ angular.module('sleepapp_patient.controllers', [])
             {"key":"-6", "value":"-6"},
             {"key":"-4", "value":"-4"},
             {"key":"-2", "value":"-2"},
-            {"key":"0", "value":"0"},
+            //{"key":"0", "value":"0"},
             {"key":"+2", "value":"2"},
             {"key":"+4", "value":"4"},
             {"key":"+6", "value":"6"},
@@ -1819,23 +1819,14 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.openDatePicker = function() {
         ionicDatePicker.openDatePicker(ipObj1);
-        $scope.calculateJetLag();
+        //$scope.calculateJetLag();
     };
-
-    $scope.jetLagData = [{
-        "id": "1"
-    }, {
-        "id": "2"
-    }, {
-        "id": "3"
-    }, {
-        "id": "4"
-    }, {
-        "id": "5"
-    }, {
-        "id": "6"
-    }]
-
+    
+    $scope.$watch('jetLag.travel_date', function(newValue, oldValue){
+        console.log('vals = ', newValue, oldValue);
+        if(newValue != oldValue)
+            $scope.calculateJetLag();
+    });
 
     var inputJsonData = {};
     $scope.jetLag = {};
@@ -1849,261 +1840,54 @@ angular.module('sleepapp_patient.controllers', [])
      */
     $scope.calculateJetLag = function() {
         console.log("$scope.jetLag = ", $scope.jetLag);
-        //console.log("$scope.jetLag time_difference = ", $scope.jetLag.time_difference;
         if ((typeof $scope.jetLag.time_difference !== "undefined") && (typeof $scope.jetLag.travel_date !== "undefined")) {
-
+            var td = parseInt($scope.jetLag.time_difference);
             var glasses_time, wakeup, bedtime, time_difference;
             var travel_date = [];
             var timeCalculate = [];
             $scope.Math = window.Math;
             var userData = JSON.parse(window.localStorage['USER_DATA']);
             glasses_time = userData.wear_glasses_time;
-            console.log("glasses_time**************", glasses_time);
             wakeup = userData.planned_wakeup;
             bedtime = userData.planned_bedtime;
+
             var timeDiffCalculate = {};
             var travelDateCal = {};
             travelDateCal.travel_date = $scope.jetLag.travel_date;
             var get_date = travelDateCal.travel_date;
             var d = new Date(get_date);
             var d1 = new Date(get_date);
-            var hoursUpdated = "null";
-            var updatedGlasses = "null";
+            
             timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
             timeCalculate = (timeDiffCalculate.time_difference) / 2;
-            // (timeCalculate);
-            // var newTimeCalculate = Math.abs(timeCalculate);
-            var newTimeCalculate = Math.floor(timeCalculate);
-            console.log("newTimeCalculate1", newTimeCalculate);
+            var newTimeCalculate = Math.abs(timeCalculate);
+            $scope.jetLagData = [];
+            for(var z=0;z<newTimeCalculate;z++){
+                $scope.jetLagData.push({'id':z});
+            }
 
-            var numberOfDaysToAdd = 0;
-            if (newTimeCalculate > 0) {
-                var timeStr = '';
-                var timeStr2 = '';
-                var glassesStr = '';
-                glassesStr = glasses_time;
-
-                // timeStr = bedtime;
-                timeStr = bedtime;
-                console.log("bedtime", timeStr);
-                timeStr2 = timeStr;
-                glassesStr2 = glassesStr;
-
-                /*Get Twenty hours format starts here*/
-                var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
-                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
-                var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
-
-                if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
-                    gethours = gethours + 12;
-                } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
-                    gethours = gethours - 12;
-                }
-
-                var sHours = gethours.toString();
-                // var sMinutes = getminutes.toString();
-                if (gethours < 10) {
-                    sHours = "0" + sHours;
-                }
-                var t24hoursFormat = sHours;
-                // console.log("t24hoursFormat",t24hoursFormat);
-                var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
-                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
-                var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
-
-                if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
-                    gethours1 = gethours1 + 12;
-                } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
-                    gethours1 = gethours1 - 12;
-                }
-                var sHours1 = gethours1.toString();
-                // var sMinutes = getmint24hoursFormatutes.toString();
-
-                if (gethours1 < 10) {
-                    sHours1 = "0" + sHours1;
-                }
-                var t24hoursFormat1 = sHours1;
-                console.log("t24hoursFormat", t24hoursFormat1);
-                /*Get Twenty hours format ends here*/
-                console.log("bed time", timeStr);
-                for (var i = 0; i < newTimeCalculate; i++) {
-                    $scope.jetLag.day[i] = i + 1;
-                    // newTimeCalculate =Math.floor(timeCalculate);
-                    d1.setDate(d.getDate() + numberOfDaysToAdd);
-                    var dd = d1.getDate();
-                    var mm = d1.getMonth() + 1;
-                    var y = d1.getFullYear();
-                    var someFormattedDate = (mm + '/' + dd + '/' + y);
-                    $scope.jetLag.date[i] = someFormattedDate;
-                    ++numberOfDaysToAdd;
-                    ///////set the bed time////////////////////////
-                    if (hoursUpdated == "null") { // if bedtime
-                        // console.log("this is a test");
-                        var parts = timeStr.split(':');
-                        // console.log("parts", parts);
-                        var hours = parseInt(parts[0]);
-                        // if()
-                        hours -= 2;
-                        t24hoursFormat -= 2;
-                        // console.log("hours1", hours);
-                        if (hours <= 0) {
-                            // easily flip it by adding 12
-                            hours += 12;
-                            // t24hoursFormat += 12;
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("first if part");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    // console.log("first else part");
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        // alert(t24hoursFormat);
-                        if (t24hoursFormat < 12 && t24hoursFormat > 0) {
-                            // alert("in test");
-                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                        }
-                        timeStr = hours + ':' + parts[1];
-                        // console.log("timestr", timeStr);
-                        hoursUpdated = hours;
-
-                    } else {
-                        hours -= 2;
-                        t24hoursFormat -= 2;
-
-                        // console.log("else part", hours);
-                        if (hours <= 0) {
-                            // easily flip it by adding 12
-                            hours += 12;
-                            console.log("hours in else part second", hours);
-                            // swap am & pm
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("second if part");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-
-                        } else {
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("second else part");
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                                // keep the case
-                            } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
-                                // alert("am condition");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
-                                // alert("yes");
-                                // noon condition
-                                parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                // alert(parts[1]);
-                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
-                                // alert("no");
-                                //night condition
-                                parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
-
-                            } else if (parts[1].match(/(AM|am)/)) {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        timeStr = hours + ':' + parts[1];
-                        // console.log("second timestr", timeStr);
-                        hoursUpdated = hours;
-                    } //else  bedtime
-
-                    //////////////glasses time////////////
-                    if (updatedGlasses == "null") { //if glasses time
-                        var parts1 = glassesStr.split(':');
-                        var hours1 = parseInt(parts1[0]);
-                        hours1 -= 2;
-                        t24hoursFormat1 -= 2;
-                        if (hours1 <= 0) {
-                            hours1 += 12;
-                            // swap am & pm
-                            if (parts1[1].match(/(AM|am)/)) {
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
-                            // alert("in test");
-                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                        }
-                        glassesStr = hours1 + ':' + parts1[1];
-                        updatedGlasses = hours1;
-
-                    } else { //else glasses time
-                        hours1 -= 2;
-                        t24hoursFormat1 -= 2;
-                        if (hours1 <= 0) {
-                            // easily flip it by adding 12
-                            hours1 += 12;
-                            // swap am & pm
-                            if (parts1[1].match(/(AM|am)/)) {
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        } else {
-
-                            if (parts1[1].match(/(AM|am)/)) {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-
-                            } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
-                                // alert("am condition");
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
-                                // noon condition
-                                parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                // alert(parts[1]);
-
-                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
-                                //night condition
-                                parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
-
-                            } else if (parts1[1].match(/(AM|am)/)) {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        glassesStr = hours1 + ':' + parts1[1];
-                        updatedGlasses = hours1;
-                    }
-
-                    $scope.jetLag.bedtime[i] = timeStr;
-                    $scope.jetLag.time[i] = glassesStr;
-
-
-                } //for
-            } else {
-                for (var i = 0; i < 6; i++) {
-                    $scope.jetLag.day[i] = "";
-                    $scope.jetLag.date[i] = "";
-                    $scope.jetLag.bedtime[i] = "";
-                    $scope.jetLag.time[i] = "";
-                }
+            var jetLagParams = {};
+                jetLagParams.glasses_time       = glasses_time;
+                jetLagParams.wakeup             = wakeup;
+                jetLagParams.bedtime            = bedtime;
+                jetLagParams.newTimeCalculate   = newTimeCalculate;
+                jetLagParams.d                  = d;
+                jetLagParams.d1                 = d1;
+                jetLagParams.hoursUpdated       = "null";
+                jetLagParams.updatedGlasses     = "null";
+                
+            /*
+             *  if (td > 0) // travelling ahead.
+             *  if (td < 0) // travelling behind.
+            */
+            $scope.jetLag.day       = [];
+            $scope.jetLag.date      = [];
+            $scope.jetLag.bedtime   = [];
+            $scope.jetLag.time      = [];
+            if (td > 0) { // travelling ahead
+                getTravelAheadJetLag($scope.jetLag, jetLagParams);
+            } else { // travelling behind
+                getTravelBehindJetLag($scope.jetLag, jetLagParams);
             }
             $scope.ifJetLagFilled = true;
         } else {
@@ -2132,7 +1916,7 @@ angular.module('sleepapp_patient.controllers', [])
             inputJson.is_completed = false;
             // inputJson.is_save=true;
             jetLagService.getJetLagData(inputJson).success(function(response) {
-                // console.log("response", response);
+                //console.log("response", response);
                 if (response.messageId == 200) {
                     if (response.data.length != 0) {
                         $scope.jetLagId = response.data[0]._id;
@@ -2284,8 +2068,385 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : Shilpa Sharma
      */
     $scope.resetJetLagData = function() {
-
         $state.reload('tabs.jetLag');
+    }
+    
+    
+    function getTravelAheadJetLag(jetLag, jetLagParams){
+        glasses_time        = jetLagParams.glasses_time;
+        wakeup              = jetLagParams.wakeup;
+        bedtime             = jetLagParams.bedtime;
+        newTimeCalculate    = jetLagParams.newTimeCalculate;
+        d                   = jetLagParams.d;
+        d1                  = jetLagParams.d1;
+        hoursUpdated        = jetLagParams.hoursUpdated;
+        updatedGlasses      = jetLagParams.updatedGlasses;
+                
+        var timeStr = ''; var timeStr2 = '';
+        var glassesStr = ''; var numberOfDaysToAdd = 0;
+        glassesStr = glasses_time;
+        timeStr = bedtime;
+        timeStr2 = timeStr;
+        glassesStr2 = glassesStr;
 
+        /*Get Twenty hours format starts here*/
+        var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
+            gethours = gethours + 12;
+        } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
+            gethours = gethours - 12;
+        }
+
+        var sHours = gethours.toString();
+        if (gethours < 10) {
+            sHours = "0" + sHours;
+        }
+        var t24hoursFormat = sHours;
+        var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
+            gethours1 = gethours1 + 12;
+        } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
+            gethours1 = gethours1 - 12;
+        }
+        var sHours1 = gethours1.toString();
+        // var sMinutes = getmint24hoursFormatutes.toString();
+
+        if (gethours1 < 10) {
+            sHours1 = "0" + sHours1;
+        }
+        var t24hoursFormat1 = sHours1;
+        /* Get Twenty hours format ends here */
+        console.log("bed time", timeStr);
+        for (var i = 0; i < newTimeCalculate; i++) {
+            $scope.jetLag.day[i] = i + 1;
+            d1.setDate(d.getDate() - numberOfDaysToAdd);
+            var dd = d1.getDate();
+            var mm = d1.getMonth() + 1;
+            var y = d1.getFullYear();
+            var someFormattedDate = (mm + '/' + dd + '/' + y);
+            $scope.jetLag.date[i] = someFormattedDate;
+            ++numberOfDaysToAdd;
+            ///////set the bed time////////////////////////
+            if (hoursUpdated == "null") { // if bedtime
+                var parts = timeStr.split(':');
+                var hours = parseInt(parts[0]);
+                hours -= 2;
+                t24hoursFormat -= 2;
+            
+                if (hours <= 0) {
+                    hours += 12;
+                    // t24hoursFormat += 12;
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                if (t24hoursFormat < 12 && t24hoursFormat > 0) {
+                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } else {
+                hours -= 2;
+                t24hoursFormat -= 2;
+                if (hours <= 0) {
+                    // easily flip it by adding 12
+                    hours += 12;
+                    console.log("hours in else part second", hours);
+                    // swap am & pm
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                } else {
+                    if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } //else  bedtime
+            //////////////glasses time////////////
+            if (updatedGlasses == "null") { //if glasses time
+                var parts1 = glassesStr.split(':');
+                var hours1 = parseInt(parts1[0]);
+                hours1 -= 2;
+                t24hoursFormat1 -= 2;
+                if (hours1 <= 0) {
+                    hours1 += 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
+                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+
+            } else { //else glasses time
+                hours1 -= 2;
+                t24hoursFormat1 -= 2;
+                if (hours1 <= 0) {
+                    // easily flip it by adding 12
+                    hours1 += 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                } else {
+                    if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+            }
+            $scope.jetLag.bedtime[i] = timeStr;
+            $scope.jetLag.time[i] = glassesStr;
+        } //for
+    }
+    
+    function getTravelBehindJetLag(jetLag, jetLagParams){
+        glasses_time        = jetLagParams.glasses_time;
+        wakeup              = jetLagParams.wakeup;
+        bedtime             = jetLagParams.bedtime;
+        newTimeCalculate    = jetLagParams.newTimeCalculate;
+        d                   = jetLagParams.d;
+        d1                  = jetLagParams.d1;
+        hoursUpdated        = jetLagParams.hoursUpdated;
+        updatedGlasses      = jetLagParams.updatedGlasses;
+        
+        var timeStr = ''; var timeStr2 = ''; var glassesStr = ''; var numberOfDaysToAdd = 0;
+        glassesStr = glasses_time;
+        timeStr = bedtime;
+        timeStr2 = timeStr;
+        glassesStr2 = glassesStr;
+
+        /*Get Twenty hours format starts here*/
+        var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
+    //console.log('gethours = ', gethours);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+    //console.log('getAMPM = ', getAMPM);
+        if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
+            gethours = gethours + 12;
+        } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
+            gethours = gethours - 12;
+        }
+    //console.log('gethours new = ', gethours);
+        var sHours = gethours.toString();
+        // var sMinutes = getminutes.toString();
+        if (gethours < 10) {
+            sHours = "0" + sHours;
+        }
+        var t24hoursFormat = parseInt(sHours);
+    //console.log('sHours = ', sHours);
+    //console.log('t24hoursFormat = ', t24hoursFormat);
+        var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
+            gethours1 = gethours1 + 12;
+        } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
+            gethours1 = gethours1 - 12;
+        }
+        var sHours1 = gethours1.toString();
+        // var sMinutes = getmint24hoursFormatutes.toString();
+
+        if (gethours1 < 10) {
+            sHours1 = "0" + sHours1;
+        }
+        var t24hoursFormat1 = sHours1;
+        /* Get Twenty hours format ends here */
+        console.log("bed time====", timeStr);
+        for (var i = 0; i < newTimeCalculate; i++) {
+            $scope.jetLag.day[i] = i + 1;
+            d1.setDate(d.getDate() - numberOfDaysToAdd);
+            var dd = d1.getDate();
+            var mm = d1.getMonth() + 1;
+            var y = d1.getFullYear();
+            var someFormattedDate = (mm + '/' + dd + '/' + y);
+            $scope.jetLag.date[i] = someFormattedDate;
+            ++numberOfDaysToAdd;
+            ///////set the bed time////////////////////////
+        //console.log('hoursUpdated = ', hoursUpdated);
+            if (hoursUpdated == "null") { // if bedtime
+            //console.log('timeStr = ', timeStr);
+                var parts = timeStr.split(':');
+                var hours = parseInt(parts[0]);
+                hours += 2;
+                t24hoursFormat += 2;
+            //console.log('-------hours ', hours, t24hoursFormat); // 13, 25
+                if (hours >= 12) {
+                    hours -= 12;
+                    
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                }
+                //if (t24hoursFormat < 12 && t24hoursFormat > 0) {
+                //    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                //}
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } else {
+                hours += 2;
+                t24hoursFormat += 2;
+                if (hours >= 12) {
+                    hours -= 12;
+                    // swap am & pm
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                } else {
+                    if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                        // keep the case
+                    } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } //else  bedtime
+            
+            //////////////glasses time////////////
+            if (updatedGlasses == "null") { //if glasses time
+                var parts1 = glassesStr.split(':');
+                var hours1 = parseInt(parts1[0]);
+                hours1 += 2;
+                t24hoursFormat1 += 2;
+                if (hours1 >= 12) {
+                    hours1 -= 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                }
+                //if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
+                //    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                //}
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+
+            } else { //else glasses time
+                hours1 += 2;
+                t24hoursFormat1 += 2;
+                if (hours1 >= 12) {
+                    hours1 -= 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                } else {
+                    if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+            }
+            $scope.jetLag.bedtime[i] = timeStr;
+            $scope.jetLag.time[i] = glassesStr;
+        } //for
     }
 });
