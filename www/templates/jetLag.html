@@ -9,7 +9,7 @@
                 <!--Travel Date-->
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Travel Date</span>
-                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date"  ng-click="openDatePicker()"    ng-disabled="formDisable" autofocus  readonly required/>
+                    <input type="text" placeholder="Travel Date" name="travel_date" ng-model="jetLag.travel_date"  ng-click="openDatePicker()" ng-disabled="formDisable" autofocus  readonly required/>
                 </label>
                 <div class="form-error" ng-show="jetLagForm.travel_date.$error.required && jetLagForm.travel_date.$dirty">Travel Date is required.</div>
                 <!--Time Diffference-->
@@ -22,7 +22,7 @@
                 </div>
                 <div class="row tz-row">
                     <div class="col tz-col">
-                        <select ng-model="jetLag.time_difference" ng-Change="calculateJetLag()" class="form-control timezoneDropdown" name="time_difference" id="timezone" required>
+                        <select ng-model="jetLag.time_difference" ng-Change="calculateJetLag()" class="form-control timezoneDropdown" name="time_difference" id="timezone" required ng-disabled="formDisable">
                             <option value="" disabled>Select a timezone difference</option>
                             <!--<option ng-repeat="tz in timezones" value ="{{tz}}" ng-selected="(tz.text == patient.timezone.text)">{{tz.abbr}} (UTC {{tz.offset}})</option>-->
                             <option ng-repeat="tz in timezones" value ="{{tz.value}}" ng-selected="">{{tz.key}} </option>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="containerDiv1" ng-if="ifJetLagFilled">
                     <div class="button-wrapper">
-                        <button class="button button-block complete-button ink" ng-click="resetJetLagData()" ng-show="show">Reset</button>
+                        <button class="button button-block ink" ng-click="resetJetLagData()" ng-show="show">Reset</button>
                     </div>
                 </div>
                 <div class="containerDiv1" ng-if="ifJetLagFilled">

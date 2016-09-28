@@ -2071,7 +2071,6 @@ angular.module('sleepapp_patient.controllers', [])
         $state.reload('tabs.jetLag');
     }
     
-    
     function getTravelAheadJetLag(jetLag, jetLagParams){
         glasses_time        = jetLagParams.glasses_time;
         wakeup              = jetLagParams.wakeup;
@@ -2083,7 +2082,7 @@ angular.module('sleepapp_patient.controllers', [])
         updatedGlasses      = jetLagParams.updatedGlasses;
                 
         var timeStr = ''; var timeStr2 = '';
-        var glassesStr = ''; var numberOfDaysToAdd = 0;
+        var glassesStr = '';
         glassesStr = glasses_time;
         timeStr = bedtime;
         timeStr2 = timeStr;
@@ -2125,13 +2124,19 @@ angular.module('sleepapp_patient.controllers', [])
         console.log("bed time", timeStr);
         for (var i = 0; i < newTimeCalculate; i++) {
             $scope.jetLag.day[i] = i + 1;
-            d1.setDate(d.getDate() - numberOfDaysToAdd);
+            if(i==0){
+                d1.setDate(d.getDate());
+            }else{
+                d1.setDate(d1.getDate() - 1);
+            }
+        
+            //var d2 = new Date(d.getTime() - 86400);
             var dd = d1.getDate();
             var mm = d1.getMonth() + 1;
             var y = d1.getFullYear();
             var someFormattedDate = (mm + '/' + dd + '/' + y);
             $scope.jetLag.date[i] = someFormattedDate;
-            ++numberOfDaysToAdd;
+            
             ///////set the bed time////////////////////////
             if (hoursUpdated == "null") { // if bedtime
                 var parts = timeStr.split(':');
@@ -2270,7 +2275,7 @@ angular.module('sleepapp_patient.controllers', [])
         hoursUpdated        = jetLagParams.hoursUpdated;
         updatedGlasses      = jetLagParams.updatedGlasses;
         
-        var timeStr = ''; var timeStr2 = ''; var glassesStr = ''; var numberOfDaysToAdd = 0;
+        var timeStr = ''; var timeStr2 = ''; var glassesStr = '';
         glassesStr = glasses_time;
         timeStr = bedtime;
         timeStr2 = timeStr;
@@ -2316,13 +2321,18 @@ angular.module('sleepapp_patient.controllers', [])
         console.log("bed time====", timeStr);
         for (var i = 0; i < newTimeCalculate; i++) {
             $scope.jetLag.day[i] = i + 1;
-            d1.setDate(d.getDate() - numberOfDaysToAdd);
+            if(i==0){
+                d1.setDate(d.getDate());
+            }else{
+                d1.setDate(d1.getDate() - 1);
+            }
+            
             var dd = d1.getDate();
             var mm = d1.getMonth() + 1;
             var y = d1.getFullYear();
             var someFormattedDate = (mm + '/' + dd + '/' + y);
             $scope.jetLag.date[i] = someFormattedDate;
-            ++numberOfDaysToAdd;
+            
             ///////set the bed time////////////////////////
         //console.log('hoursUpdated = ', hoursUpdated);
             if (hoursUpdated == "null") { // if bedtime
