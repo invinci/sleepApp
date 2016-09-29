@@ -269,11 +269,11 @@ angular.module('sleepapp_patient.controllers', [])
 
                             } else {
                                 console.log(window.localStorage["NOTIFICATION_SETTING"]);
-                                if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
-                                    $state.go("settings");
-                                } else {
+                                //if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
+                                //    $state.go("settings");
+                                //} else {
                                     $state.go("tabs.checkIn");
-                                }
+                                //}
                             }
                         }
                     });
@@ -1279,6 +1279,8 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.user_name = userData.first_name + " " + userData.last_name;
     // $scope.patient.checkin_count=[];
 
+    $scope.isChartOne = false;
+    $scope.isChartTwo = false;
     $scope.findCheckIndata = function() {
         $ionicLoading.show({
             content: 'Loading',
@@ -1289,17 +1291,12 @@ angular.module('sleepapp_patient.controllers', [])
         });
         var inputJson = {};
         inputJson.user_id = userData._id;
-        // inputJson.checkin_count=$scope.patient.checkin_count;
-        // console.log($scope.patient.checkin_count);
-        // console.log(inputJson.checkin_count);
-        // return;
         console.log("inputjson", inputJson);
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
             $ionicLoading.hide();
-            // console.log("response", response);
+        console.log("response = ", response);
             if (response.messageId == 200) {
-                if (response.data.length != 0) {
-                    // console.log(response.data);
+                if (response.data.length > 0) {
                     var sq = [];
                     var energy = [];
                     var happy = new Array();
@@ -1308,60 +1305,58 @@ angular.module('sleepapp_patient.controllers', [])
                     var medication = new Array();
                     var sleep_enough = new Array();
                     var checkin_date = new Array();
-                    console.log(response.data.checkin_date);
-                    // response.data.checkin_date;
+                    $scope.isChartOne = true;
+                    var drawChartData = [];
+                    drawChartData.push(['Date', 'Happy', 'Relaxed', 'Sleep enough']);
                     for (var i = 0; i < response.data.length; i++) {
-                        if (response.data[i].checkin_count == 2) {
-                            console.log(response.data[i].checkin_count);
+                        var tempArr = [];
+                        console.log(response.data[i].checkin_count);
+                        //if (response.data[i].checkin_count == 2) {
+                            checkin_date.push(response.data[i].checkin_date);
+                            tempArr.push(response.data[i].checkin_date);
+                            happy.push(response.data[i].happy);
+                            tempArr.push(response.data[i].happy);
+                            relaxed.push(response.data[i].relaxed);
+                            tempArr.push(response.data[i].relaxed);
+                            sleep_enough.push(response.data[i].sleep_enough);
+                            tempArr.push(response.data[i].sleep_enough);
                             sq.push(response.data[i].sleep_quality);
                             energy.push(response.data[i].energy);
-                            happy.push(response.data[i].happy);
-                            relaxed.push(response.data[i].relaxed);
                             alcohol.push(response.data[i].alcohol);
                             medication.push(response.data[i].medication);
-                            sleep_enough.push(response.data[i].sleep_enough);
-                            // console.log("checkin", response.data[i].checkin_date);
-                            checkin_date.push(response.data[i].checkin_date);
-
-                        }
+                            
+                        //}
+                        drawChartData.push(tempArr);
                     }
-                    console.log("$scope.sleep_quality", sq);
-                    console.log("$scope.energy", energy);
+                    console.log("sleep_quality", sq);
+                    console.log("energy", energy);
                     console.log("checkin date", checkin_date);
-
-
-
-
-
-
-                    ////////////////////////////////////////////////////////////////////////////////////////////
+                console.log("drawChartData = ", drawChartData);
+                    
                     //google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
 
                     function drawChart() {
-                        var data = google.visualization.arrayToDataTable([
+                        /*var data = google.visualization.arrayToDataTable([
                             ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
                             [checkin_date[0], happy[0], relaxed[0], sleep_enough[0]],
                             [checkin_date[1], happy[1], relaxed[1], sleep_enough[1]],
                             [checkin_date[2], happy[2], relaxed[2], sleep_enough[2]],
                             [checkin_date[3], happy[3], relaxed[3], sleep_enough[3]],
                             [checkin_date[4], happy[4], relaxed[4], sleep_enough[4]]
-                        ]);
+                        ]);*/
+                        var data = google.visualization.arrayToDataTable(drawChartData);
 
                         var options = {
                             title: 'Sleep Quality',
                             legend: { position: 'bottom' },
                             curveType: 'function',
-                            width: 275,
+                            width: '100%',
                             chartArea: { left: 0, right: 10 },
-                            height: 200,
-
-
-
+                            height: '100%',
                         };
 
                         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
                         chart.draw(data, options);
                     }
 
@@ -1440,7 +1435,6 @@ angular.module('sleepapp_patient.controllers', [])
                                 id: 'y-axis-1',
                                 title: "sleep_quality",
                                 type: 'linear',
-
                                 display: true,
                                 position: 'left'
                             }, {
@@ -1459,7 +1453,6 @@ angular.module('sleepapp_patient.controllers', [])
                         sq,
                         energy,
                         happy
-
                     ];
                     // console.log("data", $scope.data1)
                     // $scope.onClick1 = function(points1, evt1) {
@@ -1473,7 +1466,6 @@ angular.module('sleepapp_patient.controllers', [])
                                 id: 'y-axis-1',
                                 title: "sleep_quality",
                                 type: 'linear',
-
                                 display: true,
                                 position: 'left'
                             }, {
@@ -1490,8 +1482,6 @@ angular.module('sleepapp_patient.controllers', [])
                     $scope.series2 = ['sleep enough'];
                     $scope.data2 = [
                         sleep_enough,
-
-
                     ];
                     console.log("data", $scope.data1);
                     $scope.datasetOverride2 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
@@ -1514,7 +1504,7 @@ angular.module('sleepapp_patient.controllers', [])
                             }]
                         }
                     };
-                    //////////////////////////////////////////////////////////////////////////////////////
+                    
                     console.log("$scope.sleep_quality", sq);
                     console.log("$scope.energy", energy);
 

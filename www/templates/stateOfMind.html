@@ -1,20 +1,17 @@
- <!-- <script src="js/loader.js"></script> -->
+<!--<script src="js/loader.js"></script>-->
 <ion-view title="State" ng-init="findCheckIndata()">
   <ion-header-bar class="bar-header custom-header">
     <h1 class="title">State</h1>
     <!--<i class="button button-clear ion-gear-b settingsBtn" ></i>-->
   </ion-header-bar>
   <ion-content class="custom-content padding">
-  <!-- <div class="containerWrapper"> -->
-  <div class="row responsive-lg">
- <!-- <div class="containerWrapper"> -->
-   <div  class="col" id="curve_chart" ></div>
-
-    <div  class="col" id="chart_div"></div>
-<!-- </div> -->
-    <!-- </div> -->
+  
+    <div class="row responsive-lg">
+      <div class="col" id="curve_chart" ng-show="isChartOne">
+        <!--<div id="curve_chart" ng-show="isChartOne"></div>-->
+      </div>
+      <div class="col" id="chart_div"></div>
     </div>
-    <!-- </div> -->
   
 <!-- <div class="row"></div>
 <div class="card">

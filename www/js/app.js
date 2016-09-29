@@ -34,6 +34,8 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
       $cordovaStatusbar.styleColor('black');
     }
     
+    google.charts.load('current', { 'packages': ['corechart'] });
+    
     window.localStorage['PLATFORM'] = ionic.Platform.platform();
     /* PUSH NOTIFICATIONS CONFIGURATION as on ngCordova-- start */
       if (PushNotification) {
@@ -109,7 +111,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
   // display tabs at bottom in device
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
-  google.charts.load('current', { 'packages': ['corechart'] });
+  
   $stateProvider
   .state('welcome', {
     cache: false,
