@@ -1331,7 +1331,7 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("sleep_quality", sq);
                     console.log("energy", energy);
                     console.log("checkin date", checkin_date);
-                console.log("drawChartData = ", drawChartData);
+                    console.log("drawChartData = ", drawChartData);
                     
                     //google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
@@ -1383,38 +1383,7 @@ angular.module('sleepapp_patient.controllers', [])
                         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
                         chart.draw(data, options);
                     }
-                    ////////////////////////////////////////////////////////////
-                    //                        google.charts.load('current', {'packages':['corechart']});
-                    // google.charts.setOnLoadCallback(drawChart);
-
-                    // // function drawChart() {
-                    // //   var data = google.visualization.arrayToDataTable([
-                    // //      ['energy','sleep quality'],
-                    // //      sq, energy
-
-                    // //   ]);
-                    //    function drawChart() {
-                    //   var data = google.visualization.arrayToDataTable([
-                    //     ['Sales','Expenses'],
-                    //       sq, energy
-
-                    //     // ['2005',  1170,      460],
-                    //     // ['2006',  660,       1120],
-                    //     // ['2007',  1030,      540]
-                    //   ]);
-
-                    //   var options = {
-                    //     title: 'Sleep Quality',
-                    //     curveType: 'function',
-                    //     legend: { position: 'bottom' },
-                    //     colors: ['black','blue']
-                    //   };
-
-                    //   var chart = new google.visualization.LineChart(document.getElementById('line'));
-
-                    //   chart.draw(data, options);
-                    //   console.log("charts",chart);
-                    // }
+                    
 
                     $scope.labels = [];
                     $scope.series = ['relaxed', 'alcohol', 'medication'];
@@ -1423,12 +1392,8 @@ angular.module('sleepapp_patient.controllers', [])
                         alcohol,
                         medication
                     ];
-                    // console.log("data", $scope.data)
-                    // $scope.onClick = function(points, evt) {
-                    //     console.log(points, evt);
-                    // };
+                    
                     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    // var data=$scope.data=response.data;
                     $scope.options = {
                         scales: {
                             yAxes: [{
@@ -1541,11 +1506,9 @@ angular.module('sleepapp_patient.controllers', [])
         var dateReturn = dateday + "/" + month + "/" + date.getFullYear();
         return strTime + " " + day + " " + dateReturn;
     }
-
     // Set Appointment Date End
-
     // Show Loader 
-    return;
+    //return;
 
     $scope.getStateofMindData = function() {
         $ionicLoading.show({
@@ -1555,7 +1518,50 @@ angular.module('sleepapp_patient.controllers', [])
             maxWidth: 200,
             showDelay: 0
         });
+        
+        var inputJson = {};
+        inputJson.user_id = userData._id;
+        $scope.chartlabels1 = []; $scope.chartlabels2 = [];
+        $scope.FirstChartData = []; $scope.FirstChartSeries = [];
+        $scope.SecondChartData = []; $scope.SecondChartSeries = [];
+        $scope.ThirdChartData = [];
+        console.log("inputjson", inputJson);
+        
+        stateOfMindService.findCheckIndata(inputJson).success(function(response) {
+            $ionicLoading.hide();
+            console.log("response = ", response);
+            if ((response.messageId == 200) && (response.data.length > 0)) {
+                $scope.newObj = {};
+                $scope.newObj1 = {};
+                $scope.newObj2 = {};
+                var firstData = []; var j = 0;
+                for (var i = 0; i < response.data.length; i++) {
+                    var checkinData = response.data[i];
+                    var str = checkinData.checkin_date;
+                    var res = str.split("/");
+                    var dateForChart = res[0] + "/" + res[1];
+                    if($scope.chartlabels1.indexOf(dateForChart) == -1){
+                        $scope.chartlabels1.push(dateForChart);
+                        firstData[j] = [];
+                        firstData[j].push(checkinData.sleep_quality);
+                        firstData[j].push(checkinData.energy);
+                        firstData[j++].push(checkinData.happy);
+                    }
+                    
+                } //for end.
+                console.log("Labels = ", $scope.chartlabels1);
+                console.log("firstData = ", firstData);
+                $scope.FirstChartSeries = ['Sleep Quality', 'Energy', 'Happy'];
+                $scope.FirstChartData = firstData;
+                console.log("$scope.FirstChartSeries = ", $scope.FirstChartSeries);
+            }
+        });
+    
+        
 
+        
+        
+    /***************** extra code -------------------------------------------------------- */
         var inputJSONcheckIn = {};
         var inputJsonString = {};
         var d = new Date();
@@ -1566,36 +1572,10 @@ angular.module('sleepapp_patient.controllers', [])
         inputJSONcheckIn.created_date = {
             $gte: d.toISOString()
         };
-        /** Get all goals for patients Start**/
+        
         $scope.dailyMetricData = {};
         $scope.weeklyMetricData = {};
         $scope.patient_goal_data = {};
-
-        /** Get Patient General Questions Start**/
-        CheckInService.listPatientGeneralQuestions(inputJsonString).success(function(response) {
-            $ionicLoading.hide();
-            if (response.messageId == 200) {
-                if (response.data.length != 0) {
-                    $scope.generalQuestionCheckIn = [{
-                        "id": 1,
-                        "title": "Alcohol/drugs?",
-                        "is_enable": response.data[0].is_alcohal_drugs,
-                        "checked": false
-                    }, {
-                        "id": 2,
-                        "title": "Exercise?",
-                        "is_enable": response.data[0].is_exercise,
-                        "checked": false
-                    }, {
-                        "id": 3,
-                        "title": "Caffeine?",
-                        "is_enable": response.data[0].is_caffeine,
-                        "checked": false
-                    }];
-                }
-            }
-        });
-        /** Get Patient General Questions end **/
 
         /** List CheckIn Data Start Start**/
         $scope.CheckInDailyMetricData = {};
@@ -1606,6 +1586,7 @@ angular.module('sleepapp_patient.controllers', [])
         $scope.SecondChartData = [];
         $scope.weeklyChartSeries = [];
         $scope.WeeklyChartData = [];
+        /*
         CheckInService.getPatientCheckIn(inputJSONcheckIn).success(function(response) {
             console.log(response);
             $ionicLoading.hide();
@@ -1732,10 +1713,11 @@ angular.module('sleepapp_patient.controllers', [])
                 }
             }
         });
+        */
     }
 
-    $scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
-    $scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
+    //$scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
+    //$scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
 
     // animate pop up dailog
     function showConfirm(animation) {
