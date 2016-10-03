@@ -1,60 +1,53 @@
- <!-- <script src="js/loader.js"></script> -->
-<ion-view title="State" ng-init="findCheckIndata()">
+<!--<script src="js/loader.js"></script>-->
+<!--<ion-view title="State" ng-init="findCheckIndata()">-->
+  <ion-view title="State" ng-init="getStateofMindData()">
+  
   <ion-header-bar class="bar-header custom-header">
     <h1 class="title">State</h1>
-    <i class="button button-clear ion-gear-b settingsBtn" ></i>
+    <!--<i class="button button-clear ion-gear-b settingsBtn" ></i>-->
   </ion-header-bar>
   <ion-content class="custom-content padding">
-        <!-- <div class="containerWrapper"> -->
-      <div class="row responsive-lg">
-        <!-- <div class="containerWrapper"> -->
-         <div  class="col" id="curve_chart" ></div>
-
-          <div  class="col" id="chart_div"></div>
-        <!-- </div> -->
-          <!-- </div> -->
+  <!--Google Charts Code-->
+    <!--<div class="row responsive-lg">-->
+      <!--<div class="col" id="curve_chart" ng-show="isChartOne">-->
+      <!--<div id="curve_chart" ng-show="isChartOne"></div>-->
+      <!--</div>-->
+      <!--<div class="col" id="chart_div"></div>-->
+    <!--</div>-->
+  <!--Google Charts Code-->
+     <div class="row"></div>
+    <div class="card">
+      <div class="item item-text-wrap">
+       <div class="item item-divider padding alignCenter">
+       Sleep quality
       </div>
-          <!-- </div> -->
-        
-      <!-- <div class="row"></div>
-      <div class="card">
-        <div class="item item-text-wrap">
-         <div class="item item-divider padding alignCenter">
-         Sleep quality
-        </div>
-       <canvas id="line" class="chart chart-line" data="data"
-       labels="labels" series="series" options="options"
-       dataset-override="datasetOverride" legend="true"  height="200">
-      </canvas> 
+      <canvas id="line1" class="chart chart-line" chart-data="FirstChartData" chart-labels="chartlabels1" chart-legend="true" chart-series="FirstChartSeries" chart-options="{showTooltips: true}"></canvas>
+    </div>
+    </div>
+    
+    <div class="row"></div>
+    <div class="card">
+      <div class="item item-text-wrap">
+       <div class="item item-divider padding alignCenter">
+        Quality of life
       </div>
+     <canvas id="line2" class="chart chart-line" chart-data="SecondChartData" chart-labels="chartlabels2" chart-legend="true" chart-series="SecondChartSeries" chart-options="{showTooltips: true}"></canvas>
+    </div>
+    </div>
+    <div class="row"></div>
+    <div class="card">
+      <div class="item item-text-wrap"> 
+       <div class="item item-divider padding alignCenter">
+        Sleep vs enough
       </div>
-
-      <div class="row"></div>
-      <div class="card">
-        <div class="item item-text-wrap">
-         <div class="item item-divider padding alignCenter">
-          Quality of life
-        </div>
-       <canvas id="line" class="chart chart-line" data="data1"
-       labels="labels1" series="series1" options="options1"
-       dataset-override="datasetOverride1" legend="true"  height="200">
-      </canvas> 
-      </div>
-      </div>
-      <div class="row"></div>
-      <div class="card">
-        <div class="item item-text-wrap"> 
-         <div class="item item-divider padding alignCenter">
-          Sleep vs enough
-        </div>
-         <canvas id="line" class="chart chart-line" data="data2"
-       labels="labels2" series="series2" options="options2"
-       dataset-override="datasetOverride2" legend="true"  height="200">
-      </canvas> 
-        
-      </div>
-      </div> -->
-      <!-- </div> -->
+       <canvas id="line" class="chart chart-line" data="data2"
+     labels="labels2" series="series2" options="options2"
+     dataset-override="datasetOverride2" legend="true"  height="200">
+    </canvas> 
+      
+    </div>
+    </div> 
+    <!-- </div> -->
   </ion-content>
 </ion-view>
 

@@ -43,13 +43,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : GpSingh
      */
     $scope.signUp = function(userData) {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        $ionicLoading.show();
         //console.log("userData = ", userData);
 
         $scope.patient = userData;
@@ -80,19 +74,20 @@ angular.module('sleepapp_patient.controllers', [])
                             console.log("data3 = ", data);
                             $ionicLoading.hide();
                             if (data.status == "success") {
+                            	$ionicLoading.show();
                                 window.localStorage['ACCESS_TOKEN'] = data.access_token;
-                                window.localStorage['USER_DATA'] = JSON.stringify(data.data);
+                                window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
                                 window.localStorage['USER_DATA'].password = inputString.originalPassword;
                                 var userData = JSON.parse(window.localStorage['USER_DATA']);
                                 var inputdata = {};
                                 inputdata.id = userData._id;
-                                inputdata.device_id = window.localStorage["device_id"];
-                                inputdata.platform_type = window.localStorage['PLATFORM'];
+                                inputdata.device_id = window.localStorage["DEVICE_ID"];
+			                    inputdata.platform_type = window.localStorage['PLATFORM'];
+			                    inputdata.time_zone = window.localStorage['TIME_ZONE'];
                                 UserService.saveDeviceId(inputdata).success(function(data, status) {
+                                	$ionicLoading.hide();
                                     console.log(data);
                                     $state.go("tabs.checkIn");
-                                    //console.log(userData.user_type);
-                                    //console.log(window.localStorage["NOTIFICATION_SETTING"]);
                                 });
                             } else {
                                 showConfirm(animation);
@@ -227,53 +222,31 @@ angular.module('sleepapp_patient.controllers', [])
      * function to sign in user
      **/
     $scope.signIn = function(user) {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        $ionicLoading.show();
         UserService.logInUser(user).success(function(data) {
             console.log("logInUser response = ", data);
             $ionicLoading.hide();
             if (data.status == "success") {
                 // Check User Status Active or Inactive
                 if (data.data.user.is_status == true) {
+                	$ionicLoading.show();
                     window.localStorage['ACCESS_TOKEN'] = data.access_token;
                     window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
                     var userData = JSON.parse(window.localStorage['USER_DATA']);
                     var inputdata = {};
                     inputdata.id = userData._id;
-                    $ionicLoading.show({
-                        content: 'Loading',
-                        animation: 'fade-in',
-                        showBackdrop: true,
-                        maxWidth: 200,
-                        showDelay: 0
-                    });
-                    inputdata.device_id = window.localStorage["device_id"];
+                    inputdata.device_id = window.localStorage["DEVICE_ID"];
                     inputdata.platform_type = window.localStorage['PLATFORM'];
+                    inputdata.time_zone = window.localStorage['TIME_ZONE'];
+                    console.log(inputdata);
                     UserService.saveDeviceId(inputdata).success(function(data, status) {
                         $ionicLoading.hide();
                         if (data.status == "success") {
                             if (userData.user_type == 4) {
                                 var userId = userData._id;
-                                $ionicLoading.show({
-                                    content: 'Loading',
-                                    animation: 'fade-in',
-                                    showBackdrop: true,
-                                    maxWidth: 200,
-                                    showDelay: 0
-                                });
-
+                                $ionicLoading.show();
                             } else {
-                                console.log(window.localStorage["NOTIFICATION_SETTING"]);
-                                if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
-                                    $state.go("settings");
-                                } else {
-                                    $state.go("tabs.checkIn");
-                                }
+                                $state.go("tabs.checkIn");
                             }
                         }
                     });
@@ -795,11 +768,31 @@ angular.module('sleepapp_patient.controllers', [])
 })
 
 
-.controller('checkInCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker) {
+.controller('checkInCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker, $state) {
 
     ionicMaterialInk.displayEffect();
+    /* ++ custom IONIC loader functions ++ */
+        function showLoader()
+        {
+            $ionicLoading.show({
+                content: 'Loading',
+                animation: 'fade-in',
+                showBackdrop: true,
+                maxWidth: 200,
+                showDelay: 0
+            });
+        }
+        function hideLoader()
+        {
+           $ionicLoading.hide();
+        }
+    /* -- custom IONIC loader functions -- */
 
     var userData = JSON.parse(window.localStorage['USER_DATA']);
+    console.log("userData = ", userData);
+    if(userData.user){
+        userData = userData.user;
+    }
     var user = {};
     $scope.patient = {};
     user.username = userData.username;
@@ -869,7 +862,7 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.updateButton = false;
     $scope.nodata = false;
     $scope.showCheckInData = false;
-    $scope.hideCheckInData = false;
+    $scope.isMessage = false;
     var animation = 'bounceInDown';
     $scope.rating = {};
     $scope.rating.max = 5;
@@ -883,7 +876,8 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.findPatientCheckIn = {};
     $scope.findPatientCheckIn.patient = userData._id;
     $scope.newDate = date;
-
+    $scope.todayDate = date;
+    
     $scope.generalQuestionCheckIn = [{
         "id": 1,
         "title": "Alcohol/drugs?",
@@ -936,145 +930,128 @@ angular.module('sleepapp_patient.controllers', [])
     };
 
     /*
-     *Check in Init Function .
-     * developer : Shilpa Sharma
+     *  Check in Init Function .
+     *  developer : Shilpa Sharma
+     *  modified by : Gurpreet
      */
     $scope.showCheckInData = false;
-    $scope.hideCheckInData = false;
     $scope.checkInDisable = false;
     $scope.CheckIn = true;
-    $scope.CheckInOne = false;
+    $scope.CheckInNext = false; $scope.CheckInPrevious = true;
     $scope.checkinDate = false;
     $scope.checkinDateOne = true;
     $scope.noClick = true;
-    $scope.CheckInArrowDisable = false;
+    $scope.isDataAvailable = false;
     $scope.checkInDataGet = function(num, holderDate) {
-        $scope.CheckInOne = true;
-        // $scope.CheckInArrowDisable=true;
+        showLoader();
+        console.log('--', num, holderDate);
         if (num == 1 || num == 2) {
+            $scope.CheckInNext = true;
             var d = new Date(holderDate);
             if (num == 1) {
                 var d = new Date(holderDate);
                 var mm = d.getMonth() + 1;
                 var dd = d.getDate() - 1;
             } else if (num == 2) {
-                // console.log("second 2");
                 var d = new Date(holderDate);
                 var mm = d.getMonth() + 1;
                 var dd = d.getDate() + 1;
             }
-            console.log("DDDDDDDDDDd", d);
             var yyyy = d.getFullYear();
             var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
-            // $scope.newDate = formatdate;
+            $scope.newDate = formatdate;
             var inputJsonData = {};
             inputJsonData.user_id = userData._id;
             inputJsonData.checkin_date = formatdate;
-            // console.log("inputJsonData", inputJsonData);
             CheckInService.findCheckinData(inputJsonData).success(function(response) {
-                console.log("response", response);
                 $scope.checkinDateOne = true;
-                if (response.data.length == 0) {
-                    if (num == 1) {
-                        console.log("num", num);
-                        $scope.noClick = false;
-                        $scope.CheckInOne = true;
-                        // $scope.checkinDate = false;
-                        $scope.checkinDateOne = true;
-                        $scope.CheckInArrowDisable = true;
-
-                        var alertPopup = $ionicPopup.alert({
-                            title: 'Sorry!',
-                            template: NO_CHECK_IN,
-                            // $scope.noClick = false;
-                        });
-                        // alertPopup.then(function(res) {
-                        //     $scope.noClick = false;
-                        // });
-                        $scope.noClick = false;
-                        // $scope.CheckInArrowDisable=true;
-
-                    } else if (num == 2) {
-                        console.log("second 2");
-                        $scope.noClick = true;
-                        $scope.checkinDateOne = true;
-                        $scope.CheckInOne = false;
-
-                    }
-                } else if (response.messageId == 200) {
-                    $scope.newDate = formatdate;
-                    console.log($scope.newDate);
-                    if (response.data.length <= 1) {
-                        console.log("--------------if one");
-                        $scope.showCheckInData = true;
-                        $scope.hideCheckInData = false;
+                hideLoader();
+                if (response.messageId == 200) {
+                    if(formatdate == $scope.todayDate){
+                        console.log(">>> it's today.");
                         $scope.CheckIn = true;
-                        $scope.CheckInOne = false;
-                        // $scope.checkinDate = false;
-                        $scope.patient = response.data[0];
-                    } else if (response.data.length <= 2) {
-                        console.log("----------------else if one");
-                        $scope.showCheckInData = true;
-                        $scope.hideCheckInData = true;
-                        $scope.checkInDisable = true;
-                        $scope.CheckIn = false;
-                        $scope.CheckInOne = true;
-                        // $scope.checkinDate = false;
-                        $scope.checkinDateOne = true;
-                        $scope.noClick = true;
-                        $scope.patient = response.data[0];
-                        $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                        $scope.isMessage = false;
+                        $scope.isDataAvailable = true;
+                        $scope.CheckInNext = false;
+                        $scope.checkInDisable = false;
+                        showTodayCheckIns(response);
+                    }else{
+                        /* if not data is available for check-in */
+                        if (response.data.length == 0) {
+                            $scope.patient = {};
+                            $scope.isMessage = true;
+                            $scope.boxMessageText = NO_CHECK_IN;
+                            $scope.checkInDisable = true;
+                            $scope.isDataAvailable = false;
+                        } else {
+                            $scope.newDate = formatdate;
+                            $scope.isDataAvailable = true;
+                            $scope.patient = response.data[0];
+                            $scope.showCheckInData = true;
+                            $scope.CheckIn = false;
+                            $scope.isMessage = true;
+                            $scope.checkInDisable = true;
+                            if (response.data.length == 1) {
+                                console.log("-- not today, but 1");
+                                $scope.boxMessageText = PREV_ONE_CHECK_IN_MESSAGE;
+                            } else if (response.data.length == 2) {
+                                console.log("-- not today, but 2");
+                                $scope.boxMessageText = PREV_ALL_CHECK_IN_MESSAGE;
+                            }
+                        }
                     }
                 }
+                
+                
             });
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
             inputJson.checkin_date = $scope.newDate;
-            console.log("**********************", inputJson.checkin_date);
-            // $scope.newDate = date;
+            //console.log('inputJson = ', inputJson);
             CheckInService.findCheckinData(inputJson).success(function(response) {
-                console.log("response", response);
-                if (response.data.length == 0) {
-                    // console.log("blank data");
-                    $scope.CheckIn = true;
-                }
+            console.log("findCheckinData... ", response);
                 if (response.messageId == 200) {
-                    $scope.newDate = date;
-                    console.log("scope.newDate", $scope.newDate);
-                    $scope.checkinDateOne = true; // console.log("count",response.data[0].checkin_count);
-                    if (response.data.length <= 1) {
-                        console.log("--------------if two");
-                        // console.log("count",response.data[0].checkin_count);
-                        $scope.showCheckInData = true;
-                        $scope.hideCheckInData = false;
-                        $scope.CheckIn = true;
-                        $scope.CheckInOne = false;
-                        // $scope.checkinDateOne = false;
-                        $scope.patient = response.data[0];
-
-                    } else if (response.data.length <= 2) {
-
-                        console.log("----------------else if two");
-
-                        $scope.showCheckInData = true;
-                        $scope.checkInDisable = true;
-                        $scope.hideCheckInData = true;
-                        // $scope.checkinDate = true;
-                        $scope.CheckIn = false;
-                        $scope.CheckInOne = false;
-                        $scope.checkinDateOne = true;
-                        $scope.patient = response.data[0];
-                        $scope.alreadySubmiited = CHECK_IN_MESSAGE;
-                    }
+                    showTodayCheckIns(response);
                 }
             });
         }
     }
-
-
-
-
+    /*
+    *   function to show check-in screen in different cases for today.
+    *   developer   :   Gurpreet
+    **/
+    function showTodayCheckIns(response){
+        hideLoader();
+        $scope.isDataAvailable = true;
+        $scope.showCheckInData = true;
+        $scope.newDate = date;
+        console.log("scope.newDate = ", $scope.newDate);
+        $scope.checkinDateOne = true; // console.log("count",response.data[0].checkin_count);
+        console.log("response.data.length = ", response.data.length);
+        if (response.data.length == 0) {
+            $scope.CheckIn = true;
+            $scope.patient = {};
+        }else if (response.data.length == 1) {
+            console.log("in 1");
+            $scope.isMessage = false;
+            $scope.CheckIn = true;
+            $scope.CheckInOne = false;
+            $scope.patient = response.data[0];
+            $scope.isMessage = true;
+            $scope.boxMessageText = ONE_CHECK_IN_MESSAGE;
+        } else if (response.data.length == 2) {
+            console.log("in 2");
+            $scope.checkInDisable = true;
+            $scope.isMessage = true;
+            $scope.CheckIn = false;
+            $scope.CheckInOne = false;
+            $scope.checkinDateOne = true;
+            $scope.patient = response.data[0];
+            $scope.boxMessageText = CHECK_IN_MESSAGE;
+        }
+    }
+    
     $scope.getPatientGeneralQuestions = function() {
         CheckInService.listPatientGeneralQuestions(dataJSON).success(function(response) {
             if (response.messageId == 200) {
@@ -1105,16 +1082,16 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.getPatientCheckInData = function() {
         CheckInService.getPatientCheckIn($scope.findPatientCheckIn).success(function(response) {
-            $ionicLoading.hide();
+            hideLoader();
             if (response.messageId == 200) {
                 if (response.data.length != 0) {
                     $scope.showCheckInData = false;
-                    $scope.hideCheckInData = true;
-                    $scope.alreadySubmiited = CHECK_IN_MESSAGE;
+                    $scope.isMessage = true;
+                    $scope.boxMessageText = CHECK_IN_MESSAGE;
                 } else {
                     $scope.showCheckInData = true;
                     CheckIn
-                    $scope.hideCheckInData = false;
+                    $scope.isMessage = false;
                 }
             } else {
                 console.log("Error.")
@@ -1128,55 +1105,39 @@ angular.module('sleepapp_patient.controllers', [])
      *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        showLoader();
+    console.log('$scope.patient = ', $scope.patient);
         inputJsonData = $scope.patient;
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
         inputJsonData.checkin_count = $scope.patient.checkin_count;
-        console.log("check in data = ", inputJsonData);
-        console.log("**********************", inputJsonData.checkin_count);
+    console.log("check in data = ", inputJsonData);
         if (inputJsonData.checkin_count == 1) {
-            console.log("**********************", inputJsonData.checkin_count);
             inputJsonData.checkin_count += 1;
-
-
         }
 
-        // Save check in on daily basis
+        // Save check-in on daily basis
         CheckInService.saveCheckIn(inputJsonData).success(function(response) {
-            $ionicLoading.hide();
-            console.log("response saveeee= ", response.data);
+            hideLoader();
+            console.log("response saveeee= ", response);
             if (response.messageId == 200) {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Success!',
-                    template: CHECK_IN_SUCCESS,
+                    template: CHECK_IN_SAVE,
                 });
-             if(response.data.checkin_count <= 2)
-                {
-                    console.log("check in count");
-console.log("response.data.checkin_count",response.data.checkin_count);
-                    $scope.checkIn=false;
-                    console.log("check in count",$scope.checkIn);
-                    $scope.checkInDisable=true;
-                }
-                
+            console.log('response.data.checkin_count = ', response.data.checkin_count);
                 alertPopup.then(function(res) {
-                  
-                    $scope.alreadySubmiited = CHECK_IN_MESSAGE;
-                    // $state.reload('tabs.jetLag');
+                    $scope.boxMessageText = CHECK_IN_MESSAGE;
                 });
-            }
-                
-                
-             else {
+                if(response.data.checkin_count == 2){
+                    console.log("response.data.checkin_count", response.data.checkin_count);
+                    $scope.checkIn = false;
+                    $scope.checkInDisable = true;
+                    $state.reload('tabs.checkIn');
+                }
+            } else {
                 showConfirm(animation);
                 var alertPopup = $ionicPopup.alert({
                     title: 'Warning!',
@@ -1206,7 +1167,6 @@ console.log("response.data.checkin_count",response.data.checkin_count);
      * setTime function to set time for fields on CHECK IN screen.
      * developer : GpSingh
      */
-
     $scope.setTime = function(num) {
         var ipObj1 = {
 
@@ -1245,8 +1205,10 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                     var timeString = hours + ":" + minutes + " " + ampm;
                     var timeString2 = hours2 + ":" + minutes + " " + ampm2;
                     if (num == 1) {
-
+                        console.log('in num 1');
                         $scope.patient.bedtime = timeString;
+                        console.log('timeString = ', timeString);
+                        console.log('$scope.patient.bedtime = ', $scope.patient.bedtime);
                     } else if (num == 2) {
                         $scope.patient.wake_up = timeString;
                     } else if (num == 3) {
@@ -1264,7 +1226,6 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                     } else if (num == 9) {
                         $scope.patient.nap = timeString;
                     }
-
                 }
                 // console.log($scope.patient);
             },
@@ -1273,7 +1234,6 @@ console.log("response.data.checkin_count",response.data.checkin_count);
             step: 1, //Optional
             setLabel: 'Set' //Optional
         };
-
         ionicTimePicker.openTimePicker(ipObj1);
     }
 })
@@ -1291,6 +1251,8 @@ console.log("response.data.checkin_count",response.data.checkin_count);
     $scope.user_name = userData.first_name + " " + userData.last_name;
     // $scope.patient.checkin_count=[];
 
+    $scope.isChartOne = false;
+    $scope.isChartTwo = false;
     $scope.findCheckIndata = function() {
         $ionicLoading.show({
             content: 'Loading',
@@ -1301,17 +1263,12 @@ console.log("response.data.checkin_count",response.data.checkin_count);
         });
         var inputJson = {};
         inputJson.user_id = userData._id;
-        // inputJson.checkin_count=$scope.patient.checkin_count;
-        // console.log($scope.patient.checkin_count);
-        // console.log(inputJson.checkin_count);
-        // return;
         console.log("inputjson", inputJson);
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
             $ionicLoading.hide();
-            // console.log("response", response);
+        console.log("response = ", response);
             if (response.messageId == 200) {
-                if (response.data.length != 0) {
-                    // console.log(response.data);
+                if (response.data.length > 0) {
                     var sq = [];
                     var energy = [];
                     var happy = new Array();
@@ -1320,88 +1277,60 @@ console.log("response.data.checkin_count",response.data.checkin_count);
                     var medication = new Array();
                     var sleep_enough = new Array();
                     var checkin_date = new Array();
-                    console.log(response.data.checkin_date);
-                    // response.data.checkin_date;
+                    $scope.isChartOne = true;
+                    var drawChartData = [];
+                    drawChartData.push(['Date', 'Happy', 'Relaxed', 'Sleep enough']);
                     for (var i = 0; i < response.data.length; i++) {
-                        if (response.data[i].checkin_count == 2) {
-                            console.log(response.data[i].checkin_count);
+                        var tempArr = [];
+                        console.log(response.data[i].checkin_count);
+                        //if (response.data[i].checkin_count == 2) {
+                            checkin_date.push(response.data[i].checkin_date);
+                            tempArr.push(response.data[i].checkin_date);
+                            happy.push(response.data[i].happy);
+                            tempArr.push(response.data[i].happy);
+                            relaxed.push(response.data[i].relaxed);
+                            tempArr.push(response.data[i].relaxed);
+                            sleep_enough.push(response.data[i].sleep_enough);
+                            tempArr.push(response.data[i].sleep_enough);
                             sq.push(response.data[i].sleep_quality);
                             energy.push(response.data[i].energy);
-                            happy.push(response.data[i].happy);
-                            relaxed.push(response.data[i].relaxed);
                             alcohol.push(response.data[i].alcohol);
                             medication.push(response.data[i].medication);
-                            sleep_enough.push(response.data[i].sleep_enough);
-                            // console.log("checkin", response.data[i].checkin_date);
-                            checkin_date.push(response.data[i].checkin_date);
-                        }
+                            
+                        //}
+                        drawChartData.push(tempArr);
                     }
-                    // console.log("$scope.sleep_quality", sq);
-                    // console.log("$scope.energy", energy);
-                    // console.log("checkin date", checkin_date);
-
-   var dataCharts = new Array();
-   var dataCharts2 = new Array();
-    var dataCharts3 = new Array();
-
-for(var j=0;j< checkin_date.length;j++)
-{
-     var dataCharts = new Array();
-dataCharts.push(checkin_date[j]);
-// console.log("data",dataCharts);
-dataCharts.push(happy[j]);
-// console.log("data",dataCharts);
-dataCharts.push(relaxed[j]);
-// console.log("data",dataCharts);
-dataCharts.push(sleep_enough[j]);
-// dataCharts.push(checkin_date[j]);
-    dataCharts2[j] = dataCharts;
-    // dataCharts3.j  = dataCharts2;
-
-}
- console.log("data",dataCharts2);
-
- var dataCharts3 = new Array();
-for(var k=0; j< dataCharts2;k++){
-    dataCharts3.push(dataCharts2[k]);
-    
-}
-console.log(console.log(dataCharts3));
-// return false;
-
-
-                    ////////////////////////////////////////////////////////////////////////////////////////////
+                    console.log("sleep_quality", sq);
+                    console.log("energy", energy);
+                    console.log("checkin date", checkin_date);
+                    console.log("drawChartData = ", drawChartData);
+                    
                     //google.charts.load('current', { 'packages': ['corechart'] });
                     google.charts.setOnLoadCallback(drawChart);
 
                     function drawChart() {
-                        var data = google.visualization.arrayToDataTable([
-                             ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
-                         // [dataCharts3[0]]
+                        /*var data = google.visualization.arrayToDataTable([
+                            ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
                             [checkin_date[0], happy[0], relaxed[0], sleep_enough[0]],
                             [checkin_date[1], happy[1], relaxed[1], sleep_enough[1]],
                             [checkin_date[2], happy[2], relaxed[2], sleep_enough[2]],
                             [checkin_date[3], happy[3], relaxed[3], sleep_enough[3]],
                             [checkin_date[4], happy[4], relaxed[4], sleep_enough[4]]
-                        ]);
+                        ]);*/
+                        var data = google.visualization.arrayToDataTable(drawChartData);
 
                         var options = {
                             title: 'Sleep Quality',
                             legend: { position: 'bottom' },
                             curveType: 'function',
-                            chartArea: { left: 0, right: 10 ,width: '100%'},
-                            height: 200,
-
-
-
+                            width: '100%',
+                            chartArea: { left: 0, right: 10 },
+                            height: '100%',
                         };
 
                         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
                         chart.draw(data, options);
                     }
-
-                    // return false;
 
                     //////////////////////////////////////////////////////////////////////
                     google.charts.setOnLoadCallback(drawChart1);
@@ -1417,7 +1346,8 @@ console.log(console.log(dataCharts3));
                         var options = {
                             title: 'Sleep as Input',
                             curveType: 'function',
-                            chartArea: { left: 0, right: 10,width:'100%'},
+                            width: 275,
+                            chartArea: { left: 0, right: 10 },
                             height: 200,
                             legend: { position: 'bottom' }
                         };
@@ -1425,38 +1355,7 @@ console.log(console.log(dataCharts3));
                         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
                         chart.draw(data, options);
                     }
-                    ////////////////////////////////////////////////////////////
-                    //                        google.charts.load('current', {'packages':['corechart']});
-                    // google.charts.setOnLoadCallback(drawChart);
-
-                    // // function drawChart() {
-                    // //   var data = google.visualization.arrayToDataTable([
-                    // //      ['energy','sleep quality'],
-                    // //      sq, energy
-
-                    // //   ]);
-                    //    function drawChart() {
-                    //   var data = google.visualization.arrayToDataTable([
-                    //     ['Sales','Expenses'],
-                    //       sq, energy
-
-                    //     // ['2005',  1170,      460],
-                    //     // ['2006',  660,       1120],
-                    //     // ['2007',  1030,      540]
-                    //   ]);
-
-                    //   var options = {
-                    //     title: 'Sleep Quality',
-                    //     curveType: 'function',
-                    //     legend: { position: 'bottom' },
-                    //     colors: ['black','blue']
-                    //   };
-
-                    //   var chart = new google.visualization.LineChart(document.getElementById('line'));
-
-                    //   chart.draw(data, options);
-                    //   console.log("charts",chart);
-                    // }
+                    
 
                     $scope.labels = [];
                     $scope.series = ['relaxed', 'alcohol', 'medication'];
@@ -1465,16 +1364,14 @@ console.log(console.log(dataCharts3));
                         alcohol,
                         medication
                     ];
-
+                    
                     $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    // var data=$scope.data=response.data;
                     $scope.options = {
                         scales: {
                             yAxes: [{
                                 id: 'y-axis-1',
                                 title: "sleep_quality",
                                 type: 'linear',
-
                                 display: true,
                                 position: 'left'
                             }, {
@@ -1493,7 +1390,6 @@ console.log(console.log(dataCharts3));
                         sq,
                         energy,
                         happy
-
                     ];
                     // console.log("data", $scope.data1)
                     // $scope.onClick1 = function(points1, evt1) {
@@ -1507,7 +1403,6 @@ console.log(console.log(dataCharts3));
                                 id: 'y-axis-1',
                                 title: "sleep_quality",
                                 type: 'linear',
-
                                 display: true,
                                 position: 'left'
                             }, {
@@ -1524,10 +1419,8 @@ console.log(console.log(dataCharts3));
                     $scope.series2 = ['sleep enough'];
                     $scope.data2 = [
                         sleep_enough,
-
-
                     ];
-                    // console.log("data", $scope.data1);
+                    console.log("data", $scope.data1);
                     $scope.datasetOverride2 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
                     // var data=$scope.data=response.data;
                     $scope.options2 = {
@@ -1548,7 +1441,7 @@ console.log(console.log(dataCharts3));
                             }]
                         }
                     };
-                    //////////////////////////////////////////////////////////////////////////////////////
+                    
                     console.log("$scope.sleep_quality", sq);
                     console.log("$scope.energy", energy);
 
@@ -1585,11 +1478,9 @@ console.log(console.log(dataCharts3));
         var dateReturn = dateday + "/" + month + "/" + date.getFullYear();
         return strTime + " " + day + " " + dateReturn;
     }
-
     // Set Appointment Date End
-
     // Show Loader 
-    return;
+    //return;
 
     $scope.getStateofMindData = function() {
         $ionicLoading.show({
@@ -1599,7 +1490,50 @@ console.log(console.log(dataCharts3));
             maxWidth: 200,
             showDelay: 0
         });
+        
+        var inputJson = {};
+        inputJson.user_id = userData._id;
+        $scope.chartlabels1 = []; $scope.chartlabels2 = [];
+        $scope.FirstChartData = []; $scope.FirstChartSeries = [];
+        $scope.SecondChartData = []; $scope.SecondChartSeries = [];
+        $scope.ThirdChartData = [];
+        console.log("inputjson", inputJson);
+        
+        stateOfMindService.findCheckIndata(inputJson).success(function(response) {
+            $ionicLoading.hide();
+            console.log("response = ", response);
+            if ((response.messageId == 200) && (response.data.length > 0)) {
+                $scope.newObj = {};
+                $scope.newObj1 = {};
+                $scope.newObj2 = {};
+                var firstData = []; var j = 0;
+                for (var i = 0; i < response.data.length; i++) {
+                    var checkinData = response.data[i];
+                    var str = checkinData.checkin_date;
+                    var res = str.split("/");
+                    var dateForChart = res[0] + "/" + res[1];
+                    if($scope.chartlabels1.indexOf(dateForChart) == -1){
+                        $scope.chartlabels1.push(dateForChart);
+                        firstData[j] = [];
+                        firstData[j].push(checkinData.sleep_quality);
+                        firstData[j].push(checkinData.energy);
+                        firstData[j++].push(checkinData.happy);
+                    }
+                    
+                } //for end.
+                console.log("Labels = ", $scope.chartlabels1);
+                console.log("firstData = ", firstData);
+                $scope.FirstChartSeries = ['Sleep Quality', 'Energy', 'Happy'];
+                $scope.FirstChartData = firstData;
+                console.log("$scope.FirstChartSeries = ", $scope.FirstChartSeries);
+            }
+        });
+    
+        
 
+        
+        
+    /***************** extra code -------------------------------------------------------- */
         var inputJSONcheckIn = {};
         var inputJsonString = {};
         var d = new Date();
@@ -1610,36 +1544,10 @@ console.log(console.log(dataCharts3));
         inputJSONcheckIn.created_date = {
             $gte: d.toISOString()
         };
-        /** Get all goals for patients Start**/
+        
         $scope.dailyMetricData = {};
         $scope.weeklyMetricData = {};
         $scope.patient_goal_data = {};
-
-        /** Get Patient General Questions Start**/
-        CheckInService.listPatientGeneralQuestions(inputJsonString).success(function(response) {
-            $ionicLoading.hide();
-            if (response.messageId == 200) {
-                if (response.data.length != 0) {
-                    $scope.generalQuestionCheckIn = [{
-                        "id": 1,
-                        "title": "Alcohol/drugs?",
-                        "is_enable": response.data[0].is_alcohal_drugs,
-                        "checked": false
-                    }, {
-                        "id": 2,
-                        "title": "Exercise?",
-                        "is_enable": response.data[0].is_exercise,
-                        "checked": false
-                    }, {
-                        "id": 3,
-                        "title": "Caffeine?",
-                        "is_enable": response.data[0].is_caffeine,
-                        "checked": false
-                    }];
-                }
-            }
-        });
-        /** Get Patient General Questions end **/
 
         /** List CheckIn Data Start Start**/
         $scope.CheckInDailyMetricData = {};
@@ -1650,6 +1558,7 @@ console.log(console.log(dataCharts3));
         $scope.SecondChartData = [];
         $scope.weeklyChartSeries = [];
         $scope.WeeklyChartData = [];
+        /*
         CheckInService.getPatientCheckIn(inputJSONcheckIn).success(function(response) {
             console.log(response);
             $ionicLoading.hide();
@@ -1776,10 +1685,11 @@ console.log(console.log(dataCharts3));
                 }
             }
         });
+        */
     }
 
-    $scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
-    $scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
+    //$scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
+    //$scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
 
     // animate pop up dailog
     function showConfirm(animation) {
@@ -1794,13 +1704,36 @@ console.log(console.log(dataCharts3));
     }
 })
 
-
 /*
  *jet lag calculator controller .
  * developer : Shilpa Sharma
  */
-.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state) {
-
+.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state, $http) {
+    
+    $scope.timezones = {};
+    $scope.timezones = [
+            {"key":"-12", "value":"-12"},
+            {"key":"-10", "value":"-10"},
+            {"key":"-8", "value":"-8"},
+            {"key":"-6", "value":"-6"},
+            {"key":"-4", "value":"-4"},
+            {"key":"-2", "value":"-2"},
+            //{"key":"0", "value":"0"},
+            {"key":"+2", "value":"2"},
+            {"key":"+4", "value":"4"},
+            {"key":"+6", "value":"6"},
+            {"key":"+8", "value":"8"},
+            {"key":"+10", "value":"10"},
+            {"key":"+12", "value":"12"}
+    ];
+    $scope.ifJetLagFilled = false;
+    /*
+    $http.get('json/timezones-even.json').success(function(data) {
+        //console.log('timezones = ', data);
+        $scope.timezones = data;
+    });
+    */
+    
     var userData = JSON.parse(window.localStorage['USER_DATA']);
     $scope.jetLag = {};
     var ipObj1 = {
@@ -1829,23 +1762,14 @@ console.log(console.log(dataCharts3));
 
     $scope.openDatePicker = function() {
         ionicDatePicker.openDatePicker(ipObj1);
-        $scope.calculateJetLag();
+        //$scope.calculateJetLag();
     };
-
-    $scope.jetLagData = [{
-        "id": "1"
-    }, {
-        "id": "2"
-    }, {
-        "id": "3"
-    }, {
-        "id": "4"
-    }, {
-        "id": "5"
-    }, {
-        "id": "6"
-    }]
-
+    
+    $scope.$watch('jetLag.travel_date', function(newValue, oldValue){
+        console.log('vals = ', newValue, oldValue);
+        if(newValue != oldValue)
+            $scope.calculateJetLag();
+    });
 
     var inputJsonData = {};
     $scope.jetLag = {};
@@ -1858,266 +1782,57 @@ console.log(console.log(dataCharts3));
      * developer : Shilpa Sharma
      */
     $scope.calculateJetLag = function() {
-
+        console.log("$scope.jetLag = ", $scope.jetLag);
         if ((typeof $scope.jetLag.time_difference !== "undefined") && (typeof $scope.jetLag.travel_date !== "undefined")) {
-
-            var glasses_time;
-            var wakeup;
-            var bedtime;
-            var time_difference;
+            var td = parseInt($scope.jetLag.time_difference);
+            var glasses_time, wakeup, bedtime, time_difference;
             var travel_date = [];
             var timeCalculate = [];
             $scope.Math = window.Math;
             var userData = JSON.parse(window.localStorage['USER_DATA']);
             glasses_time = userData.wear_glasses_time;
-            // var glassesStr = glasses_time;
-            console.log("glasses_time**************", glasses_time);
             wakeup = userData.planned_wakeup;
             bedtime = userData.planned_bedtime;
+
             var timeDiffCalculate = {};
             var travelDateCal = {};
             travelDateCal.travel_date = $scope.jetLag.travel_date;
             var get_date = travelDateCal.travel_date;
             var d = new Date(get_date);
             var d1 = new Date(get_date);
-            var hoursUpdated = "null";
-            var updatedGlasses = "null";
+            
             timeDiffCalculate.time_difference = $scope.jetLag.time_difference;
             timeCalculate = (timeDiffCalculate.time_difference) / 2;
-            // (timeCalculate);
-            // var newTimeCalculate = Math.abs(timeCalculate);
-            var newTimeCalculate = Math.floor(timeCalculate);
-            console.log("newTimeCalculate1", newTimeCalculate);
-
-            var numberOfDaysToAdd = 0;
-            if (newTimeCalculate > 0) {
-                var timeStr = '';
-                var timeStr2 = '';
-                var glassesStr = '';
-                glassesStr = glasses_time;
-
-                // timeStr = bedtime;
-                timeStr = bedtime;
-                console.log("bedtime", timeStr);
-                timeStr2 = timeStr;
-                glassesStr2 = glassesStr;
-
-                /*Get Twenty hours format starts here*/
-                var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
-                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
-                var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
-
-                if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
-                    gethours = gethours + 12;
-                } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
-                    gethours = gethours - 12;
-                }
-
-                var sHours = gethours.toString();
-                // var sMinutes = getminutes.toString();
-                if (gethours < 10) {
-                    sHours = "0" + sHours;
-                }
-                var t24hoursFormat = sHours;
-                // console.log("t24hoursFormat",t24hoursFormat);
-                var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
-                // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
-                var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
-
-                if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
-                    gethours1 = gethours1 + 12;
-                } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
-                    gethours1 = gethours1 - 12;
-                }
-                var sHours1 = gethours1.toString();
-                // var sMinutes = getmint24hoursFormatutes.toString();
-
-                if (gethours1 < 10) {
-                    sHours1 = "0" + sHours1;
-                }
-                var t24hoursFormat1 = sHours1;
-                console.log("t24hoursFormat", t24hoursFormat1);
-                /*Get Twenty hours format ends here*/
-                console.log("bed time", timeStr);
-                for (var i = 0; i < newTimeCalculate; i++) {
-                    $scope.jetLag.day[i] = i + 1;
-                    // newTimeCalculate =Math.floor(timeCalculate);
-                    d1.setDate(d.getDate() + numberOfDaysToAdd);
-                    var dd = d1.getDate();
-                    var mm = d1.getMonth() + 1;
-                    var y = d1.getFullYear();
-                    var someFormattedDate = (mm + '/' + dd + '/' + y);
-                    $scope.jetLag.date[i] = someFormattedDate;
-                    ++numberOfDaysToAdd;
-                    ///////set the bed time////////////////////////
-                    if (hoursUpdated == "null") { // if bedtime
-                        // console.log("this is a test");
-                        var parts = timeStr.split(':');
-                        // console.log("parts", parts);
-                        var hours = parseInt(parts[0]);
-                        // if()
-                        hours -= 2;
-                        t24hoursFormat -= 2;
-                        // console.log("hours1", hours);
-                        if (hours <= 0) {
-                            // easily flip it by adding 12
-                            hours += 12;
-                            // t24hoursFormat += 12;
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("first if part");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    // console.log("first else part");
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        // alert(t24hoursFormat);
-                        if (t24hoursFormat < 12 && t24hoursFormat > 0) {
-                            // alert("in test");
-                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                        }
-                        timeStr = hours + ':' + parts[1];
-                        // console.log("timestr", timeStr);
-                        hoursUpdated = hours;
-
-                    } else {
-                        hours -= 2;
-                        t24hoursFormat -= 2;
-
-                        // console.log("else part", hours);
-                        if (hours <= 0) {
-                            // easily flip it by adding 12
-                            hours += 12;
-                            console.log("hours in else part second", hours);
-                            // swap am & pm
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("second if part");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-
-                        } else {
-                            if (parts[1].match(/(AM|am)/)) {
-                                // console.log("second else part");
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                                // keep the case
-                            } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
-                                // alert("am condition");
-                                parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
-                                // alert("yes");
-                                // noon condition
-                                parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                // alert(parts[1]);
-                            } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
-                                // alert("no");
-                                //night condition
-                                parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
-
-                            } else if (parts[1].match(/(AM|am)/)) {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        timeStr = hours + ':' + parts[1];
-                        // console.log("second timestr", timeStr);
-                        hoursUpdated = hours;
-                    } //else  bedtime
-
-                    //////////////glasses time////////////
-                    if (updatedGlasses == "null") { //if glasses time
-                        var parts1 = glassesStr.split(':');
-                        var hours1 = parseInt(parts1[0]);
-                        hours1 -= 2;
-                        t24hoursFormat1 -= 2;
-                        if (hours1 <= 0) {
-                            hours1 += 12;
-                            // swap am & pm
-                            if (parts1[1].match(/(AM|am)/)) {
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-                                // keep the case
-                            } else {
-                                if (hours < 12) {
-                                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
-                            // alert("in test");
-                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                        }
-                        glassesStr = hours1 + ':' + parts1[1];
-                        updatedGlasses = hours1;
-
-                    } else { //else glasses time
-                        hours1 -= 2;
-                        t24hoursFormat1 -= 2;
-                        if (hours1 <= 0) {
-                            // easily flip it by adding 12
-                            hours1 += 12;
-                            // swap am & pm
-                            if (parts1[1].match(/(AM|am)/)) {
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        } else {
-
-                            if (parts1[1].match(/(AM|am)/)) {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-
-                            } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
-                                // alert("am condition");
-                                parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
-
-                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
-                                // noon condition
-                                parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                // alert(parts[1]);
-
-                            } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
-                                //night condition
-                                parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
-
-                            } else if (parts1[1].match(/(AM|am)/)) {
-                                if (hours1 < 12) {
-                                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
-                                }
-                            }
-                        }
-                        glassesStr = hours1 + ':' + parts1[1];
-                        updatedGlasses = hours1;
-                    }
-
-                    $scope.jetLag.bedtime[i] = timeStr;
-                    $scope.jetLag.time[i] = glassesStr;
-
-
-                } //for
-            } else {
-                for (var i = 0; i < 6; i++) {
-                    $scope.jetLag.day[i] = "";
-                    $scope.jetLag.date[i] = "";
-                    $scope.jetLag.bedtime[i] = "";
-                    $scope.jetLag.time[i] = "";
-                }
+            var newTimeCalculate = Math.abs(timeCalculate);
+            $scope.jetLagData = [];
+            for(var z=0;z<newTimeCalculate;z++){
+                $scope.jetLagData.push({'id':z});
             }
+
+            var jetLagParams = {};
+                jetLagParams.glasses_time       = glasses_time;
+                jetLagParams.wakeup             = wakeup;
+                jetLagParams.bedtime            = bedtime;
+                jetLagParams.newTimeCalculate   = newTimeCalculate;
+                jetLagParams.d                  = d;
+                jetLagParams.d1                 = d1;
+                jetLagParams.hoursUpdated       = "null";
+                jetLagParams.updatedGlasses     = "null";
+                
+            /*
+             *  if (td > 0) // travelling ahead.
+             *  if (td < 0) // travelling behind.
+            */
+            $scope.jetLag.day       = [];
+            $scope.jetLag.date      = [];
+            $scope.jetLag.bedtime   = [];
+            $scope.jetLag.time      = [];
+            if (td > 0) { // travelling ahead
+                getTravelAheadJetLag($scope.jetLag, jetLagParams);
+            } else { // travelling behind
+                getTravelBehindJetLag($scope.jetLag, jetLagParams);
+            }
+            $scope.ifJetLagFilled = true;
         } else {
             for (var i = 0; i < 6; i++) {
                 $scope.jetLag.day[i] = "";
@@ -2125,6 +1840,7 @@ console.log(console.log(dataCharts3));
                 $scope.jetLag.bedtime[i] = "";
                 $scope.jetLag.time[i] = "";
             }
+            $scope.ifJetLagFilled = false;
         }
     }
 
@@ -2143,7 +1859,7 @@ console.log(console.log(dataCharts3));
             inputJson.is_completed = false;
             // inputJson.is_save=true;
             jetLagService.getJetLagData(inputJson).success(function(response) {
-                // console.log("response", response);
+                //console.log("response", response);
                 if (response.messageId == 200) {
                     if (response.data.length != 0) {
                         $scope.jetLagId = response.data[0]._id;
@@ -2163,11 +1879,12 @@ console.log(console.log(dataCharts3));
                     console.log("Error.");
                 }
             })
-        }
-        /*
-         * save the jet lag calculator controller.
-         * developer : Shilpa Sharma
-         */
+    }
+        
+    /*
+     * save the jet lag calculator controller.
+     * developer : Shilpa Sharma
+     */
     inputJsonData.jetLag = {};
     inputJsonData.jet_lags = [];
     $scope.is_save = true;
@@ -2195,7 +1912,7 @@ console.log(console.log(dataCharts3));
             }
             $ionicLoading.hide();
             var confirmPopup = $ionicPopup.confirm({
-                title: 'confirm',
+                title: 'Confirm',
                 template: JET_LAG_CONFIRM,
             });
             confirmPopup.then(function(res) {
@@ -2294,8 +2011,395 @@ console.log(console.log(dataCharts3));
      * developer : Shilpa Sharma
      */
     $scope.resetJetLagData = function() {
-
         $state.reload('tabs.jetLag');
+    }
+    
+    function getTravelAheadJetLag(jetLag, jetLagParams){
+        glasses_time        = jetLagParams.glasses_time;
+        wakeup              = jetLagParams.wakeup;
+        bedtime             = jetLagParams.bedtime;
+        newTimeCalculate    = jetLagParams.newTimeCalculate;
+        d                   = jetLagParams.d;
+        d1                  = jetLagParams.d1;
+        hoursUpdated        = jetLagParams.hoursUpdated;
+        updatedGlasses      = jetLagParams.updatedGlasses;
+                
+        var timeStr = ''; var timeStr2 = '';
+        var glassesStr = '';
+        glassesStr = glasses_time;
+        timeStr = bedtime;
+        timeStr2 = timeStr;
+        glassesStr2 = glassesStr;
 
+        /*Get Twenty hours format starts here*/
+        var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
+            gethours = gethours + 12;
+        } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
+            gethours = gethours - 12;
+        }
+
+        var sHours = gethours.toString();
+        if (gethours < 10) {
+            sHours = "0" + sHours;
+        }
+        var t24hoursFormat = sHours;
+        var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
+            gethours1 = gethours1 + 12;
+        } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
+            gethours1 = gethours1 - 12;
+        }
+        var sHours1 = gethours1.toString();
+        // var sMinutes = getmint24hoursFormatutes.toString();
+
+        if (gethours1 < 10) {
+            sHours1 = "0" + sHours1;
+        }
+        var t24hoursFormat1 = sHours1;
+        /* Get Twenty hours format ends here */
+        console.log("bed time", timeStr);
+        for (var i = 0; i < newTimeCalculate; i++) {
+            $scope.jetLag.day[i] = i + 1;
+            if(i==0){
+                d1.setDate(d.getDate());
+            }else{
+                d1.setDate(d1.getDate() - 1);
+            }
+        
+            //var d2 = new Date(d.getTime() - 86400);
+            var dd = d1.getDate();
+            var mm = d1.getMonth() + 1;
+            var y = d1.getFullYear();
+            var someFormattedDate = (mm + '/' + dd + '/' + y);
+            $scope.jetLag.date[i] = someFormattedDate;
+            
+            ///////set the bed time////////////////////////
+            if (hoursUpdated == "null") { // if bedtime
+                var parts = timeStr.split(':');
+                var hours = parseInt(parts[0]);
+                hours -= 2;
+                t24hoursFormat -= 2;
+            
+                if (hours <= 0) {
+                    hours += 12;
+                    // t24hoursFormat += 12;
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                if (t24hoursFormat < 12 && t24hoursFormat > 0) {
+                    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } else {
+                hours -= 2;
+                t24hoursFormat -= 2;
+                if (hours <= 0) {
+                    // easily flip it by adding 12
+                    hours += 12;
+                    console.log("hours in else part second", hours);
+                    // swap am & pm
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                } else {
+                    if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } //else  bedtime
+            //////////////glasses time////////////
+            if (updatedGlasses == "null") { //if glasses time
+                var parts1 = glassesStr.split(':');
+                var hours1 = parseInt(parts1[0]);
+                hours1 -= 2;
+                t24hoursFormat1 -= 2;
+                if (hours1 <= 0) {
+                    hours1 += 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
+                    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+
+            } else { //else glasses time
+                hours1 -= 2;
+                t24hoursFormat1 -= 2;
+                if (hours1 <= 0) {
+                    // easily flip it by adding 12
+                    hours1 += 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                } else {
+                    if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+            }
+            $scope.jetLag.bedtime[i] = timeStr;
+            $scope.jetLag.time[i] = glassesStr;
+        } //for
+    }
+    
+    function getTravelBehindJetLag(jetLag, jetLagParams){
+        glasses_time        = jetLagParams.glasses_time;
+        wakeup              = jetLagParams.wakeup;
+        bedtime             = jetLagParams.bedtime;
+        newTimeCalculate    = jetLagParams.newTimeCalculate;
+        d                   = jetLagParams.d;
+        d1                  = jetLagParams.d1;
+        hoursUpdated        = jetLagParams.hoursUpdated;
+        updatedGlasses      = jetLagParams.updatedGlasses;
+        
+        var timeStr = ''; var timeStr2 = ''; var glassesStr = '';
+        glassesStr = glasses_time;
+        timeStr = bedtime;
+        timeStr2 = timeStr;
+        glassesStr2 = glassesStr;
+
+        /*Get Twenty hours format starts here*/
+        var gethours = Number(timeStr2.match(/^(\d\d?)/)[1]);
+    //console.log('gethours = ', gethours);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM = timeStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+    //console.log('getAMPM = ', getAMPM);
+        if (getAMPM == 'PM' || getAMPM == 'pm' && gethours < 12) {
+            gethours = gethours + 12;
+        } else if (getAMPM == 'AM' || getAMPM == "am" && gethours == 12) {
+            gethours = gethours - 12;
+        }
+    //console.log('gethours new = ', gethours);
+        var sHours = gethours.toString();
+        // var sMinutes = getminutes.toString();
+        if (gethours < 10) {
+            sHours = "0" + sHours;
+        }
+        var t24hoursFormat = parseInt(sHours);
+    //console.log('sHours = ', sHours);
+    //console.log('t24hoursFormat = ', t24hoursFormat);
+        var gethours1 = Number(glassesStr2.match(/^(\d\d?)/)[1]);
+        // var getminutes = Number(timeStr2.match(/:(\d\d?)/)[1]);
+        var getAMPM1 = glassesStr2.match(/\s(.AM|am|PM|pm)$/i)[1];
+
+        if (getAMPM1 == 'PM' || getAMPM1 == 'pm' && gethours1 < 12) {
+            gethours1 = gethours1 + 12;
+        } else if (getAMPM1 == 'AM' || getAMPM1 == "am" && gethours1 == 12) {
+            gethours1 = gethours1 - 12;
+        }
+        var sHours1 = gethours1.toString();
+        // var sMinutes = getmint24hoursFormatutes.toString();
+
+        if (gethours1 < 10) {
+            sHours1 = "0" + sHours1;
+        }
+        var t24hoursFormat1 = sHours1;
+        /* Get Twenty hours format ends here */
+        console.log("bed time====", timeStr);
+        for (var i = 0; i < newTimeCalculate; i++) {
+            $scope.jetLag.day[i] = i + 1;
+            if(i==0){
+                d1.setDate(d.getDate());
+            }else{
+                d1.setDate(d1.getDate() - 1);
+            }
+            
+            var dd = d1.getDate();
+            var mm = d1.getMonth() + 1;
+            var y = d1.getFullYear();
+            var someFormattedDate = (mm + '/' + dd + '/' + y);
+            $scope.jetLag.date[i] = someFormattedDate;
+            
+            ///////set the bed time////////////////////////
+        //console.log('hoursUpdated = ', hoursUpdated);
+            if (hoursUpdated == "null") { // if bedtime
+            //console.log('timeStr = ', timeStr);
+                var parts = timeStr.split(':');
+                var hours = parseInt(parts[0]);
+                hours += 2;
+                t24hoursFormat += 2;
+            //console.log('-------hours ', hours, t24hoursFormat); // 13, 25
+                if (hours >= 12) {
+                    hours -= 12;
+                    
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                }
+                //if (t24hoursFormat < 12 && t24hoursFormat > 0) {
+                //    parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                //}
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } else {
+                hours += 2;
+                t24hoursFormat += 2;
+                if (hours >= 12) {
+                    hours -= 12;
+                    // swap am & pm
+                    if (parts[1].match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                } else {
+                    if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                        // keep the case
+                    } else if (parts[1].match(/(AM|am)/) && hours <= 12 && timeStr2.match(/(AM|am)/)) {
+                        parts[1] = parts[1].replace('AM', 'PM').replace('am', 'pm');
+
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat >= 1 && t24hoursFormat <= 12 && timeStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts[1].match(/(PM|pm)/) && hours <= 12 && t24hoursFormat > 12 && timeStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts[1] = parts[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts[1].match(/(AM|am)/)) {
+                        if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                timeStr = hours + ':' + parts[1];
+                hoursUpdated = hours;
+            } //else  bedtime
+            
+            //////////////glasses time////////////
+            if (updatedGlasses == "null") { //if glasses time
+                var parts1 = glassesStr.split(':');
+                var hours1 = parseInt(parts1[0]);
+                hours1 += 2;
+                t24hoursFormat1 += 2;
+                if (hours1 >= 12) {
+                    hours1 -= 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                        // keep the case
+                    } else {
+                        //if (hours < 12) {
+                            parts[1] = parts[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                }
+                //if (t24hoursFormat1 < 12 && t24hoursFormat1 > 0) {
+                //    parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                //}
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+
+            } else { //else glasses time
+                hours1 += 2;
+                t24hoursFormat1 += 2;
+                if (hours1 >= 12) {
+                    hours1 -= 12;
+                    // swap am & pm
+                    if (parts1[1].match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else {
+                        //if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        //}
+                    }
+                } else {
+                    if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    } else if (parts1[1].match(/(AM|am)/) && hours1 <= 12 && glassesStr2.match(/(AM|am)/)) {
+                        parts1[1] = parts1[1].replace('AM', 'PM').replace('am', 'pm');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 >= 1 && t24hoursFormat1 <= 12 && glassesStr2.match(/(PM|pm)/)) {
+                        // noon condition
+                        parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                    } else if (parts1[1].match(/(PM|pm)/) && hours1 <= 12 && t24hoursFormat1 > 12 && glassesStr2.match(/(PM|pm)/)) {
+                        //night condition
+                        parts1[1] = parts1[1].replace('PM', 'PM').replace('pm', 'pm');
+                    } else if (parts1[1].match(/(AM|am)/)) {
+                        if (hours1 < 12) {
+                            parts1[1] = parts1[1].replace('PM', 'AM').replace('pm', 'am');
+                        }
+                    }
+                }
+                glassesStr = hours1 + ':' + parts1[1];
+                updatedGlasses = hours1;
+            }
+            $scope.jetLag.bedtime[i] = timeStr;
+            $scope.jetLag.time[i] = glassesStr;
+        } //for
     }
 });

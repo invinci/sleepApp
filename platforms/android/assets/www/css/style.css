@@ -1,1 +1,648 @@
 /* Empty. Add your own CSS if you like */
+body{
+	font-size: 16px ;
+}
+.custom-header{
+	background-color: #3c1e69;
+	color: #fff !important;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.bar h1.title{
+	color: #fff !important;
+	text-transform: uppercase;
+}
+.custom-content{
+	position: absolute;
+	top: 44px;
+}
+.button-wrapper{
+	width: 100%;
+	text-align: center;
+}
+.button-wrapper1{
+	float: left;
+	width: 100%;
+	text-align: center;
+	margin-top: 20px !important;
+}
+.button-wrapper2{
+	width: 100%;
+	text-align: center;
+	padding: 0px 10px !important;
+}
+.button-wrapper3{
+	width: 100%;
+	text-align: center;
+	padding: 0px 10px !important;
+	margin-top: 30px;
+}
+.custom-button{
+	background-color: #3d7822;
+	color: #fff;
+	border-radius: 5px;
+}
+.custom-button1{
+	background-color:#387ef5;
+	color: #fff;
+	text-transform: none;
+	border-radius: 5px;
+	padding: 3px;
+}
+.complete-button{
+	background-color: #3d7822;
+	color: #fff;
+	border-radius: 5px;
+	width: 100% !important;
+	margin: 0 auto !important;
+}
+.button:hover{
+	background-color: #3d7822;
+	color: #fff;
+}
+.custom-button1:hover{
+	background-color:#387ef5;
+}
+.btnWrapper{
+	margin: 5px 0px;
+	float: left;
+	width: 100%;
+	padding:5px 5px 0px 0px;
+}
+.inputLabel{
+	min-height: 70px !important;
+}
+.custom-link{color: #0000EE;margin-top: 30px;/*cursor: pointer;*/}
+.signUpLink{float: left;margin-top: 20px;}
+.linktoSignup{text-decoration: none;color: #0000EE;}
+.patientName{font-size: 14px !important;font-weight: normal !important;}
+.myList{list-style-type: decimal;padding-left: 18px !important;}
+.sortBy{float: left;width: 20%;line-height: 65px;}
+.customItem{float: left;width: 40%;line-height: 25px;}
+.btnBar{float: left;width: 60%;}
+.button-bar{box-shadow: none;}
+.add-button-wrapper{float: right;width: 15%;margin-top: 10px;}
+.button-bar > .button {padding: 0px;text-transform: none;}
+.settingsBtn{padding-top: 0px !important;font-size: 26px !important;}
+.add-button{text-align: center;background-color: #3d7822;color: #fff;border:none;padding: 0px;}
+.topDiv{float: left;width: 100%;}
+.listDiv{float: left;width: 100%;}
+.colorSpan{background-color: red;width: 20px;height: 20px;float: left;border-radius: 15px;margin-right: 10px;}
+.listItem{font-size: 16px !important;border: 1px solid #ddd !important;border-right: none !important;}
+.icon-size{font-size: 22px !important;}
+.profileImageDiv{width: 100%;float: left;text-align: center;}
+.myform{float: right;width: 100%;}
+.profileImage{width: 100px;height: 100px;margin: 0 auto;border: 1px solid #ddd;position: relative;display: inline-block;}
+.edit {
+	position: absolute;
+	right: 0;
+	top: 78px;
+	left:70px;
+}
+.editImageIcon{
+	background-color: rgba(0, 0, 0, 0.4);
+	color: #fff;
+	padding: 3px 10px;
+}
+
+.fixedBtnDiv{
+	float: left;
+	width: 100%;
+	margin-top: 10px;
+	padding: 0px 10px;
+}
+.clientName{
+	width: 70%;
+	float: left;
+	line-height: 40px;
+	font-size: 18px;
+	font-weight: bold;
+	padding-left: 5px;
+}
+.capitalize {
+    text-transform: capitalize;   
+}
+.update-button{
+	float: left;
+	width: 28%;
+	text-align: right;
+}
+.toggle .track{
+	background-color: transparent !important;
+	border: solid 1px #e6e6e6 !important;
+}
+.toggle input:checked + .track{
+	background-color: transparent !important;
+	border: solid 1px #e6e6e6 !important;
+}
+.updateBtn{
+	max-width: 70px !important;
+	min-height: 35px !important;
+	width: 70px !important;
+	text-align: center;
+	background-color: #3d7822;
+	color: #fff;
+	border:none;
+	padding: 0px !important;
+	border-radius: 5px !important;
+	line-height: 37px !important;
+}
+.right-align{
+	text-align: right !important;
+	color: green !important;
+}
+.bar{
+	box-shadow: none;
+}
+.bar-subheader{
+	height: 60px !important;
+	border: 0 !important;
+}
+.form-error {
+    color: #D33F3D;
+    font-size: 13px;
+    float: left;
+}
+
+.questionWrapper{
+	margin-top: 10px;
+	padding: 0px 5px;
+}
+
+.emgCallDiv{
+	background-color: #F52C02;
+	color: #fff !important;
+	text-decoration: none; 
+  	float: left;
+  	border-radius: 10px;
+  	text-align: center;
+  	font-size: 18px;
+  	text-transform: uppercase;
+  	width: 100%;
+  	height: 90px;
+  	padding: 0px 15px !important;
+  	line-height: 85px;
+}
+.emgCallDiv:hover{
+	background-color: #F52C02;
+}
+.emgCallDiv:active{
+	background-color: #F52C02;
+}
+.emgCallDiv:visited{
+	background-color: #F52C02;
+}
+.custom-icon{
+	font-size: 20px !important;
+}
+
+.rowMargin{
+	margin-bottom: 20px;
+}
+.fixedBtnDiv1{
+	text-align: center;
+	float: left;
+	width: 100%;
+	padding: 10px 0px;
+}
+.clientName1{
+	width: 100%;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 40px;
+}
+.sessionWrapper{
+	float: left;
+	width: 100%;
+	margin-top: 20px;
+}
+.goalWrapper{
+	width: 90%;
+	margin: 0 auto;
+	margin-bottom: 10px;
+}
+.containerWrapper{
+	width: 90%;
+	margin: 0 auto;
+	margin-bottom: -10px;
+}
+.customRow{
+	border: 1px solid #000;
+	padding: 0px !important;
+}
+h4{
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: 18px;
+	margin: 0px;
+}
+.sesssionText{
+	color: #2f4f4f;
+	margin: 5px 0px !important;
+}
+.responsive-sm .col{
+	margin: 0px !important;
+}
+.rightAlignText{
+	text-align: right !important;
+}
+.selectItem{
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border: none;
+	color: #000;
+	padding: 5px !important;
+	background-color: #f9f9f9;
+	outline: 0;
+	width: 100%;
+}
+.selectdayItem{
+	color: #000;
+	padding: 5px !important;
+	background-color: #f9f9f9;
+	font-size: 16px;
+	width: 100%;
+	border: 1px solid #f1f1f1;
+}
+.nextApptText{
+	float: left;
+	width: 30%;
+}
+
+.datetimeText{
+	float: left;
+	width: auto;
+	background-color: #e0e0e0;
+	color: #467321;
+	padding: 0px 2px;
+}
+.main-session-para{
+	margin-top: 30px;
+	float: left;
+	width: 100%;
+}
+.sessionpara{
+	margin-top: 5px;
+	float: left;
+	width: 100%;
+}
+.nextsessionText{
+	width: 50%;
+	float: left;
+	text-decoration: underline;
+	font-size: 16px;
+}
+.yesDayText{
+	float: right;
+	width: 25%;
+	font-size: 16;
+	text-align: right;
+}
+
+.percentageSpan{
+	font-size: 14px;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    float: left;
+    text-align: center;
+    line-height: 40px;
+    margin-left: 3px;
+
+}
+
+.sesssionText1{
+	width: 70%;
+	float: left;
+	color: #000;
+	line-height: 40px;
+}
+.yesDayText1{
+	float: right;
+	line-height: 40px;
+}
+.chartDiv{
+	float: left;
+	width: 100%;
+}
+.chartDiv1{
+	float: left;
+	width: 100%;
+}
+.topDiv{
+	margin: 40px 0px 5px 0px;
+}
+.checkInDailyMetric{
+	border-bottom: 1px solid #000;
+}
+.customCol{
+	float: left;
+}
+.customBtnBar1{
+	margin: 0px !important;
+	height: 40px !important;
+	min-height: 35px !important;
+	line-height: 40px !important;
+	border: 1px solid #ddd !important;
+}
+.customBtnBar1:hover{
+	color: #fff !important;
+}
+.button.button-light.active, .button.button-light.activated{
+	background-color: #3d7822;
+	color: #fff;
+	border: 0px !important;
+}
+
+.yes{
+	padding: 5px 0px;
+    margin-right: 5px;
+    position: relative;
+    top: -10px;
+}
+.no{
+	padding: 5px 0px;
+    margin-left: 5px;
+    position: relative;
+    top: -10px;
+}
+.containerDiv{
+	width: 100%;
+	float: left;
+	padding: 10px;
+}
+.containerDiv1{
+	width: 100%;
+	float: left;
+	padding: 0px 10px;
+	margin-top: 10px;
+}
+.rowDiv{
+	margin-top: 25px !important;
+}
+.toggleBar{
+	float: right;
+	/*width: 100%;*/
+	font-size: 16px;
+	text-align: right;
+}
+.responsiveCheckInDiv{
+	float: left;
+	width: 50%;
+	padding-top: 7px;
+}
+.responsiveCheckInDiv1{
+	float: left;
+	width: 50%;
+	text-align: right !important;
+}
+.rateSpan{
+	float: left;
+}
+.dailytMetricSize{
+	font-weight: bold;
+}
+.removePadding{
+	padding: 0px !important;
+}
+.smiley{
+	float: left;
+	font-size: 25px;
+    line-height: 25px;
+	color: #a9a9a9;
+}
+
+.DailyMetricBottom{
+	width: 100%;
+}
+.card{
+	margin: 0px !important;
+	margin-top: 10px !important;
+	border-radius: 0px !important;
+	text-align: center;
+}
+.card .item{
+	padding: 5px !important;
+}
+
+.greenDiv{
+	background-color: green !important;
+}
+.yellowDiv{
+	background-color: yellow !important;
+	color: #000 !important;
+}
+.redDiv{
+	background-color: red !important;
+}
+
+.tabs-dark > .tabs, .tabs.tabs-dark{
+	background-color: #3c1e69 !important;
+	color: #fff !important;
+	border: 0px !important;
+}
+.tab-item.tab-item-active, .tab-item.active, .tab-item.activated {
+	background-color: #fff !important;
+    color: #3c1e69 !important;
+}
+.emptyDiv{
+	min-height: 10px !important;
+}
+
+.popup-buttons .button
+{
+    background-color: #387ef5;
+    color: white;
+    border: none;
+    box-shadow: none;
+    padding: 0px !important;
+    font-size: 16px;
+    font-weight: 500;
+    -webkit-border-radius: 4px;
+    border-radius: 5px !important;
+    margin: 26px 5px 0 5px;
+    cursor: pointer; 
+    text-transform: capitalize !important;
+}
+.country-select{
+	border-bottom: 1px solid #ddd !important;
+}
+
+.countrySelect{
+	padding: 0px !important;
+	border-top: 1px solid #ddd !important;
+	border-right: none !important;
+	max-width: 46% !important;
+	right: 25px !important;
+}
+
+.countryCodeField{
+	width: 30% !important;
+	float: left;
+}
+
+.phoneNumberField{
+	width: 60% !important;
+	float: right !important;
+}
+
+input[readonly]:not(.cloned-text-input){
+	background-color: #fff !important;
+}
+
+/* *************************************** */
+
+.header-item{
+	left: 0 !important;
+	right: 0 !important;
+	text-align: center !important;
+}
+
+.headerTitle{
+	text-align: center !important;
+}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"]{
+	font-size: 12px ;
+}
+.item-input{
+	padding-left: 0px !important;
+}
+.tab-title{
+	font-size: 11px !important;
+}
+
+.reminderDiv{
+	float: left;
+	width: 100%;
+	line-height: 34px;
+}
+
+.dailyReminderTitle{
+	font-weight: bold !important;
+	font-size: 18px !important;
+}
+.reminderTime{
+	font-size: 28px;
+	text-align: center; float: right; width: 50%;
+}
+.editBtn{
+	padding-top: 9px !important;
+}
+.bar.bar-header .button+.title{
+	text-align: center !important;
+}
+
+/************************************ Carousal Start ******************************/
+
+.slider {
+  height: 100%;
+  text-align: center;
+background: rgb(252,236,252); /* Old browsers */
+background: -moz-linear-gradient(top, rgba(252,236,252,1) 0%, rgba(251,166,225,1) 49%, rgba(251,166,225,1) 55%, rgba(253,137,215,1) 77%, rgba(255,124,216,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, rgba(252,236,252,1) 0%,rgba(251,166,225,1) 49%,rgba(251,166,225,1) 55%,rgba(253,137,215,1) 77%,rgba(255,124,216,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, rgba(252,236,252,1) 0%,rgba(251,166,225,1) 49%,rgba(251,166,225,1) 55%,rgba(253,137,215,1) 77%,rgba(255,124,216,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', endColorstr='#ff7cd8',GradientType=0 ); /* IE6-9 */
+}
+.slider-slide {
+  color: #000;
+  text-align: center;
+  margin: 25px 0px 5px 0px;
+}
+
+.startBtn:hover{
+	background-color: #3c1e69 !important;
+}
+.backBtn{
+	background-color: #3c1e69;
+}
+.backBtn:hover{
+	background-color: #3c1e69 !important;
+}
+
+.carouselImage{
+	width: 100% !important;
+	height: 75% !important;
+	margin: 0 auto;
+}
+.carouseltext{
+	float: left;
+	padding: 0px 8px;
+	margin-top: 10px !important;
+	text-align: center;
+	margin: 0 auto;
+	width: 100%;
+}
+.carousel-header{
+	background-color: transparent !important;
+	border: 0px !important;
+	position: absolute;
+	top: -25px;
+}
+.carousel-link{
+	color: #3c1e69;
+	position: absolute;
+	right: 7px;
+	top: 10px;
+	font-size: 18px;
+	text-transform: capitalize;
+}
+
+.bar-header {
+    border: 0px !important;
+    border-bottom-color: transparent !important;
+    background-image: none !important;
+    border-bottom: none !important;
+}
+
+/************** Carousal End ************/
+/* added by gurpreet */
+.largeText{word-wrap: normal;padding: 15px 0px;margin: 10px 0px;width: 100%;float: left;}
+.removePadding2{padding: 0 0 10px !important;}
+.checkInTitle{padding: 0px !important;text-align: center;}
+.lightHRs{border: 1px solid #efefef;}
+.borderBottom{border-bottom: 1px solid #eaeaea !important;}
+.borderBottom : hover{border-bottom: 1px solid #3c1e69 !important;}
+.responsiveCheckInDiv2title{
+	float: left;
+	width: 70%;
+	padding-top: 7px;
+}
+.responsiveCheckInDiv2{
+	float: left;
+	width: 30%;
+	text-align: right !important;
+}
+.fullWidth{width: 100%;}
+.form-error-right {color: #D33F3D; font-size: 13px; float: right;}
+
+/* durationPicker CSS */
+.rateSpan .item-button-right{border:none;}
+.rateSpan .item-button-right button{margin:0; padding: 0;}
+.rateSpan .item-button-right .button.button-positive.button-outline{color: inherit;font-size: 14px;}
+.idp-control button{padding: 0;}
+.popup-sub-title{font-size: medium}
+.popup-buttons .button.button-assertive{border-color: #e42112;
+    background-color: #ef473a;
+    color: #fff;}
+/* durationPicker CSS */
+/*added by shilpa*/
+.noPadding{padding: 0 !important;}
+.jetLagdiv {padding:5px;}
+.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px; }
+.itemInput {color:  #CD5C5C;}
+.itemText{ font-size:14px; color: #CD5C5C !important;}
+.chartSecond{padding-top:2px !important;}
+.alignCenter{text-align:center;}
+.msgBox{border: 0px solid #3C1E69;background-color: #ebe8f0;padding: 10px 3px;}
+.msgBox p{color: #3C1E69 !important;}
+.timezoneDropdown{width: 100%; min-height: 40px;background: transparent;color: #999;border-color: #ccc;}
+.tz-row, .tz-col{padding: 0px !important;}
+.note-label{color: #555;text-align: justify;width: 100%;float: left;padding: 1px;margin-bottom: 10px;}
+
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"]{
+	font-size: 16px !important;
+}

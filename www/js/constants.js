@@ -1,12 +1,11 @@
 // APP's PLAYSTORE DOWNLOAD LINK
 var DOWNLOAD_LINK = 'http://google.com';
 
-// HOST
-//var HOST = 'http://52.39.212.226:4003';
-var HOST = 'http://localhost:3000';
+// HOSTs
+var HOST = 'http://52.39.212.226:4021';
+//var HOST = 'http://localhost:3000';
 
 // MESSAGES
-
 var SIGNUP_LOGIN = "Your account has been created. Please login.";
 var LOGIN_ERROR = "Either username or password is incorrect.";
 var LOGIN_STATUS_ERROR = "Your account is not active. Please contact your clinician."
@@ -14,17 +13,28 @@ var USER_NAME_ERROR = "Username already exist. Please try another.";
 var EMAIL_ERROR = "Email already exist. Please try another.";
 var EMAIL_SERVER_ERROR = 'email already exists.';
 var PARENT_ID_ERROR = "Reference code does not match.";
+
+// assessment messages
 var ASSESSMENT_SUBMITTED_MESSAGE = "You have already submitted your assessment.";
 var NO_ASSESSMENT_MESSAGE = "No assessments available right now for you.";
-var CHECK_IN_SUCCESS = "Check in data updated.";
-var CHECK_IN_ERROR = "Unable to update check in data.";
-var CHECK_IN_MESSAGE = "You have already submitted your check in for today.";
+
+// check in messages
+var CHECK_IN_SAVE				= "Check in data has been submitted.";
+var CHECK_IN_UPDATE				= "Check in data has been updated.";
+var CHECK_IN_ERROR				= "Unable to update check in data.";
+var CHECK_IN_MESSAGE			= "You have submitted your allowed number(2) of check-ins for today.";
+var NO_CHECK_IN					= "No check-in data available for this date.";
+var ONE_CHECK_IN_MESSAGE		= "You have submitted 1(2) check-ins for today.";
+var PREV_ONE_CHECK_IN_MESSAGE	= "You have submitted 1(2) check-ins for today. Check-ins cannot be submitted for previous days.";
+var PREV_ALL_CHECK_IN_MESSAGE	= "You have submitted your allowed number(2) of check-ins for today. Check-ins cannot be submitted for previous days.";
+
+// jet lag messages
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";
 var JET_LAG_SUCCESS = "Jet Lag  save completely.";
-var JET_LAG_CONFIRM ='Are you sure you want to save jet lag information?.';
+var JET_LAG_CONFIRM ='Are you sure you want to save jet lag information?';
 var JET_LAG_COMPLETE ='Are you sure you want to Complete jet lag information?';
 var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is Completed.';
-var NO_CHECK_IN='No  previous Check In available. ';
+
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";
 

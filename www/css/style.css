@@ -73,7 +73,7 @@ body{
 .inputLabel{
 	min-height: 70px !important;
 }
-.custom-link{color: #0000EE;margin-top: 30px;}
+.custom-link{color: #0000EE;margin-top: 30px;/*cursor: pointer;*/}
 .signUpLink{float: left;margin-top: 20px;}
 .linktoSignup{text-decoration: none;color: #0000EE;}
 .patientName{font-size: 14px !important;font-weight: normal !important;}
@@ -410,9 +410,9 @@ h4{
 }
 .smiley{
 	float: left;
-	font-size: 29px;
+	font-size: 25px;
+    line-height: 25px;
 	color: #a9a9a9;
-	line-height: 29px;
 }
 
 .DailyMetricBottom{
@@ -422,6 +422,7 @@ h4{
 	margin: 0px !important;
 	margin-top: 10px !important;
 	border-radius: 0px !important;
+	text-align: center;
 }
 .card .item{
 	padding: 5px !important;
@@ -630,10 +631,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 /* durationPicker CSS */
 /*added by shilpa*/
 .noPadding{padding: 0 !important;}
-.jetLagdiv {padding:3%;}
+.jetLagdiv {padding:5px;}
 .jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px; }
 .itemInput {color:  #CD5C5C;}
 .itemText{ font-size:14px; color: #CD5C5C !important;}
 .chartSecond{padding-top:2px !important;}
 .alignCenter{text-align:center;}
+.msgBox{border: 0px solid #3C1E69;background-color: #ebe8f0;padding: 10px 3px;}
+.msgBox p{color: #3C1E69 !important;}
+.timezoneDropdown{width: 100%; min-height: 40px;background: transparent;color: #999;border-color: #ccc;}
+.tz-row, .tz-col{padding: 0px !important;}
+.note-label{color: #555;text-align: justify;width: 100%;float: left;padding: 1px;margin-bottom: 10px;}
 
+textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="number"], input[type="email"], input[type="tel"]{
+	font-size: 16px !important;
+}

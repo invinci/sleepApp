@@ -7,7 +7,7 @@
       <div class="list">
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="Username" name="username" ng-model="user.username" required>
+          <input type="text" placeholder="Username" name="username" ng-model="user.username" autofocus required/>
         </label>
         <div class="form-error" ng-show="signinForm.username.$invalid && !signinForm.username.$pristine" >Username is required.</div>
         <label class="item item-input item-floating-label">
@@ -15,7 +15,6 @@
           <input type="password" placeholder="Password" name="password" ng-model="user.password" required>
         </label>
         <div class="form-error" ng-show="signinForm.password.$error.required && signinForm.password.$dirty" >Password is required.</div>
-        <div class="custom-link" ui-sref="forgotpassword">Forgot Password</div>
       </div>
 
       <div class="button-wrapper">
@@ -24,7 +23,10 @@
     </form> 
 
     <div class="button-wrapper signUpLink">
-      <a class="linktoSignup" type="submit" ui-sref="signup">Don't have a username & password ?</a>
+      <span class="custom-link" ui-sref="forgotpassword">Forgot Password?</span>
+    </div> 
+    <div class="button-wrapper signUpLink">
+      <a class="linktoSignup" type="submit" ui-sref="signup">Don't have account? Register</a>
     </div>  
   </ion-content>
 </ion-view>
