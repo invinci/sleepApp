@@ -2,8 +2,8 @@
 var DOWNLOAD_LINK = 'http://google.com';
 
 // HOSTs
-var HOST = 'http://52.39.212.226:4021';
-//var HOST = 'http://localhost:3000';
+//var HOST = 'http://52.39.212.226:4021';
+var HOST = 'http://localhost:3000';
 
 // MESSAGES
 var SIGNUP_LOGIN = "Your account has been created. Please login.";
@@ -21,7 +21,7 @@ var NO_ASSESSMENT_MESSAGE = "No assessments available right now for you.";
 // check in messages
 var CHECK_IN_SAVE				= "Check in data has been submitted.";
 var CHECK_IN_UPDATE				= "Check in data has been updated.";
-var CHECK_IN_ERROR				= "Unable to update check in data.";
+var CHECK_IN_ERROR				= "Something went wrong. Please try again.";
 var CHECK_IN_MESSAGE			= "You have submitted your allowed number(2) of check-ins for today.";
 var NO_CHECK_IN					= "No check-in data available for this date.";
 var ONE_CHECK_IN_MESSAGE		= "You have submitted 1(2) check-ins for today.";
@@ -30,10 +30,10 @@ var PREV_ALL_CHECK_IN_MESSAGE	= "You have submitted your allowed number(2) of ch
 
 // jet lag messages
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";
-var JET_LAG_SUCCESS = "Jet Lag  save completely.";
+var JET_LAG_SUCCESS = "Jet Lag  saved successfully.";
 var JET_LAG_CONFIRM ='Are you sure you want to save jet lag information?';
-var JET_LAG_COMPLETE ='Are you sure you want to Complete jet lag information?';
-var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is Completed.';
+var JET_LAG_COMPLETE ='Are you sure you want to complete jet lag information?';
+var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is completed.';
 
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";

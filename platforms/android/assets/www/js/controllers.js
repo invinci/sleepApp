@@ -80,10 +80,11 @@ angular.module('sleepapp_patient.controllers', [])
                                 window.localStorage['USER_DATA'].password = inputString.originalPassword;
                                 var userData = JSON.parse(window.localStorage['USER_DATA']);
                                 var inputdata = {};
-                                inputdata.id = userData._id;
+                                inputdata._id = userData._id;
                                 inputdata.device_id = window.localStorage["DEVICE_ID"];
 			                    inputdata.platform_type = window.localStorage['PLATFORM'];
 			                    inputdata.time_zone = window.localStorage['TIME_ZONE'];
+                                //alert(JSON.stringify(inputdata));
                                 UserService.saveDeviceId(inputdata).success(function(data, status) {
                                 	$ionicLoading.hide();
                                     console.log(data);
@@ -234,11 +235,15 @@ angular.module('sleepapp_patient.controllers', [])
                     window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
                     var userData = JSON.parse(window.localStorage['USER_DATA']);
                     var inputdata = {};
-                    inputdata.id = userData._id;
+                    inputdata._id = userData._id;
                     inputdata.device_id = window.localStorage["DEVICE_ID"];
                     inputdata.platform_type = window.localStorage['PLATFORM'];
                     inputdata.time_zone = window.localStorage['TIME_ZONE'];
-                    console.log(inputdata);
+
+                    // inputdata.device_id = "dEzpYL7f5uo:APA91bEyDJOOiX37ftxfoAmTpz4cXn7-kgRZSvDBmAKWYo3UZA3S2Xf6qoRq3_ne9kzDp9XxCqyiAEABlqPmQ_vjtvJAwcZ17xIEcLKRAyv8Tk_o0Fr8V-EAJZqlPpnbGjPJzJ4hwVzf";
+                    // inputdata.platform_type = "android";
+                    // inputdata.time_zone = "-330";
+                    console.log(JSON.stringify(inputdata));
                     UserService.saveDeviceId(inputdata).success(function(data, status) {
                         $ionicLoading.hide();
                         if (data.status == "success") {

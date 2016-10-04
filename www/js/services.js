@@ -46,7 +46,8 @@ angular.module('sleepapp_patient.services', [])
             });
             return promise;
         },
-        saveDeviceId: function(user){
+        saveDeviceId: function(Data){
+            console.log(Data);
             var token = window.localStorage['ACCESS_TOKEN'];
             var AUTH_HEADER = {
                 'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ angular.module('sleepapp_patient.services', [])
             var promise = $http({
                 url: SAVE_DEVICE_ID_URL,
                 method: 'POST',
-                data: {'_id':user.id, 'device_id':user.device_id},
+                data: Data,
                 headers: AUTH_HEADER
             }).success(function(data, status, headers, config) {
                 return data;
