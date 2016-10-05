@@ -239,10 +239,6 @@ angular.module('sleepapp_patient.controllers', [])
                     inputdata.device_id = window.localStorage["DEVICE_ID"];
                     inputdata.platform_type = window.localStorage['PLATFORM'];
                     inputdata.time_zone = window.localStorage['TIME_ZONE'];
-
-                    // inputdata.device_id = "dEzpYL7f5uo:APA91bEyDJOOiX37ftxfoAmTpz4cXn7-kgRZSvDBmAKWYo3UZA3S2Xf6qoRq3_ne9kzDp9XxCqyiAEABlqPmQ_vjtvJAwcZ17xIEcLKRAyv8Tk_o0Fr8V-EAJZqlPpnbGjPJzJ4hwVzf";
-                    // inputdata.platform_type = "android";
-                    // inputdata.time_zone = "-330";
                     console.log(JSON.stringify(inputdata));
                     UserService.saveDeviceId(inputdata).success(function(data, status) {
                         $ionicLoading.hide();
@@ -1338,7 +1334,7 @@ angular.module('sleepapp_patient.controllers', [])
                 $scope.FirstChartData = firstData;
                 $scope.showChart1 = true;
                 
-                $scope.SecondChartSeries = ['Happy', 'Relaxed', 'Sleep enough'];
+                $scope.SecondChartSeries = ['Happy', 'Relaxed', 'Sleep Enough'];
                 $scope.ThirdChartSeries = ['Relaxed', 'Alcohol', 'Medication'];
 
                 setTimeout(function(){
@@ -1520,6 +1516,9 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.completeShow = false;
     $scope.formDisable = false;
     $scope.jetLagId = '';
+    $scope.completeDisable = true;
+
+    $scope.instructionNotes = INSTRUCTION_NOTE;
     // console.log("**********", userData._id);
     $scope.getJetLagData = function() {
         var inputJson = {};
@@ -1542,6 +1541,14 @@ angular.module('sleepapp_patient.controllers', [])
                         $scope.completeShow = true;
                         $scope.formDisable = true;
                     }
+                    var travelDate = new Date(response.data[0].travel_date);
+                    travelDate.setHours(0,0,0,0);
+                    var current_date = new Date();
+                    current_date.setHours(0,0,0,0);
+                    if(travelDate.valueOf() == current_date.valueOf()){
+                        $scope.completeDisable = false;
+                    }
+                    $scope.instructionNotes = COMPLETE_BUTTON_MSG;
                 }
             } else {
                 var alertPopup = $ionicPopup.alert({

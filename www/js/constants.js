@@ -38,6 +38,9 @@ var JET_LAG_COMPLETE_SUCCESS=' Your Jet lag  is completed.';
 
 var NO_DATA = "This page becomes active once you see your clinician. Thanks for your patience!";
 
+var INSTRUCTION_NOTE = "Note : If you are moving to a timezone which is not listed above, you can select the nearest timezone difference.";
+var COMPLETE_BUTTON_MSG = "Note : Your jet lag is active now. You will receive notifications based on new timings. Complete button will become active on travel date. Do complete the jet lag once travel is done.";
+
 // DIRECTORY PATH
 var PROFILE_PIC       = HOST + 'images/profile/';
 
