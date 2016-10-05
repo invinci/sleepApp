@@ -43,13 +43,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : GpSingh
      */
     $scope.signUp = function(userData) {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        $ionicLoading.show();
         //console.log("userData = ", userData);
 
         $scope.patient = userData;
@@ -80,19 +74,21 @@ angular.module('sleepapp_patient.controllers', [])
                             console.log("data3 = ", data);
                             $ionicLoading.hide();
                             if (data.status == "success") {
+                            	$ionicLoading.show();
                                 window.localStorage['ACCESS_TOKEN'] = data.access_token;
-                                window.localStorage['USER_DATA'] = JSON.stringify(data.data);
+                                window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
                                 window.localStorage['USER_DATA'].password = inputString.originalPassword;
                                 var userData = JSON.parse(window.localStorage['USER_DATA']);
                                 var inputdata = {};
-                                inputdata.id = userData._id;
-                                inputdata.device_id = window.localStorage["device_id"];
-                                inputdata.platform_type = window.localStorage['PLATFORM'];
+                                inputdata._id = userData._id;
+                                inputdata.device_id = window.localStorage["DEVICE_ID"];
+			                    inputdata.platform_type = window.localStorage['PLATFORM'];
+			                    inputdata.time_zone = window.localStorage['TIME_ZONE'];
+                                //alert(JSON.stringify(inputdata));
                                 UserService.saveDeviceId(inputdata).success(function(data, status) {
+                                	$ionicLoading.hide();
                                     console.log(data);
                                     $state.go("tabs.checkIn");
-                                    //console.log(userData.user_type);
-                                    //console.log(window.localStorage["NOTIFICATION_SETTING"]);
                                 });
                             } else {
                                 showConfirm(animation);
@@ -227,53 +223,35 @@ angular.module('sleepapp_patient.controllers', [])
      * function to sign in user
      **/
     $scope.signIn = function(user) {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
+        $ionicLoading.show();
         UserService.logInUser(user).success(function(data) {
             console.log("logInUser response = ", data);
             $ionicLoading.hide();
             if (data.status == "success") {
                 // Check User Status Active or Inactive
                 if (data.data.user.is_status == true) {
+                	$ionicLoading.show();
                     window.localStorage['ACCESS_TOKEN'] = data.access_token;
                     window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
                     var userData = JSON.parse(window.localStorage['USER_DATA']);
                     var inputdata = {};
-                    inputdata.id = userData._id;
-                    $ionicLoading.show({
-                        content: 'Loading',
-                        animation: 'fade-in',
-                        showBackdrop: true,
-                        maxWidth: 200,
-                        showDelay: 0
-                    });
-                    inputdata.device_id = window.localStorage["device_id"];
+                    inputdata._id = userData._id;
+                    inputdata.device_id = window.localStorage["DEVICE_ID"];
                     inputdata.platform_type = window.localStorage['PLATFORM'];
+                    inputdata.time_zone = window.localStorage['TIME_ZONE'];
+
+                    // inputdata.device_id = "dEzpYL7f5uo:APA91bEyDJOOiX37ftxfoAmTpz4cXn7-kgRZSvDBmAKWYo3UZA3S2Xf6qoRq3_ne9kzDp9XxCqyiAEABlqPmQ_vjtvJAwcZ17xIEcLKRAyv8Tk_o0Fr8V-EAJZqlPpnbGjPJzJ4hwVzf";
+                    // inputdata.platform_type = "android";
+                    // inputdata.time_zone = "-330";
+                    console.log(JSON.stringify(inputdata));
                     UserService.saveDeviceId(inputdata).success(function(data, status) {
                         $ionicLoading.hide();
                         if (data.status == "success") {
                             if (userData.user_type == 4) {
                                 var userId = userData._id;
-                                $ionicLoading.show({
-                                    content: 'Loading',
-                                    animation: 'fade-in',
-                                    showBackdrop: true,
-                                    maxWidth: 200,
-                                    showDelay: 0
-                                });
-
+                                $ionicLoading.show();
                             } else {
-                                console.log(window.localStorage["NOTIFICATION_SETTING"]);
-                                //if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
-                                //    $state.go("settings");
-                                //} else {
-                                    $state.go("tabs.checkIn");
-                                //}
+                                $state.go("tabs.checkIn");
                             }
                         }
                     });
@@ -1044,7 +1022,6 @@ angular.module('sleepapp_patient.controllers', [])
             });
         }
     }
-    
     /*
     *   function to show check-in screen in different cases for today.
     *   developer   :   Gurpreet
@@ -1395,7 +1372,6 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-
 /*
  *jet lag calculator controller .
  * developer : Shilpa Sharma
@@ -1546,36 +1522,40 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.jetLagId = '';
     // console.log("**********", userData._id);
     $scope.getJetLagData = function() {
-            var inputJson = {};
-            inputJson.user_id = userData._id;
-            inputJson.is_completed = false;
-            // inputJson.is_save=true;
-            jetLagService.getJetLagData(inputJson).success(function(response) {
-                //console.log("response", response);
-                if (response.messageId == 200) {
-                    if (response.data.length != 0) {
-                        $scope.jetLagId = response.data[0]._id;
-                        for (var i = 0; i < response.data[0].jet_lags.length; i++) {
-                            $scope.jetLag.travel_date = response.data[0].travel_date;
-                            $scope.jetLag.time_difference = response.data[0].time_difference;
-                            $scope.jetLag.day[i] = response.data[0].jet_lags[i].day;
-                            $scope.jetLag.date[i] = response.data[0].jet_lags[i].start_date;
-                            $scope.jetLag.time[i] = response.data[0].jet_lags[i].glasses_time;
-                            $scope.jetLag.bedtime[i] = response.data[0].jet_lags[i].bedtime;
-                            $scope.show = false;
-                            $scope.completeShow = true;
-                            $scope.formDisable = true;
-                        }
+        var inputJson = {};
+        inputJson.user_id = userData._id;
+        inputJson.is_completed = false;
+        $ionicLoading.show();
+        jetLagService.getJetLagData(inputJson).success(function(response) {
+            $ionicLoading.hide();
+            if (response.messageId == 200) {
+                if (response.data.length != 0) {
+                    $scope.jetLagId = response.data[0]._id;
+                    for (var i = 0; i < response.data[0].jet_lags.length; i++) {
+                        $scope.jetLag.travel_date = response.data[0].travel_date;
+                        $scope.jetLag.time_difference = response.data[0].time_difference;
+                        $scope.jetLag.day[i] = response.data[0].jet_lags[i].day;
+                        $scope.jetLag.date[i] = response.data[0].jet_lags[i].start_date;
+                        $scope.jetLag.time[i] = response.data[0].jet_lags[i].glasses_time;
+                        $scope.jetLag.bedtime[i] = response.data[0].jet_lags[i].bedtime;
+                        $scope.show = false;
+                        $scope.completeShow = true;
+                        $scope.formDisable = true;
                     }
-                } else {
-                    console.log("Error.");
                 }
-            })
+            } else {
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: CHECK_IN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        });
     }
         
     /*
      * save the jet lag calculator controller.
-     * developer : Shilpa Sharma
+     * developer : RaJesh Thakur
      */
     inputJsonData.jetLag = {};
     inputJsonData.jet_lags = [];
@@ -1583,13 +1563,6 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.is_completed = false;
     $scope.completeShow = false;
     $scope.saveJetLagData = function() {
-            $ionicLoading.show({
-                content: 'Loading',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0
-            });
             inputJsonData.user_id = userData._id;
             inputJsonData.travel_date = $scope.jetLag.travel_date;
             inputJsonData.time_difference = $scope.jetLag.time_difference;
@@ -1602,35 +1575,25 @@ angular.module('sleepapp_patient.controllers', [])
                 inputJson.bedtime = $scope.jetLag.bedtime[i];
                 inputJsonData.jet_lags.push(inputJson);
             }
-            $ionicLoading.hide();
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Confirm',
                 template: JET_LAG_CONFIRM,
             });
             confirmPopup.then(function(res) {
                 if (res) {
-                    // console.log("res", res);
-                    var flag = 1;
-                } else {
-                    console.log("res1", res);
-                }
-                if (flag == 1) {
+                    $ionicLoading.show();
                     jetLagService.saveJetLagData(inputJsonData).success(function(response) {
-                        // console.log("response", response);
-                        // $ionicLoading.hide();
+                        $ionicLoading.hide();
                         if (response.messageId == 200) {
-
                             var alertPopup = $ionicPopup.alert({
                                 title: 'Success!',
                                 template: JET_LAG_SUCCESS,
                             });
                             alertPopup.then(function(res) {
                                 $scope.alreadySubmiited = JET_LAG_MESSAGE;
+                                $state.reload("tabs.jetLag");
                             });
-                            $state.reload("tabs.jetLag");
-
                         } else {
-
                             var alertPopup = $ionicPopup.alert({
                                 title: 'Warning!',
                                 template: CHECK_IN_ERROR,
@@ -1639,51 +1602,40 @@ angular.module('sleepapp_patient.controllers', [])
                         }
 
                     });
-
+                } else {
+                    console.log("res-->>", res);
                 }
             });
         }
-        /*
-         * update the jet lag calculator controller .
-         * developer : Shilpa Sharma
-         */
+
+    /*
+     * update the jet lag calculator controller .
+     * developer : RaJesh Thakur
+     */
     var updateJson = {};
-    var is_completed = false;
-    // $scope.show = true;
     $scope.updateJetLagData = function() {
         var confirmPopup = $ionicPopup.confirm({
-            title: 'confirm',
+            title: 'Confirm',
             template: JET_LAG_COMPLETE,
         });
         confirmPopup.then(function(res) {
             if (res) {
-                // console.log("res", res);
-                var flag1 = 1;
-            } else {
-                console.log("res1", res);
-            }
-            // updateJson.user_id = userData._id;
-            updateJson._id = $scope.jetLagId;
-            updateJson.is_completed = true;
-            updateJson.is_save = false;
-
-            // console.log("updatejson", updateJson);
-            if (flag1 == 1) {
+                updateJson.user_id = userData._id;
+                updateJson._id = $scope.jetLagId;
+                updateJson.is_completed = true;
+                updateJson.is_save = false;
+                $ionicLoading.show();
                 jetLagService.updateJetLagData(updateJson).success(function(response) {
-                    // console.log("response for update", response);
+                    $ionicLoading.hide();
                     if (response.messageId == 200) {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Success!',
                             template: JET_LAG_COMPLETE_SUCCESS,
                         });
-
                         alertPopup.then(function(res) {
-
                             $scope.alreadySubmiited = JET_LAG_MESSAGE;
+                            $state.reload("tabs.jetLag");
                         });
-                        $state.reload("tabs.jetLag");
-
-
                     } else {
                         var alertPopup = $ionicPopup.alert({
                             title: 'Warning!',
@@ -1691,10 +1643,10 @@ angular.module('sleepapp_patient.controllers', [])
                         });
                         alertPopup.then(function(res) {});
                     }
-
                 });
+            } else {
+                console.log("res-->>", res);
             }
-
         });
     }
 

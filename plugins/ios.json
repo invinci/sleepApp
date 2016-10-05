@@ -13,6 +13,9 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
         },
+        "cordova-plugin-screen-orientation": {
+            "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
+        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
         },
@@ -25,7 +28,8 @@
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
         },
-        "cordova-plugin-screen-orientation": {
+        "phonegap-plugin-push": {
+            "SENDER_ID": "117882864904",
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
         }
     },

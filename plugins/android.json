@@ -27,6 +27,10 @@
         },
         "cordova-plugin-screen-orientation": {
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
+        },
+        "phonegap-plugin-push": {
+            "SENDER_ID": "117882864904",
+            "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
         }
     },
     "dependent_plugins": {}

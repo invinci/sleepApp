@@ -36,24 +36,25 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     
     google.charts.load('current', { 'packages': ['corechart'] });
     
-    window.localStorage['PLATFORM'] = ionic.Platform.platform();
     /* PUSH NOTIFICATIONS CONFIGURATION as on ngCordova-- start */
-      if (PushNotification) {
-        var push = PushNotification.init({
-          android: {senderID: "780443469261"},
-          ios: {alert: "true",badge: "false",sound: "true"}
-        });
-      }
-      push.on('registration', function(data) {
-        window.localStorage["device_id"] =  data.registrationId;
-      });
+    var push = PushNotification.init({
+      android: {senderID: "117882864904"},
+      ios: {alert: "true",badge: "false",sound: "true"}
+    });
+    push.on('registration', function(data) {
+      var d = new Date();
+      window.localStorage["DEVICE_ID"] = data.registrationId;
+      window.localStorage['PLATFORM'] = ionic.Platform.platform();
+      window.localStorage['TIME_ZONE'] = d.getTimezoneOffset();
+    });
 
-      push.on('notification', function(data) {
-        // data.message, data.title, data.count, data.sound, data.image, data.additionalData, alert(JSON.stringify(data));
-      });
-      push.on('error', function(e) {
-        console.log(e.message);
-      });
+    push.on('notification', function(data) {
+      // data.message, data.title, data.count, data.sound, data.image, data.additionalData, alert(JSON.stringify(data));
+    });
+    push.on('error', function(e) {
+      console.log(e.message);
+    });
+  
     /* PUSH NOTIFICATIONS CONFIGURATION -- end. */
 
     /* HANDLE ANDROID DEVICE BACK BUTTON -- start. */

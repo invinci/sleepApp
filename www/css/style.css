@@ -410,9 +410,9 @@ h4{
 }
 .smiley{
 	float: left;
-	font-size: 29px;
+	font-size: 25px;
+    line-height: 25px;
 	color: #a9a9a9;
-	line-height: 29px;
 }
 
 .DailyMetricBottom{
@@ -630,11 +630,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .popup-buttons .button.button-assertive{border-color: #e42112;
     background-color: #ef473a;
     color: #fff;}
+
 /* durationPicker CSS */
 /*added by shilpa*/
 .noPadding{padding: 0 !important;}
 .jetLagdiv {padding:5px;}
-.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center;font-size: 12px; }
+.jetLaginput { width:100%; border: 1px solid #ccc !important; text-align: center; font-size: 13px !important; }
 .itemInput {color:  #CD5C5C;}
 .itemText{ font-size:14px; color: #CD5C5C !important;}
 .chartSecond{padding-top:2px !important;}
