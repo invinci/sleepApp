@@ -11,6 +11,13 @@
 	</ion-header-bar>
 	<ion-content class="custom-content padding">
 		<br/><br/>
+		<div class="card msgBox" ng-show="nodata">
+			<div class="row">
+				<div class="col">
+					<p>{{noDataMessage}}</p>
+				</div>
+			</div>
+		</div>
 		<div class="card slide-in" ng-if="showChart1">
 			<div class="item item-text-wrap">
 				<div class="item item-divider padding alignCenter">

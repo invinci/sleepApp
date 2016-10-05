@@ -949,22 +949,20 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.isDataAvailable = false;
     $scope.checkInDataGet = function(num, holderDate) {
         showLoader();
-        console.log('--', num, holderDate);
         if (num == 1 || num == 2) {
             $scope.CheckInNext = true;
             var d = new Date(holderDate);
             if (num == 1) {
-                var d = new Date(holderDate);
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate() - 1;
+                d.setDate(d.getDate() - 1);
             } else if (num == 2) {
-                var d = new Date(holderDate);
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate() + 1;
+                d.setDate(d.getDate() + 1);
             }
+            var mm = d.getMonth() + 1;
             var yyyy = d.getFullYear();
+            var dd = d.getDate();
             var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
             $scope.newDate = formatdate;
+            
             var inputJsonData = {};
             inputJsonData.user_id = userData._id;
             inputJsonData.checkin_date = formatdate;
@@ -1281,9 +1279,7 @@ angular.module('sleepapp_patient.controllers', [])
         return strTime + " " + day + " " + dateReturn;
     }
     // Set Appointment Date End
-    // Show Loader 
-    //return;
-
+    
     $scope.getStateofMindData = function() {
         $ionicLoading.show({
             content: 'Loading',
@@ -1300,10 +1296,9 @@ angular.module('sleepapp_patient.controllers', [])
         $scope.SecondChartData = []; $scope.SecondChartSeries = [];
         $scope.ThirdChartData = []; $scope.ThirdChartSeries = [];
         $scope.showChart1 = false; $scope.showChart2 = false; $scope.showChart3 = false;
-        console.log("inputjson", inputJson);
+        $scope.nodata = false; $scope.noDataMessage = '';
         
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
-            $ionicLoading.hide();
             console.log("response = ", response);
             if ((response.messageId == 200) && (response.data.length > 0)) {
                 var firstData = []; var secondData = []; var thirdData = [];
@@ -1331,30 +1326,31 @@ angular.module('sleepapp_patient.controllers', [])
                         thirdData[2].push(checkinData.medication);
                 } //for end.
                 
-                //console.log("Labels = ", $scope.chartlabels1);
                 console.log("firstData = ", firstData);
                 console.log("secondData = ", secondData);
                 $scope.FirstChartSeries = ['Sleep Quality', 'Energy', 'Happy'];
                 $scope.FirstChartData = firstData;
                 $scope.showChart1 = true;
-                
                 $scope.SecondChartSeries = ['Happy', 'Relaxed', 'Sleep enough'];
                 $scope.ThirdChartSeries = ['Relaxed', 'Alcohol', 'Medication'];
 
                 setTimeout(function(){
-                    //alert("Hello 2");
                     $scope.SecondChartData = secondData;
                     $scope.showChart2 = true;
                     $scope.$apply();
                 }, 1000);
                 
                 setTimeout(function(){
-                    //alert("Hello 3");
                     $scope.ThirdChartData = thirdData;
                     $scope.showChart3 = true;
                     $scope.$apply();
+                    $ionicLoading.hide();
                 }, 1000);
                 
+            }else{
+                $scope.nodata = true;
+                $scope.noDataMessage = 'No data available. Please submit check-ins first.';
+                $ionicLoading.hide();
             }
         });        
     }
