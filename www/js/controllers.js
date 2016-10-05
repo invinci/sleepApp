@@ -1277,209 +1277,6 @@ angular.module('sleepapp_patient.controllers', [])
     decryptedOldPassword = decryptedOldPassword.slice(1, -1);
     user.password = decryptedOldPassword;
     $scope.user_name = userData.first_name + " " + userData.last_name;
-    // $scope.patient.checkin_count=[];
-
-    $scope.isChartOne = false;
-    $scope.isChartTwo = false;
-    $scope.findCheckIndata = function() {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
-        var inputJson = {};
-        inputJson.user_id = userData._id;
-        console.log("inputjson", inputJson);
-        stateOfMindService.findCheckIndata(inputJson).success(function(response) {
-            $ionicLoading.hide();
-        console.log("response = ", response);
-            if (response.messageId == 200) {
-                if (response.data.length > 0) {
-                    var sq = [];
-                    var energy = [];
-                    var happy = new Array();
-                    var relaxed = new Array();
-                    var alcohol = new Array();
-                    var medication = new Array();
-                    var sleep_enough = new Array();
-                    var checkin_date = new Array();
-                    $scope.isChartOne = true;
-                    var drawChartData = [];
-                    drawChartData.push(['Date', 'Happy', 'Relaxed', 'Sleep enough']);
-                    for (var i = 0; i < response.data.length; i++) {
-                        var tempArr = [];
-                        console.log(response.data[i].checkin_count);
-                        //if (response.data[i].checkin_count == 2) {
-                            checkin_date.push(response.data[i].checkin_date);
-                            tempArr.push(response.data[i].checkin_date);
-                            happy.push(response.data[i].happy);
-                            tempArr.push(response.data[i].happy);
-                            relaxed.push(response.data[i].relaxed);
-                            tempArr.push(response.data[i].relaxed);
-                            sleep_enough.push(response.data[i].sleep_enough);
-                            tempArr.push(response.data[i].sleep_enough);
-                            sq.push(response.data[i].sleep_quality);
-                            energy.push(response.data[i].energy);
-                            alcohol.push(response.data[i].alcohol);
-                            medication.push(response.data[i].medication);
-                            
-                        //}
-                        drawChartData.push(tempArr);
-                    }
-                    console.log("sleep_quality", sq);
-                    console.log("energy", energy);
-                    console.log("checkin date", checkin_date);
-                    console.log("drawChartData = ", drawChartData);
-                    
-                    //google.charts.load('current', { 'packages': ['corechart'] });
-                    google.charts.setOnLoadCallback(drawChart);
-
-                    function drawChart() {
-                        /*var data = google.visualization.arrayToDataTable([
-                            ['Date', 'Happy', 'Relaxed', 'Sleep enough'],
-                            [checkin_date[0], happy[0], relaxed[0], sleep_enough[0]],
-                            [checkin_date[1], happy[1], relaxed[1], sleep_enough[1]],
-                            [checkin_date[2], happy[2], relaxed[2], sleep_enough[2]],
-                            [checkin_date[3], happy[3], relaxed[3], sleep_enough[3]],
-                            [checkin_date[4], happy[4], relaxed[4], sleep_enough[4]]
-                        ]);*/
-                        var data = google.visualization.arrayToDataTable(drawChartData);
-
-                        var options = {
-                            title: 'Sleep Quality',
-                            legend: { position: 'bottom' },
-                            curveType: 'function',
-                            width: '100%',
-                            chartArea: { left: 0, right: 10 },
-                            height: '100%',
-                        };
-
-                        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-                        chart.draw(data, options);
-                    }
-
-                    //////////////////////////////////////////////////////////////////////
-                    google.charts.setOnLoadCallback(drawChart1);
-
-                    function drawChart1() {
-                        var data = google.visualization.arrayToDataTable([
-                            ['Date', 'energy', 'sleep quality'],
-                            [checkin_date[0], sq[0], energy[0]],
-                            [checkin_date[1], sq[1], energy[1]],
-                            [checkin_date[2], sq[2], energy[2]],
-                            [checkin_date[3], sq[3], energy[3]]
-                        ]);
-                        var options = {
-                            title: 'Sleep as Input',
-                            curveType: 'function',
-                            width: 275,
-                            chartArea: { left: 0, right: 10 },
-                            height: 200,
-                            legend: { position: 'bottom' }
-                        };
-
-                        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-                        chart.draw(data, options);
-                    }
-                    
-
-                    $scope.labels = [];
-                    $scope.series = ['relaxed', 'alcohol', 'medication'];
-                    $scope.data = [
-                        relaxed,
-                        alcohol,
-                        medication
-                    ];
-                    
-                    $scope.datasetOverride = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    $scope.options = {
-                        scales: {
-                            yAxes: [{
-                                id: 'y-axis-1',
-                                title: "sleep_quality",
-                                type: 'linear',
-                                display: true,
-                                position: 'left'
-                            }, {
-                                id: 'y-axis-2',
-                                title: "energy",
-                                type: 'linear',
-                                display: true,
-                                position: 'right'
-                            }]
-                        }
-                    };
-                    ///////////////////////////////
-                    $scope.labels1 = [];
-                    $scope.series1 = ['Sleep Quantity', 'Energy', 'happy'];
-                    $scope.data1 = [
-                        sq,
-                        energy,
-                        happy
-                    ];
-                    // console.log("data", $scope.data1)
-                    // $scope.onClick1 = function(points1, evt1) {
-                    //     console.log(points1, evt1);
-                    // };
-                    $scope.datasetOverride1 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    // var data=$scope.data=response.data;
-                    $scope.options1 = {
-                        scales: {
-                            yAxes: [{
-                                id: 'y-axis-1',
-                                title: "sleep_quality",
-                                type: 'linear',
-                                display: true,
-                                position: 'left'
-                            }, {
-                                id: 'y-axis-2',
-                                title: "energy",
-                                type: 'linear',
-                                display: true,
-                                position: 'right'
-                            }]
-                        }
-                    };
-                    //////////////////////////////////////////////////////////////////////////////////////////
-                    $scope.labels2 = [];
-                    $scope.series2 = ['sleep enough'];
-                    $scope.data2 = [
-                        sleep_enough,
-                    ];
-                    console.log("data", $scope.data1);
-                    $scope.datasetOverride2 = [{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-                    // var data=$scope.data=response.data;
-                    $scope.options2 = {
-                        scales: {
-                            yAxes: [{
-                                id: 'y-axis-1',
-                                title: "sleep_quality",
-                                type: 'linear',
-
-                                display: true,
-                                position: 'left'
-                            }, {
-                                id: 'y-axis-2',
-                                title: "energy",
-                                type: 'linear',
-                                display: true,
-                                position: 'right'
-                            }]
-                        }
-                    };
-                    
-                    console.log("$scope.sleep_quality", sq);
-                    console.log("$scope.energy", energy);
-
-                }
-            } else {
-                console.log("Error.");
-            }
-
-        });
-    }
 
     $scope.showAppointmentDiv = false;
     $scope.showDailyMetricDiv = false;
@@ -1521,203 +1318,69 @@ angular.module('sleepapp_patient.controllers', [])
         
         var inputJson = {};
         inputJson.user_id = userData._id;
-        $scope.chartlabels1 = []; $scope.chartlabels2 = [];
+        $scope.chartlabels1 = []; $scope.chartlabels2 = []; $scope.chartlabels3 = [];
         $scope.FirstChartData = []; $scope.FirstChartSeries = [];
         $scope.SecondChartData = []; $scope.SecondChartSeries = [];
-        $scope.ThirdChartData = [];
+        $scope.ThirdChartData = []; $scope.ThirdChartSeries = [];
+        $scope.showChart1 = false; $scope.showChart2 = false; $scope.showChart3 = false;
         console.log("inputjson", inputJson);
         
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
             $ionicLoading.hide();
             console.log("response = ", response);
             if ((response.messageId == 200) && (response.data.length > 0)) {
-                $scope.newObj = {};
-                $scope.newObj1 = {};
-                $scope.newObj2 = {};
-                var firstData = []; var j = 0;
+                var firstData = []; var secondData = []; var thirdData = [];
+                firstData[0] = []; firstData[1] = []; firstData[2] = [];
+                secondData[0] = []; secondData[1] = []; secondData[2] = [];
+                thirdData[0] = []; thirdData[1] = []; thirdData[2] = [];
                 for (var i = 0; i < response.data.length; i++) {
                     var checkinData = response.data[i];
                     var str = checkinData.checkin_date;
                     var res = str.split("/");
                     var dateForChart = res[0] + "/" + res[1];
-                    if($scope.chartlabels1.indexOf(dateForChart) == -1){
                         $scope.chartlabels1.push(dateForChart);
-                        firstData[j] = [];
-                        firstData[j].push(checkinData.sleep_quality);
-                        firstData[j].push(checkinData.energy);
-                        firstData[j++].push(checkinData.happy);
-                    }
-                    
+                        firstData[0].push(checkinData.sleep_quality);
+                        firstData[1].push(checkinData.energy);
+                        firstData[2].push(checkinData.happy);
+                        
+                        $scope.chartlabels2.push(dateForChart);
+                        secondData[0].push(checkinData.happy);
+                        secondData[1].push(checkinData.relaxed);
+                        secondData[2].push(checkinData.sleep_enough);
+                        
+                        $scope.chartlabels3.push(dateForChart);
+                        thirdData[0].push(checkinData.relaxed);
+                        thirdData[1].push(checkinData.alcohol);
+                        thirdData[2].push(checkinData.medication);
                 } //for end.
-                console.log("Labels = ", $scope.chartlabels1);
+                
+                //console.log("Labels = ", $scope.chartlabels1);
                 console.log("firstData = ", firstData);
+                console.log("secondData = ", secondData);
                 $scope.FirstChartSeries = ['Sleep Quality', 'Energy', 'Happy'];
                 $scope.FirstChartData = firstData;
-                console.log("$scope.FirstChartSeries = ", $scope.FirstChartSeries);
+                $scope.showChart1 = true;
+                
+                $scope.SecondChartSeries = ['Happy', 'Relaxed', 'Sleep enough'];
+                $scope.ThirdChartSeries = ['Relaxed', 'Alcohol', 'Medication'];
+
+                setTimeout(function(){
+                    //alert("Hello 2");
+                    $scope.SecondChartData = secondData;
+                    $scope.showChart2 = true;
+                    $scope.$apply();
+                }, 1000);
+                
+                setTimeout(function(){
+                    //alert("Hello 3");
+                    $scope.ThirdChartData = thirdData;
+                    $scope.showChart3 = true;
+                    $scope.$apply();
+                }, 1000);
+                
             }
-        });
-    
-        
-
-        
-        
-    /***************** extra code -------------------------------------------------------- */
-        var inputJSONcheckIn = {};
-        var inputJsonString = {};
-        var d = new Date();
-        d.setDate(d.getDate() - 10);
-        var newdate = (d.getMonth() + 1) + '/' + d.getDate() + '/' + d.getFullYear();
-        inputJsonString.patient = userData._id;
-        inputJSONcheckIn.patient = userData._id;
-        inputJSONcheckIn.created_date = {
-            $gte: d.toISOString()
-        };
-        
-        $scope.dailyMetricData = {};
-        $scope.weeklyMetricData = {};
-        $scope.patient_goal_data = {};
-
-        /** List CheckIn Data Start Start**/
-        $scope.CheckInDailyMetricData = {};
-        $scope.CheckInWeeklyMetricData = {};
-        $scope.checkInData = {};
-        $scope.chartlabels = [];
-        $scope.FirstChartData = [];
-        $scope.SecondChartData = [];
-        $scope.weeklyChartSeries = [];
-        $scope.WeeklyChartData = [];
-        /*
-        CheckInService.getPatientCheckIn(inputJSONcheckIn).success(function(response) {
-            console.log(response);
-            $ionicLoading.hide();
-            if (response.messageId == 200) {
-                $scope.totalDays = response.data.length;
-                if ($scope.totalDays == 0) {
-                    console.log("Here");
-                    $scope.NoDataAvailable = true;
-                    $scope.DataAvailable = false;
-                } else {
-                    $scope.NoDataAvailable = false;
-                    $scope.DataAvailable = true;
-                    // Set Appointment Date Start
-                    if (userData.next_appointment_date) {
-                        var nextApptDate = userData.next_appointment_date;
-                        var nextApptTime = userData.next_appointment_time;
-                        var newTime = nextApptTime.split(":");
-                        var d = new Date(nextApptDate);
-                        d.setHours(newTime[0]);
-                        d.setMinutes(newTime[1]);
-                        $scope.nextApptDateTime = formatDate(d);
-                        var currentDt = new Date();
-                        if (d >= currentDt) {
-                            $scope.showAppointmentDiv = true;
-                        } else {
-                            $scope.showAppointmentDiv = false;
-                        }
-                    }
-                    $scope.newObj = {};
-                    $scope.newObj1 = {};
-                    $scope.newObj2 = {};
-                    for (var i = 0; i < response.data.length; i++) {
-                        $scope.checkInData = response.data;
-                        if ($scope.checkInData[i].daily_metric) {
-                            var checkIn_daily_metric = $scope.checkInData[i].daily_metric;
-                            if (checkIn_daily_metric.length == 0) {
-                                $scope.showDailyMetricDiv = false;
-                            } else {
-                                $scope.showDailyMetricDiv = true;
-                                for (var j = 0; j < checkIn_daily_metric.length; j++) {
-                                    $scope.checkIn_dm = checkIn_daily_metric[j];
-                                    // Changed by Rajesh
-                                    if (j == 0) {
-                                        $scope.CheckInDailyMetricData[$scope.checkIn_dm.goal] = 0;
-                                    }
-                                    if ($scope.checkIn_dm.checked == true) {
-                                        $scope.CheckInDailyMetricData[$scope.checkIn_dm.goal] += 1;
-                                    }
-                                }
-                            }
-                        }
-                        var str = $scope.checkInData[i].checkin_date;
-                        var res = str.split("/");
-                        var dateForChart = res[0] + "/" + res[1];
-                        $scope.chartlabels.push(dateForChart);
-
-                        if ($scope.checkInData[i].static_metric) {
-                            var checkIn_static_metric = $scope.checkInData[i].static_metric;
-                            if (checkIn_static_metric.length == 0) {
-                                $scope.showDailyMetricCharts = false;
-                            } else {
-                                $scope.showDailyMetricCharts = true;
-                                for (var k = 0; k < checkIn_static_metric.length; k++) {
-                                    if (checkIn_static_metric[k].id == 1 || checkIn_static_metric[k].id == 2 || checkIn_static_metric[k].id == 3) {
-                                        if (typeof $scope.newObj[checkIn_static_metric[k].id] == "undefined") {
-                                            $scope.newObj[checkIn_static_metric[k].id] = new Array();
-                                        }
-                                        $scope.newObj[checkIn_static_metric[k].id].push(checkIn_static_metric[k].rating);
-                                    }
-                                    if (checkIn_static_metric[k].id == 1 || checkIn_static_metric[k].id == 4 || checkIn_static_metric[k].id == 5) {
-                                        if (typeof $scope.newObj1[checkIn_static_metric[k].id] == "undefined") {
-                                            $scope.newObj1[checkIn_static_metric[k].id] = new Array();
-                                        }
-                                        $scope.newObj1[checkIn_static_metric[k].id].push(checkIn_static_metric[k].rating);
-                                    }
-                                }
-                            }
-                        }
-
-                        if ($scope.checkInData[i].weekly_metric) {
-                            var checkIn_weekly_metric = $scope.checkInData[i].weekly_metric;
-                            $scope.thirdchartData = [];
-                            if (checkIn_weekly_metric.length == 0) {
-                                $scope.showWeeklyMetricDiv = false;
-                            } else {
-                                $scope.showWeeklyMetricDiv = true;
-                                for (var k = 0; k < checkIn_weekly_metric.length; k++) {
-                                    if (typeof $scope.newObj2[checkIn_weekly_metric[k].goal] == "undefined") {
-                                        $scope.newObj2[checkIn_weekly_metric[k].goal] = new Array();
-                                    }
-                                    $scope.newObj2[checkIn_weekly_metric[k].goal].push(checkIn_weekly_metric[k].rating);
-                                }
-                            }
-
-                        }
-                    }
-                    if (response.data[0].weekly_metric) {
-                        for (var c = 0; c < response.data[0].weekly_metric.length; c++) {
-                            var yourString = response.data[0].weekly_metric[c].goal_question;
-                            var maxLength = 20 // maximum number of characters to extract
-
-                            //trim the string to the maximum length
-                            var trimmedString = yourString.substr(0, maxLength);
-
-                            //re-trim if we are in the middle of a word
-                            trimmedString = trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(" ")));
-
-                            $scope.weeklyChartSeries.push(trimmedString);
-                        }
-                    }
-                    for (key in $scope.newObj) {
-                        var dailydetail1 = (typeof $scope.newObj[key] != "undefined") ? $scope.newObj[key] : null;
-                        $scope.FirstChartData.push(dailydetail1);
-                    }
-                    for (key in $scope.newObj1) {
-                        var dailydetail2 = (typeof $scope.newObj1[key] != "undefined") ? $scope.newObj1[key] : null;
-                        $scope.SecondChartData.push(dailydetail2);
-                    }
-                    for (key in $scope.newObj2) {
-                        var detail = (typeof $scope.newObj2[key] != "undefined") ? $scope.newObj2[key] : null;
-                        $scope.WeeklyChartData.push(detail);
-                    }
-                    $scope.CheckInDailyMetricDataKeys = Object.keys($scope.CheckInDailyMetricData);
-                }
-            }
-        });
-        */
+        });        
     }
-
-    //$scope.firstchartseries = ['Good Mood', 'Good Energy', 'Low Stress'];
-    //$scope.secondchartseries = ['Good Mood', 'Good Sleep', 'Eating Healthy'];
 
     // animate pop up dailog
     function showConfirm(animation) {

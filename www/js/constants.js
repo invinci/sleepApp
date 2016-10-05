@@ -3,7 +3,7 @@ var DOWNLOAD_LINK = 'http://google.com';
 
 // HOSTs
 var HOST = 'http://52.39.212.226:4021';
-//var HOST = 'http://localhost:3000';
+// var HOST = 'http://localhost:3000';
 //var HOST = 'http://localhost:4021';
 
 // MESSAGES
