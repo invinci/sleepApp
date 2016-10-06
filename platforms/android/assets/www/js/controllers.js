@@ -1,7 +1,13 @@
 angular.module('sleepapp_patient.controllers', [])
 
-.controller('welcomeCtrl', function($scope, $state) {
-
+.controller('welcomeCtrl', function($scope, $state, $ionicSlideBoxDelegate) {
+    $scope.slideChanged = function(index) {
+        if (index == 4) {
+            document.getElementsByClassName("slider-pager")[0].style.display = "none";
+        }else{
+            document.getElementsByClassName("slider-pager")[0].style.display = "block";
+        };
+    };
     // LOCK SCREEN ORIENTATION IN PORTRAIT MODE FOR CAROUSEL SCREENS.
     document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -10,11 +16,12 @@ angular.module('sleepapp_patient.controllers', [])
     }
     // Called to navigate to the main app
     $scope.startApp = function() {
-        $state.go('signup');
+        window.localStorage['IsCompleted'] = true;
+        $state.go('signin');
     };
 })
 
-.controller('SignUpController', function($scope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker) {
+.controller('SignUpController', function($scope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     // UNLOCK SCREEN ORIENTATION
     document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -88,7 +95,7 @@ angular.module('sleepapp_patient.controllers', [])
                                 UserService.saveDeviceId(inputdata).success(function(data, status) {
                                 	$ionicLoading.hide();
                                     console.log(data);
-                                    $state.go("tabs.checkIn");
+                                    $state.go("app.tabs.checkIn");
                                 });
                             } else {
                                 showConfirm(animation);
@@ -210,6 +217,10 @@ angular.module('sleepapp_patient.controllers', [])
             };
         }, 1)
     }
+
+    $scope.goBackToSignIn = function(){
+        $ionicHistory.goBack();
+    }
 })
 
 .controller('SignInController', function($scope, $timeout, $ionicHistory, ionicMaterialInk, $ionicPopup, $ionicLoading, $state, UserService) {
@@ -247,7 +258,7 @@ angular.module('sleepapp_patient.controllers', [])
                                 var userId = userData._id;
                                 $ionicLoading.show();
                             } else {
-                                $state.go("tabs.checkIn");
+                                $state.go("app.tabs.checkIn");
                             }
                         }
                     });
@@ -313,461 +324,103 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('settingsCtrl', function($scope, $state, $cordovaToast, $ionicHistory, $stateParams, $cordovaLocalNotification, ionicTimePicker) {
-    if (window.localStorage["NOTIFICATION_SETTING"] == undefined) {
-        $scope.hideBackButton = true;
-    } else {
-        $scope.hideBackButton = false;
-    }
-    var currentDate = new Date();
-    var weekday = new Array(7);
-    weekday[0] = "Sunday";
-    weekday[1] = "Monday";
-    weekday[2] = "Tuesday";
-    weekday[3] = "Wednesday";
-    weekday[4] = "Thursday";
-    weekday[5] = "Friday";
-    weekday[6] = "Saturday";
-    var n;
-    $scope.dayOfWeek = [{
-        "id": 0,
-        "day": "Sunday"
-    }, {
-        "id": 1,
-        "day": "Monday"
-    }, {
-        "id": 2,
-        "day": "Tuesday"
-    }, {
-        "id": 3,
-        "day": "Wednesday"
-    }, {
-        "id": 4,
-        "day": "Thursday"
-    }, {
-        "id": 5,
-        "day": "Friday"
-    }, {
-        "id": 6,
-        "day": "Saturday"
-    }];
-    if (window.localStorage['CUSTOM_REMINDER'] == undefined) {
-        // setting Notification for daily reminder for default time 9 PM
-        $scope.reminderTime = "9:00 PM";
-        var today = new Date();
-        today.setHours(21);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        $scope.today_at_9_pm = today;
-        window.localStorage['REMINDER_TIME'] = $scope.reminderTime;
-        window.localStorage['DAILY_REMINDER_TIME'] = $scope.today_at_9_pm;
-        // set default reminder value for weekly goals on Sunday 12:00 PM.
-        n = weekday[currentDate.getDay()];
-        $scope.selectedDay = $scope.dayOfWeek[0];
-        $scope.dataDay = $scope.selectedDay.day;
-        $scope.weeklyReminderDayTime = "Sunday, 12:00 PM";
-        $scope.selectedTime = "12:00 PM";
-        if (n == $scope.selectedDay.day) {
-            console.log("If day is Sunday.");
-            currentDate.setHours(12);
-            currentDate.setMinutes(0);
-            currentDate.setSeconds(0);
-            $scope.dateTimeForWeeklyReminder = currentDate;
-        } else {
-            console.log("If day is not Sunday.");
-            if (n == "Monday") {
-                currentDate.setDate(currentDate.getDate() + 6);
-            } else if (n == "Tuesday") {
-                currentDate.setDate(currentDate.getDate() + 5);
-            } else if (n == "Wednesday") {
-                currentDate.setDate(currentDate.getDate() + 4);
-            } else if (n == "Thursday") {
-                currentDate.setDate(currentDate.getDate() + 3);
-            } else if (n == "Friday") {
-                currentDate.setDate(currentDate.getDate() + 2);
-            } else if (n == "Saturday") {
-                currentDate.setDate(currentDate.getDate() + 1);
-            }
-            currentDate.setHours(12);
-            currentDate.setMinutes(0);
-            currentDate.setSeconds(0);
-            $scope.dateTimeForWeeklyReminder = currentDate;
-        }
-        console.log(currentDate);
-        var hours = currentDate.getHours();
-        var minutes = currentDate.getMinutes();
-        var setreminderTime = hours
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-
-        var timeString = hours + ":" + minutes + " " + ampm;
-        $scope.selectedtimeString = timeString;
-        $scope.weeklyReminderDayTime = $scope.dataDay + ", " + $scope.selectedtimeString;
-        $scope.selectedTime = $scope.selectedtimeString;
-        window.localStorage['WEEKLY_REMINDER_TIME'] = $scope.weeklyReminderDayTime;
-        window.localStorage['TIME_FOR_WEEKLY_REMINDER'] = $scope.selectedTime;
-        window.localStorage['WEEKLY_REMINDER_TIME_SAVE'] = $scope.dateTimeForWeeklyReminder;
-    } else {
-        $scope.today_at_9_pm = window.localStorage['DAILY_REMINDER_TIME'];
-        $scope.dateTimeForWeeklyReminder = window.localStorage['WEEKLY_REMINDER_TIME_SAVE'];
-        console.log(window.localStorage['TIME_FOR_WEEKLY_REMINDER']);
-        console.log(window.localStorage['WEEKLY_REMINDER_TIME']);
-        $scope.reminderTime = window.localStorage['REMINDER_TIME'];
-        if (window.localStorage['WEEKLY_REMINDER_TIME']) {
-            var day = window.localStorage['WEEKLY_REMINDER_TIME'];
-            var dayToSet = day.split(',');
-            var newDay = dayToSet[0];
-            if (newDay == "Sunday") {
-                $scope.selectedDay = $scope.dayOfWeek[0];
-            } else if (newDay == "Monday") {
-                $scope.selectedDay = $scope.dayOfWeek[1];
-            } else if (newDay == "Tuesday") {
-                $scope.selectedDay = $scope.dayOfWeek[2];
-            } else if (newDay == "Wednesday") {
-                $scope.selectedDay = $scope.dayOfWeek[3];
-            } else if (newDay == "Thursday") {
-                $scope.selectedDay = $scope.dayOfWeek[4];
-            } else if (newDay == "Friday") {
-                $scope.selectedDay = $scope.dayOfWeek[5];
-            } else if (newDay == "Saturday") {
-                $scope.selectedDay = $scope.dayOfWeek[6];
-            }
-        }
-        $scope.weeklyReminderDayTime = window.localStorage['WEEKLY_REMINDER_TIME'];
-        $scope.selectedTime = window.localStorage['TIME_FOR_WEEKLY_REMINDER'];
-    }
-
-    $scope.editDailyReminder = function() {
-        var ipObj1 = {
-            callback: function(val) { //Mandatory
-                if (typeof(val) === 'undefined') {
-                    console.log('Time not selected');
-                } else {
-                    var selectedTime = new Date(val * 1000);
-                    var d = new Date(selectedTime);
-                    var d2 = new Date();
-
-                    d.setMonth(d2.getMonth());
-                    d.setDate(d2.getDate());
-                    d.setFullYear(d2.getFullYear());
-                    d.setHours(d.getUTCHours());
-                    d.setMinutes(d.getUTCMinutes());
-                    // Check if User have selected previous time
-                    if (d2.getTime() > d.getTime()) {
-                        d.setDate(d2.getDate() + 1);
-                    }
-                    $scope.today_at_9_pm = d;
-                    window.localStorage['DAILY_REMINDER_TIME'] = $scope.today_at_9_pm;
-                    var hours = d.getHours();
-                    var minutes = d.getMinutes();
-                    var setreminderTime = hours
-                    var ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12; // the hour '0' should be '12'
-                    minutes = minutes < 10 ? '0' + minutes : minutes;
-                    var timeString = hours + ":" + minutes + " " + ampm;
-                    $scope.reminderTime = timeString;
-                    window.localStorage['REMINDER_TIME'] = timeString;
-                }
-            },
-            inputTime: 50400, //Optional
-            format: 12, //Optional
-            step: 1, //Optional
-            setLabel: 'Set' //Optional
-        };
-
-        ionicTimePicker.openTimePicker(ipObj1);
-    }
-
-    // Weekly goals Settings
-
-    $scope.selectedDayValue = function(data) {
-        $scope.dataDay = data.day;
-        if ($scope.selectedtimeString == undefined) {
-            $scope.weeklyReminderDayTime = data.day + ", 12:00 PM";
-        } else {
-            $scope.weeklyReminderDayTime = data.day + ", " + $scope.selectedtimeString;
-            $scope.selectedTime = $scope.selectedtimeString;
-        }
-        if (n == data.day) {
-            console.log("If Current day, repeat alarm on same day from next week");
-            var d = new Date();
-            console.log($scope.TimeSelected);
-            if ($scope.TimeSelected == false) {
-                d.setDate(d.getDate() + 7);
-                d.setHours(12);
-                d.setMinutes(0);
-                d.setSeconds(0);
-            } else {
-                d.setHours($scope.alreadySelectedTime.getHours());
-                d.setMinutes($scope.alreadySelectedTime.getMinutes());
-                d.setSeconds(0);
-            }
-            console.log(d);
-            $scope.dateTimeForWeeklyReminder = d;
-            var hours = d.getHours();
-            var minutes = d.getMinutes();
-            var setreminderTime = hours
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-
-            var timeString = hours + ":" + minutes + " " + ampm;
-            $scope.selectedtimeString = timeString;
-            $scope.weeklyReminderDayTime = $scope.dataDay + ", " + $scope.selectedtimeString;
-            $scope.selectedTime = $scope.selectedtimeString;
-            window.localStorage['WEEKLY_REMINDER_TIME_SAVE'] = $scope.dateTimeForWeeklyReminder;
-            window.localStorage['WEEKLY_REMINDER_TIME'] = $scope.weeklyReminderDayTime;
-            window.localStorage['TIME_FOR_WEEKLY_REMINDER'] = $scope.selectedTime;
-        } else {
-            var newDate = new Date();
-            if ($scope.TimeSelected == false) {
-                newDate.setHours(12);
-                newDate.setMinutes(0);
-                newDate.setSeconds(0);
-                n = weekday[newDate.getDay()];
-                matchDay(newDate, n);
-            } else {
-                console.log($scope.alreadySelectedTime);
-                newDate.setHours($scope.alreadySelectedTime.getHours());
-                newDate.setMinutes($scope.alreadySelectedTime.getMinutes());
-                newDate.setSeconds(0);
-                n = weekday[newDate.getDay()];
-                console.log(n);
-                matchDay(newDate, n);
-            }
-        }
-    }
-    $scope.TimeSelected = false;
-
-    function matchDay(newDate, n) {
-        if (n == "Monday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Monday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Monday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Monday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Monday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Monday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Tuesday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Tuesday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Tuesday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Tuesday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Tuesday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Tuesday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Wednesday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Wednesday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Wednesday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Wednesday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Wednesday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Wednesday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Thursday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Thursday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Thursday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Thursday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Thursday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Thursday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Friday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Friday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Friday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Friday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Friday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Friday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Saturday" && $scope.dataDay == "Sunday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Saturday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Saturday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Saturday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Saturday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Saturday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 6);
-        } else if (n == "Sunday" && $scope.dataDay == "Monday") {
-            newDate.setDate(newDate.getDate() + 1);
-        } else if (n == "Sunday" && $scope.dataDay == "Tuesday") {
-            newDate.setDate(newDate.getDate() + 2);
-        } else if (n == "Sunday" && $scope.dataDay == "Wednesday") {
-            newDate.setDate(newDate.getDate() + 3);
-        } else if (n == "Sunday" && $scope.dataDay == "Thursday") {
-            newDate.setDate(newDate.getDate() + 4);
-        } else if (n == "Sunday" && $scope.dataDay == "Friday") {
-            newDate.setDate(newDate.getDate() + 5);
-        } else if (n == "Sunday" && $scope.dataDay == "Saturday") {
-            newDate.setDate(newDate.getDate() + 6);
-        }
-
-        console.log(newDate);
-        $scope.dateTimeForWeeklyReminder = newDate;
-        console.log(newDate);
-        var hours = newDate.getHours();
-        var minutes = newDate.getMinutes();
-        var setreminderTime = hours
-        var ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12; // the hour '0' should be '12'
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-
-        var timeString = hours + ":" + minutes + " " + ampm;
-        $scope.selectedtimeString = timeString;
-        $scope.weeklyReminderDayTime = $scope.dataDay + ", " + $scope.selectedtimeString;
-        $scope.selectedTime = $scope.selectedtimeString;
-        window.localStorage['WEEKLY_REMINDER_TIME_SAVE'] = $scope.dateTimeForWeeklyReminder;
-        window.localStorage['WEEKLY_REMINDER_TIME'] = $scope.weeklyReminderDayTime;
-        window.localStorage['WEEKLY_REMINDER_TIME_SAVE'] = $scope.dateTimeForWeeklyReminder;
-    }
-    $scope.editWeeklyReminderTime = function() {
-        var ipObj1 = {
-            callback: function(val) { //Mandatory
-                if (typeof(val) === 'undefined') {
-                    console.log('Time not selected');
-                } else {
-                    $scope.TimeSelected = true;
-                    var selectedTime = new Date(val * 1000);
-                    var d = new Date(selectedTime);
-                    var d2 = new Date();
-                    d.setMonth(d2.getMonth());
-                    d.setDate(d2.getDate());
-                    d.setFullYear(d2.getFullYear());
-                    d.setHours(d.getUTCHours());
-                    d.setMinutes(d.getUTCMinutes());
-                    $scope.alreadySelectedTime = d;
-                    n = weekday[$scope.alreadySelectedTime.getDay()];
-                    matchDay($scope.alreadySelectedTime, n);
-                    var hours = d.getHours();
-                    var minutes = d.getMinutes();
-                    var setreminderTime = hours
-                    var ampm = hours >= 12 ? 'PM' : 'AM';
-                    hours = hours % 12;
-                    hours = hours ? hours : 12; // the hour '0' should be '12'
-                    minutes = minutes < 10 ? '0' + minutes : minutes;
-
-                    var timeString = hours + ":" + minutes + " " + ampm;
-                    $scope.selectedtimeString = timeString;
-                    $scope.weeklyReminderDayTime = $scope.dataDay + ", " + $scope.selectedtimeString;
-                    $scope.selectedTime = $scope.selectedtimeString;
-                    window.localStorage['WEEKLY_REMINDER_TIME'] = $scope.weeklyReminderDayTime;
-                    window.localStorage['TIME_FOR_WEEKLY_REMINDER'] = $scope.selectedTime;
-                }
-            },
-            inputTime: 50400, //Optional
-            format: 12, //Optional
-            step: 1, //Optional
-            setLabel: 'Set' //Optional
-        };
-
-        ionicTimePicker.openTimePicker(ipObj1);
-    }
-
-    function setReminder(timeForReminder) {
-        document.addEventListener('deviceready', function() {
-            // cordova.plugins.notification.local is now available
-            cordova.plugins.notification.local.schedule({
-                id: 1,
-                title: 'BH App Daily Notification',
-                text: 'Please fill in your daily Check In data.',
-                firstAt: timeForReminder,
-                every: "day" // "minute", "hour", "day" , "week", "month", "year"
-            });
-        }, false);
-    }
-
-    function setWeeklyGoalReminder(timeForReminder) {
-        document.addEventListener('deviceready', function() {
-            // cordova.plugins.notification.local is now available
-            cordova.plugins.notification.local.schedule({
-                id: 1,
-                title: 'BH App Weekly Notification',
-                text: 'Please fill in your Weekly Goals Check In data.',
-                firstAt: timeForReminder,
-                every: "week" // "minute", "hour", "day", "week", "month", "year"
-            });
-        }, false);
-    }
-
-
-    $scope.saveReminder = function() {
-        console.log($scope.today_at_9_pm);
-        // CALL SET DAILY REMINDER
-        setReminder($scope.today_at_9_pm);
-
-        console.log($scope.dateTimeForWeeklyReminder);
-        // CALL SET WEEKLY REMINDER
-        setWeeklyGoalReminder($scope.dateTimeForWeeklyReminder);
-
-
-        window.localStorage['CUSTOM_REMINDER'] = true;
-        window.localStorage["NOTIFICATION_SETTING"] = true;
-        $cordovaToast.showLongBottom('Remiders are set successfully.').then(function(success) {
-            // success
-        }, function(error) {
-            // error
+.controller('menuCtrl', function($scope, $rootScope, $state, $ionicPopup, $cordovaToast, $ionicHistory, UserService, $ionicLoading) {
+    var msg = LOGOUT_MSG;
+    $scope.logout = function() {
+        $rootScope.$broadcast('Call_Custom_Alert');
+        var confirmPopup = $ionicPopup.confirm({
+            title: 'Logout Alert!',
+            template: 'Are you sure you want to Log Out ?' + msg
         });
-
-        if ($stateParams.pageId == 1) {
-            $state.go("tabs.assessment");
-        } else if ($stateParams.pageId == 2) {
-            $state.go("tabs.goals");
-        } else if ($stateParams.pageId == 3) {
-            $state.go("tabs.checkIn");
-        } else if ($stateParams.pageId == 4) {
-            $state.go("tabs.stateOfMind");
-        } else if ($stateParams.pageId == 5) {
-            $state.go("tabs.emergencyCall");
-        } else {
-            $state.go("tabs.assessment");
-        }
+        confirmPopup.then(function(res) {
+            if (res) {
+                $ionicLoading.show();
+                var userData = JSON.parse(window.localStorage['USER_DATA']);
+                var user_id = userData._id;
+                var inputJSON = {"_id": user_id};
+                UserService.logOutUser(inputJSON).success(function(data) {
+                    $ionicLoading.hide();
+                    if(data.status == "success"){
+                        localStorage.removeItem('userData');
+                        $state.go("signin");
+                    }else{
+                        $cordovaToast.showLongBottom('Sorry! Something went wrong. Please again later.');
+                    }
+                });
+            } else {
+                console.log('You are not sure');
+            }
+        });
     }
-
-    $scope.goBackToback = function() {
-        if ($stateParams.pageId == 1) {
-            $state.go("tabs.assessment");
-        } else if ($stateParams.pageId == 2) {
-            $state.go("tabs.goals");
-        } else if ($stateParams.pageId == 3) {
-            $state.go("tabs.checkIn");
-        } else if ($stateParams.pageId == 4) {
-            $state.go("tabs.stateOfMind");
-        } else if ($stateParams.pageId == 5) {
-            $state.go("tabs.emergencyCall");
-        }
-    }
-
 })
 
+.controller('ChangePasswordController', function($scope, $rootScope, $ionicPopup, ionicMaterialInk, $state, $ionicLoading, $ionicHistory, UserService) {
+    ionicMaterialInk.displayEffect();
+    $scope.user = {};
+
+    $scope.changePassword = function() {
+        $ionicLoading.show();
+        var userData = JSON.parse(window.localStorage['USER_DATA']);
+        var user_id = userData._id;
+        var inputJSON = { "_id": user_id, "password": $scope.user.oldpassword, "newpassword": $scope.user.newpassword };
+        var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputJSON.newpassword), ENCRYPTION_KEY);
+        inputJSON.newpassword = ciphertext.toString();
+        UserService.changePassword(inputJSON).success(function(data) {
+            $ionicLoading.hide();
+            if(data.status == "warning"){
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: OLD_NEW_PASSWORD_ERROR
+                });
+                alertPopup.then(function(res) {
+                });
+            }else if(data.status == "failure"){
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: OLD_PASSWORD_ERROR
+                });
+                alertPopup.then(function(res) {});
+            }else{
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Success!',
+                    template: PASSWORD_CHANGE_SUCCESS
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        })
+    }
+})
+
+.controller('settingsCtrl', function($scope, $state, $cordovaToast, UserService, $ionicLoading) {
+    var userData = JSON.parse(window.localStorage['USER_DATA']);
+    $scope.getUserSettings = function(){
+        if(userData.notifications_setting == true){
+            $scope.pushNotification = { checked: true };
+        }else{
+            $scope.pushNotification = { checked: false };
+        }
+    }
+    $scope.pushNotificationChange = function(){
+        console.log('Push Notification Change', $scope.pushNotification.checked);
+        var inputdata = {};
+        inputdata._id = userData._id;
+        inputdata.notifications_setting = $scope.pushNotification.checked;
+        console.log(JSON.stringify(inputdata));
+        $ionicLoading.show();
+        UserService.saveDeviceId(inputdata).success(function(data, status) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                console.log("HERE in SUCCESS");
+                $cordovaToast.showLongBottom('Push notifications setting changed successfully.');
+            }
+        });
+    }
+})
 
 .controller('checkInCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker, $state) {
 
@@ -945,22 +598,20 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.isDataAvailable = false;
     $scope.checkInDataGet = function(num, holderDate) {
         showLoader();
-        console.log('--', num, holderDate);
         if (num == 1 || num == 2) {
             $scope.CheckInNext = true;
             var d = new Date(holderDate);
             if (num == 1) {
-                var d = new Date(holderDate);
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate() - 1;
+                d.setDate(d.getDate() - 1);
             } else if (num == 2) {
-                var d = new Date(holderDate);
-                var mm = d.getMonth() + 1;
-                var dd = d.getDate() + 1;
+                d.setDate(d.getDate() + 1);
             }
+            var mm = d.getMonth() + 1;
             var yyyy = d.getFullYear();
+            var dd = d.getDate();
             var formatdate = (mm < 10 ? '0' + mm : mm) + '/' + dd + '/' + yyyy;
             $scope.newDate = formatdate;
+            
             var inputJsonData = {};
             inputJsonData.user_id = userData._id;
             inputJsonData.checkin_date = formatdate;
@@ -1136,7 +787,7 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("response.data.checkin_count", response.data.checkin_count);
                     $scope.checkIn = false;
                     $scope.checkInDisable = true;
-                    $state.reload('tabs.checkIn');
+                    $state.reload('app.tabs.checkIn');
                 }
             } else {
                 showConfirm(animation);
@@ -1277,9 +928,7 @@ angular.module('sleepapp_patient.controllers', [])
         return strTime + " " + day + " " + dateReturn;
     }
     // Set Appointment Date End
-    // Show Loader 
-    //return;
-
+    
     $scope.getStateofMindData = function() {
         $ionicLoading.show({
             content: 'Loading',
@@ -1296,10 +945,9 @@ angular.module('sleepapp_patient.controllers', [])
         $scope.SecondChartData = []; $scope.SecondChartSeries = [];
         $scope.ThirdChartData = []; $scope.ThirdChartSeries = [];
         $scope.showChart1 = false; $scope.showChart2 = false; $scope.showChart3 = false;
-        console.log("inputjson", inputJson);
+        $scope.nodata = false; $scope.noDataMessage = '';
         
         stateOfMindService.findCheckIndata(inputJson).success(function(response) {
-            $ionicLoading.hide();
             console.log("response = ", response);
             if ((response.messageId == 200) && (response.data.length > 0)) {
                 var firstData = []; var secondData = []; var thirdData = [];
@@ -1327,30 +975,31 @@ angular.module('sleepapp_patient.controllers', [])
                         thirdData[2].push(checkinData.medication);
                 } //for end.
                 
-                //console.log("Labels = ", $scope.chartlabels1);
                 console.log("firstData = ", firstData);
                 console.log("secondData = ", secondData);
                 $scope.FirstChartSeries = ['Sleep Quality', 'Energy', 'Happy'];
                 $scope.FirstChartData = firstData;
                 $scope.showChart1 = true;
-                
                 $scope.SecondChartSeries = ['Happy', 'Relaxed', 'Sleep Enough'];
                 $scope.ThirdChartSeries = ['Relaxed', 'Alcohol', 'Medication'];
 
                 setTimeout(function(){
-                    //alert("Hello 2");
                     $scope.SecondChartData = secondData;
                     $scope.showChart2 = true;
                     $scope.$apply();
                 }, 1000);
                 
                 setTimeout(function(){
-                    //alert("Hello 3");
                     $scope.ThirdChartData = thirdData;
                     $scope.showChart3 = true;
                     $scope.$apply();
+                    $ionicLoading.hide();
                 }, 1000);
                 
+            }else{
+                $scope.nodata = true;
+                $scope.noDataMessage = 'No data available. Please submit check-ins first.';
+                $ionicLoading.hide();
             }
         });        
     }
@@ -1516,6 +1165,9 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.completeShow = false;
     $scope.formDisable = false;
     $scope.jetLagId = '';
+    $scope.completeDisable = true;
+
+    $scope.instructionNotes = INSTRUCTION_NOTE;
     // console.log("**********", userData._id);
     $scope.getJetLagData = function() {
         var inputJson = {};
@@ -1527,6 +1179,7 @@ angular.module('sleepapp_patient.controllers', [])
             if (response.messageId == 200) {
                 if (response.data.length != 0) {
                     $scope.jetLagId = response.data[0]._id;
+                    //console.log(JSON.stringify(response.data[0]));
                     for (var i = 0; i < response.data[0].jet_lags.length; i++) {
                         $scope.jetLag.travel_date = response.data[0].travel_date;
                         $scope.jetLag.time_difference = response.data[0].time_difference;
@@ -1538,6 +1191,14 @@ angular.module('sleepapp_patient.controllers', [])
                         $scope.completeShow = true;
                         $scope.formDisable = true;
                     }
+                    var travelDate = new Date(response.data[0].travel_date);
+                    travelDate.setHours(0,0,0,0);
+                    var current_date = new Date();
+                    current_date.setHours(0,0,0,0);
+                    if(travelDate.valueOf() == current_date.valueOf()){
+                        $scope.completeDisable = false;
+                    }
+                    $scope.instructionNotes = COMPLETE_BUTTON_MSG;
                 }
             } else {
                 var alertPopup = $ionicPopup.alert({
@@ -1587,7 +1248,7 @@ angular.module('sleepapp_patient.controllers', [])
                             });
                             alertPopup.then(function(res) {
                                 $scope.alreadySubmiited = JET_LAG_MESSAGE;
-                                $state.reload("tabs.jetLag");
+                                $state.reload("app.tabs.jetLag");
                             });
                         } else {
                             var alertPopup = $ionicPopup.alert({
@@ -1630,7 +1291,7 @@ angular.module('sleepapp_patient.controllers', [])
                         });
                         alertPopup.then(function(res) {
                             $scope.alreadySubmiited = JET_LAG_MESSAGE;
-                            $state.reload("tabs.jetLag");
+                            $state.reload("app.tabs.jetLag");
                         });
                     } else {
                         var alertPopup = $ionicPopup.alert({
@@ -1651,7 +1312,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : Shilpa Sharma
      */
     $scope.resetJetLagData = function() {
-        $state.reload('tabs.jetLag');
+        $state.reload('app.tabs.jetLag');
     }
     
     function getTravelAheadJetLag(jetLag, jetLagParams){
@@ -2042,4 +1703,4 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.jetLag.time[i] = glassesStr;
         } //for
     }
-});
+})

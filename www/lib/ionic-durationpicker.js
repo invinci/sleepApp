@@ -191,14 +191,14 @@
                     cssClass: cssClass,
                     buttons: [
                         {
-                            text: config.popupCancelLabel,
-                            type: config.popupCancelButtonType,
-                            onTap: _initialize
-                        },
-                        {
                             text: config.popupSaveLabel,
                             type: config.popupSaveButtonType,
                             onTap: __getDurationInSeconds
+                        },
+                        {
+                            text: config.popupCancelLabel,
+                            type: config.popupCancelButtonType,
+                            onTap: _initialize
                         }
                     ]
                 });

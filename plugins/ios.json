@@ -31,6 +31,12 @@
         "phonegap-plugin-push": {
             "SENDER_ID": "117882864904",
             "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "com.ionicframework.sleepapppatient568165"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "com.sleepapp.patient"
         }
     },
     "dependent_plugins": {}
