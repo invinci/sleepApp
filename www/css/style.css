@@ -673,3 +673,4 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
   -webkit-animation-duration: 750ms;
   animation-duration: 750ms;
 }*/
+.borderBottomRed{border-bottom: 1px solid red !important;color: #ff0000 !important;}

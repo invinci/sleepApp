@@ -151,13 +151,13 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" ng-disabled="checkInDisable"/><br/>
+                      <input type="text" placeholder="00" ng-model="patient.caffeine1" class="reminderTime borderBottom" ng-class="{'borderBottomRed' : enableErrClass1}" name="caffeine1" ng-disabled="checkInDisable" maxlength="2" /><br/>
                     </span>
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.caffeine2" class="reminderTime borderBottom" name="caffeine2" ng-disabled="checkInDisable" /><br/>
+                      <input type="text" placeholder="00" ng-model="patient.caffeine2" class="reminderTime borderBottom" ng-class="{'borderBottomRed' : enableErrClass2}" name="caffeine2" ng-disabled="checkInDisable" maxlength="2" /><br/>
                     </span>
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.caffeine3" class="reminderTime borderBottom" name="caffeine3" ng-disabled="checkInDisable"/>
+                      <input type="text" placeholder="00" ng-model="patient.caffeine3" class="reminderTime borderBottom" ng-class="{'borderBottomRed' : enableErrClass3}" name="caffeine3" ng-disabled="checkInDisable" maxlength="2" />
                     </span>
                             </div>
                         </div>
@@ -167,7 +167,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.medication" class="reminderTime borderBottom" name="medication" ng-disabled="checkInDisable" />
+                      <input type="text" placeholder="00" ng-model="patient.medication" class="reminderTime borderBottom" name="medication" ng-disabled="checkInDisable" ng-class="{'borderBottomRed' : enableErrClass4}" maxlength="2" />
                     </span>
                             </div>
                         </div>
@@ -177,7 +177,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.alcohol" class="reminderTime borderBottom" name="alcohol" ng-disabled="checkInDisable" />
+                      <input type="text" placeholder="00" ng-model="patient.alcohol" class="reminderTime borderBottom" name="alcohol" ng-disabled="checkInDisable" ng-class="{'borderBottomRed' : enableErrClass5}" maxlength="2" />
                     </span>
                             </div>
                         </div>
@@ -189,7 +189,7 @@
                 <div class="emptyDiv">&nbsp;</div>
                 <div class="containerDiv1">
                     <div class="button-wrapper">
-                        <button class="button button-block complete-button ink" type="submit" ng-disabled="checkInForm.$invalid" ng-show="CheckIn">Save</button>
+                        <button class="button button-block complete-button ink" type="submit" ng-disabled="(checkInForm.$invalid || enableErrClass1 || enableErrClass2 || enableErrClass3 || enableErrClass4 || enableErrClass5)" ng-show="CheckIn">Save</button>
                     </div>
                 </div>
             </div>
