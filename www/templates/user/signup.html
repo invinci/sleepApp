@@ -1,5 +1,8 @@
 <ion-view>
   <ion-header-bar class="bar-header custom-header">
+    <button class="button button-positive button-clear no-animation backBtn" ng-click="goBackToSignIn()">
+      <i class="ion-ios-arrow-back"></i>
+    </button>
     <h1 class="title headerTitle">Sign Up</h1>
   </ion-header-bar>
   <ion-content class="custom-content padding">
@@ -11,7 +14,7 @@
         <!--Username-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required autofocus/>
+          <input type="text" class="custom_text_box" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required autofocus/>
         </label>
         <div class="form-error" ng-show="signUpForm.username.$error.required && signUpForm.username.$dirty" >Username is required.</div>
         <div class="form-error" ng-show="signUpForm.username.$error.pattern">Username must be letters and numbers only.</div>
@@ -19,31 +22,24 @@
         <!--Email-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Email</span>
-          <input type="email" placeholder="Email" name="email" ng-model="patient.email" required>
+          <input type="email" class="custom_text_box" placeholder="Email" name="email" ng-model="patient.email" required>
         </label>
         <div class="form-error" ng-show="signUpForm.email.$invalid && !signUpForm.email.$pristine" >Email address is required.</div>
         <!--First Name-->
         <label class="item item-input item-floating-label">
           <span class="input-label">First Name</span>
-          <input type="text" placeholder="First Name" name="fName" ng-model="patient.first_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
+          <input type="text" class="custom_text_box" placeholder="First Name" name="fName" ng-model="patient.first_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
         </label>
         <div class="form-error" ng-show="signUpForm.fName.$error.required && signUpForm.fName.$dirty" >First name is required.</div>
         <div class="form-error" ng-show="signUpForm.fName.$error.pattern" >First name must be in characters.</div>
         <!--Last Name-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Last Name</span>
-          <input type="text" placeholder="Last Name" name="lName" ng-model="patient.last_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
+          <input type="text" class="custom_text_box" placeholder="Last Name" name="lName" ng-model="patient.last_name" ng-pattern="/^[a-zA-Z\s]*$/" required>
         </label>
         <div class="form-error" ng-show="signUpForm.lName.$error.required && signUpForm.lName.$dirty" >Last name is required.</div>
         <div class="form-error" ng-show="signUpForm.lName.$error.pattern" >Last name must be in characters.</div>
-        
-        <!--<label class="item item-input">-->
-        <!--  <span class="input-label">Gender</span>-->
-        <!--  <select name="gender" ng-model="patient.gender" class="selectItem" required>-->
-        <!--      <option value="Male">Male</option>-->
-        <!--      <option value="Female">Female</option>-->
-        <!--  </select>-->
-        <!--</label>-->
+
         <!--Gender-->
         <div class="btnWrapper">
           <span class="input-label customItem">Gender</span>
@@ -55,32 +51,18 @@
             </div>
         </div>
         
-        
-        <!--<label class="item item-input item-floating-label">-->
-        <!--  <span class="input-label">Reference Code</span>-->
-        <!--  <input type="text" placeholder="Reference Code" name="parentId" ng-model="patient.parent" required>-->
-        <!--</label>-->
-        <!--<div class="form-error" ng-show="signUpForm.parentId.$invalid && !signUpForm.parentId.$pristine" >Reference Code is required.</div>-->
-
-        <!--<div ng-if="showEMRNumber">
-          <label class="item item-input item-floating-label">
-            <span class="input-label">EMR #</span>
-            <input type="text" placeholder="EMR #" name="emrNumber" ng-model="patient.emr_no" required>
-          </label>
-          <div class="form-error" ng-show="signUpForm.emrNumber.$invalid && !signUpForm.emrNumber.$pristine " >EMR # is required.</div>
-        </div>-->
 
         <!--Password-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Password</span>
-          <input type="password" placeholder="Password" name="pass1" id="pass1" ng-model="patient.password" ng-minlength="6" ng-maxlength="15" required>
+          <input type="password" class="custom_text_box" placeholder="Password" name="pass1" id="pass1" ng-model="patient.password" ng-minlength="6" ng-maxlength="15" required>
         </label>
         <div class="form-error" ng-show="signUpForm.pass1.$error.required && signUpForm.pass1.$dirty" >Password is required.</div>
         <div class="form-error" ng-show="!signUpForm.pass1.$error.required && (signUpForm.pass1.$error.minlength || signUpForm.pass1.$error.maxlength) && signUpForm.pass1.$dirty">Password must be between 6 and 15 characters.</div>
         <!--Confirm Password-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Confirm Password</span>
-          <input type="password" placeholder="Confirm Password " name="passwordC" id="passwordC" ng-model="patient.passwordC" required>
+          <input type="password" class="custom_text_box" placeholder="Confirm Password " name="passwordC" id="passwordC" ng-model="patient.passwordC" required>
         </label>
         <div class="form-error" ng-show="patient.passwordC != patient.password">Password doesn't match.</div>
         <!--Ratings-->
@@ -126,7 +108,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.planned_bedtime" required class="reminderTime" ng-click="editTime(1)" name="planned_bedtime" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.planned_bedtime" required class="reminderTime" ng-click="editTime(1)" name="planned_bedtime" readonly />
               </span>
               <div class="form-error-right" ng-show="signUpForm.planned_bedtime.$error.required && signUpForm.planned_bedtime.$dirty" >required.</div>
             </div>
@@ -137,7 +119,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.planned_wakeup" required class="reminderTime" ng-click="editTime(2)" name="planned_wakeup" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.planned_wakeup" required class="reminderTime" ng-click="editTime(2)" name="planned_wakeup" readonly/>
               </span>
               <div class="form-error-right" ng-show="signUpForm.planned_wakeup.$error.required && signUpForm.planned_wakeup.$dirty" >required.</div>
             </div>
@@ -148,7 +130,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" disabled class="reminderTime" name="wear_glasses_time" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" disabled class="reminderTime" name="wear_glasses_time" readonly/>
               </span>
             </div>
           </div>

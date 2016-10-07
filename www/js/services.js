@@ -114,6 +114,36 @@ angular.module('sleepapp_patient.services', [])
                 return data;
             });
             return promise;
+        },
+        changePassword: function(dataJSON){
+            var promise = $http({
+                url: CHANGE_PASSWORD,
+                method: 'POST',
+                data: dataJSON,
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            }).success(function(data, status, headers, config) {
+                return data;
+            }).error(function (error, status){
+                return status;
+            });
+            return promise;
+        },
+        logOutUser: function(dataJSON){
+            var promise = $http({
+                url: LOG_OUT,
+                method: 'POST',
+                data: dataJSON,
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            }).success(function(data, status, headers, config) {
+                return data;
+            }).error(function (error, status){
+                return status;
+            });
+            return promise;
         }
     }
 })

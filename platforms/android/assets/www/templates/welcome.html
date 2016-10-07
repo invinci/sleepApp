@@ -1,5 +1,5 @@
 <ion-view>
-  <ion-slide-box>
+  <ion-slide-box on-slide-changed="slideChanged(index)">
     <ion-slide>
         <div class="carouselImage">
           <img src="img/Carousel-Screen1.png" width="320px" height="100%">
@@ -39,9 +39,9 @@
         <p class="carouseltext">
           See your State of Mind charts to monitor changes.
         </p>
-        <ion-header-bar class="bar-header carousel-header">
-          <a class="carousel-link" ng-click="startApp()">Start</a>
-        </ion-header-bar>
+        <div id="footerBtn" class="reg-btn">
+            <a class="button button-reg button-block" ng-click="startApp()">START</a>
+        </div> 
     </ion-slide>
   </ion-slide-box>
 </ion-view>

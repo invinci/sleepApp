@@ -10,14 +10,8 @@
 // the 2nd parameter is an array of 'requires'
 angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker','chart.js'])
 
-.run(function($ionicPlatform, $state, $ionicPopup, $timeout, $cordovaStatusbar) {
+.run(function($ionicPlatform, $state, $ionicPopup, $rootScope, $timeout, $cordovaStatusbar, $cordovaNetwork, $cordovaToast) {
   $ionicPlatform.ready(function() {
-    // Handle the App Minimize/Resume event for Auto Logout
-    document.addEventListener("resume", onResume, false);
-    function onResume() {
-        $state.go('signin');
-    }
-    
     if(window.cordova && window.cordova.plugins.Keyboard) {
       // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
       // for form inputs)
@@ -33,8 +27,49 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
       StatusBar.styleDefault();
       $cordovaStatusbar.styleColor('black');
     }
-    
-    google.charts.load('current', { 'packages': ['corechart'] });
+
+/*
+    var myPopup;
+    // Check for network connection
+    var CheckInternetConnection = function() {
+      if(window.Connection) {
+        if(navigator.connection.type == Connection.NONE) {
+          myPopup = $ionicPopup.alert({
+            title: 'Warning!',
+            template: 'Sorry, no internet connection detected. Please reconnect and try again.',
+            buttons: [{
+                  text: '<b>OK</b>',
+                  type: 'button-positive',
+                  onTap: function(e) {
+                      if(ionic.Platform.isIOS()){
+                          if(navigator.connection.type == Connection.NONE) {
+                            $cordovaToast.showLongBottom('Connect to your internet connection first.');
+                            e.preventDefault();
+                          }
+                      }
+                      if(ionic.Platform.isAndroid()){
+                          if(navigator.connection.type == Connection.NONE) {
+                            $cordovaToast.showLongBottom('Connect to your internet connection first.');
+                            e.preventDefault();
+                          }
+                      }
+                  }
+              }]
+          });
+        }
+      }
+    }
+    CheckInternetConnection();
+
+    $rootScope.$on('$cordovaNetwork:online', function(event, networkState){
+        $cordovaToast.showLongBottom('Connected successfully.');
+        myPopup.close();
+        //$state.go($state.current, {}, {reload: true});
+    })
+    $rootScope.$on('$cordovaNetwork:offline', function(event, networkState){
+      CheckInternetConnection();
+    })
+    */
     
     /* PUSH NOTIFICATIONS CONFIGURATION as on ngCordova-- start */
     var push = PushNotification.init({
@@ -58,39 +93,39 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     /* PUSH NOTIFICATIONS CONFIGURATION -- end. */
 
     /* HANDLE ANDROID DEVICE BACK BUTTON -- start. */
-    $ionicPlatform.registerBackButtonAction(function (event) {  
-      var animation = 'bounceInRight';
-      console.log($state.current.name);
-      if($state.current.name == "tabs.assessment" || $state.current.name == "signup"){
-        showConfirm(animation);
-        var confirmPopup = $ionicPopup.confirm({
-          title: 'Warning!',
-          template: 'Are you sure you want to exit?'
-        });
-        confirmPopup.then(function(res) {
-          if(res) {
-            navigator.app.exitApp();
-          } else {
-            console.log('You are not sure');
-          }
-        });   
-      }else if($state.current.name == "signin"){
-        showConfirm(animation);
-        var confirmPopup = $ionicPopup.confirm({
-          title: 'Warning!',
-          template: 'Are you sure you want to exit?'
-        });
-        confirmPopup.then(function(res) {
-          if(res) {
-            navigator.app.exitApp();
-          } else {
-            console.log('You are not sure');
-          }
-        });   
-      }else{ 
-        navigator.app.backHistory();
-      }
-    }, 100);
+    // $ionicPlatform.registerBackButtonAction(function (event) {  
+    //   var animation = 'bounceInRight';
+    //   console.log($state.current.name);
+    //   if($state.current.name == "tabs.assessment" || $state.current.name == "signup"){
+    //     showConfirm(animation);
+    //     var confirmPopup = $ionicPopup.confirm({
+    //       title: 'Warning!',
+    //       template: 'Are you sure you want to exit?'
+    //     });
+    //     confirmPopup.then(function(res) {
+    //       if(res) {
+    //         navigator.app.exitApp();
+    //       } else {
+    //         console.log('You are not sure');
+    //       }
+    //     });   
+    //   }else if($state.current.name == "signin"){
+    //     showConfirm(animation);
+    //     var confirmPopup = $ionicPopup.confirm({
+    //       title: 'Warning!',
+    //       template: 'Are you sure you want to exit?'
+    //     });
+    //     confirmPopup.then(function(res) {
+    //       if(res) {
+    //         navigator.app.exitApp();
+    //       } else {
+    //         console.log('You are not sure');
+    //       }
+    //     });   
+    //   }else{ 
+    //     navigator.app.backHistory();
+    //   }
+    // }, 100);
     /* HANDLE ANDROID DEVICE BACK BUTTON -- end. */
     
     // A confirm dialog
@@ -142,15 +177,46 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     controller: 'ForgotPasswordController'
   })
 
-
-  .state('tabs', {
-    url: '/tab',
+  .state('app', {
     cache: false,
+    url: '/app',
     abstract: true,
-    templateUrl: 'templates/tabsController.html'
+    templateUrl: 'templates/menu.html',
+    controller: 'menuCtrl'
   })
 
-  .state('tabs.checkIn', {
+  .state('app.changePassword', {
+    cache: false,
+    url: '/changePassword',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/user/changePassword.html',
+        controller:'ChangePasswordController'
+      }
+    }
+  })
+
+  .state('app.settings', {
+    cache: false,
+    url: '/settings',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/user/settings.html',
+        controller: 'settingsCtrl'
+      }
+    }
+  })
+
+  .state('app.tabs', {
+    url: '/tab',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/tabsController.html'
+      }
+    }
+  })
+
+  .state('app.tabs.checkIn', {
     cache: false,
     url: '/page1',
     views: {
@@ -160,7 +226,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
       }
     }
   })
-     .state('tabs.jetLag', {
+     .state('app.tabs.jetLag', {
     cache: false,
     url: '/page2',
     views: {
@@ -171,7 +237,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     }
   })
 
-  .state('tabs.stateOfMind', {
+  .state('app.tabs.stateOfMind', {
     cache: false,
     url: '/page3',
     views: {
@@ -181,17 +247,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
       }
     }
   })
-
-  .state('settings', {
-    cache: false,
-    url: '/settings/:pageId',
-    templateUrl: 'templates/user/settings.html',
-    controller: 'settingsCtrl'
-  })
-  
- 
-
   // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/welcome');
+  $urlRouterProvider.otherwise('/welcome');
  
 });

@@ -2,7 +2,6 @@
 <ion-view title="Check in" ng-init="checkInDataGet(0)">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Check in</h1>
-        <!--<i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:3})"></i>-->
     </ion-header-bar>
     <ion-content has-header="true" has-tabs="true" ng-show="showCheckInData">
         <form name="checkInForm" ng-submit="saveCheckInData()">
@@ -151,7 +150,7 @@
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
-                      <input type="number" placeholder="00" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" ng-disabled="checkInDisable"/><br/>
+                      <input type="text" placeholder="00" ng-model="patient.caffeine1" class="reminderTime borderBottom" name="caffeine1" maxLength="2" ng-disabled="checkInDisable"/><br/>
                     </span>
                                 <span class="rateSpan">
                       <input type="number" placeholder="00" ng-model="patient.caffeine2" class="reminderTime borderBottom" name="caffeine2" ng-disabled="checkInDisable" /><br/>

@@ -1,9 +1,8 @@
 <ion-view title="jet lag" ng-init="getJetLagData()">
     <ion-header-bar class="bar-header custom-header">
         <h1 class="title">Jet Lag</h1>
-        <!--<i class="button button-clear ion-gear-b settingsBtn" ui-sref="settings({pageId:2})"></i>-->
     </ion-header-bar>
-    <ion-content class="custom-content padding">
+    <ion-content class="padding" has-header="true" has-tabs="true">
         <form name="jetLagForm" >
             <div class="list">
                 <!--Travel Date-->
@@ -33,7 +32,7 @@
                 <div class="row">
                     <div class="col">&nbsp;</div>
                 </div>
-                <label class="note-label">Note : If you are moving to a timezone which is not listed above, you can select the nearest timezone difference.</label>
+                <label class="note-label">{{instructionNotes}}</label>
                 <div class="row noPadding" ng-if="ifJetLagFilled">
                     <div class="col noPadding">
                         <div class="row">
@@ -71,7 +70,7 @@
                 </div>
                 <div class="containerDiv1" ng-if="ifJetLagFilled">
                     <div class="button-wrapper">
-                        <button class="button button-block complete-button ink" ng-click="updateJetLagData()" ng-show="completeShow">Complete</button>
+                        <button class="button button-block complete-button ink" ng-click="updateJetLagData()" ng-show="completeShow" ng-disabled="completeDisable">Complete</button>
                     </div>
                 </div>
         </form>

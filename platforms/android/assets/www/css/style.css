@@ -128,14 +128,14 @@ body{
 	width: 28%;
 	text-align: right;
 }
-.toggle .track{
+/*.toggle .track{
 	background-color: transparent !important;
 	border: solid 1px #e6e6e6 !important;
-}
-.toggle input:checked + .track{
+}*/
+/*.toggle input:checked + .track{
 	background-color: transparent !important;
 	border: solid 1px #e6e6e6 !important;
-}
+}*/
 .updateBtn{
 	max-width: 70px !important;
 	min-height: 35px !important;
@@ -627,9 +627,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .rateSpan .item-button-right .button.button-positive.button-outline{color: inherit;font-size: 14px;}
 .idp-control button{padding: 0;}
 .popup-sub-title{font-size: medium}
-.popup-buttons .button.button-assertive{border-color: #e42112;
+/*.popup-buttons .button.button-assertive{border-color: #e42112;
     background-color: #ef473a;
-    color: #fff;}
+    color: #fff;}*/
 
 /* durationPicker CSS */
 /*added by shilpa*/
@@ -673,3 +673,84 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
   -webkit-animation-duration: 750ms;
   animation-duration: 750ms;
 }*/
+
+
+.toggle-text > .track {
+  width: auto;
+  padding-left: 25px;
+  padding-right: 25px;
+  background: #4cd964;
+  border-color: #4cd964;
+}
+
+.toggle-text .handle {
+  left: 7px;
+}
+
+.toggle-text .handle-text {
+  font-size: 16px;
+  color: white;
+  position: absolute;
+  top: 3px;
+}
+
+.toggle-text .handle-text-false {
+  left: 36px;
+}
+
+.toggle-text input:checked + .track .handle {
+  -webkit-transform: none;
+  -moz-transform: none;
+  transform: none;
+  left: calc(100% - 34px);
+  
+/*  -webkit-transform: translate3d(0, 0,0);*/
+}
+.track-text {
+  line-height: 26px;
+  color: white;
+  font-size: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.toggle-small .track {
+	
+	height:30px !important;
+}
+
+.toggle-small .handle{
+	
+	top:9px !important;
+}
+
+.toggle-text .handle-text{
+	top:0px !important;
+}
+
+.custom_text_box {
+	font-size: 16px !important;
+}
+
+
+.button.button-reg {
+    border-color: #002946;
+    border-radius: 0px !important;
+    background-color: #002946;
+    color: #fff;
+    }
+
+.reg-btn {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: 15px;
+    display: block;
+}
+
+.reg-btn a{
+    padding: 5px 0px !important;
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100% !important;
+}
