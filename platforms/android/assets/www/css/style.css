@@ -714,6 +714,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
   padding-right: 5px;
 }
 
+.toggle-small .track {
+	
+	height:30px !important;
+}
+
+.toggle-small .handle{
+	
+	top:9px !important;
+}
+
+.toggle-text .handle-text{
+	top:0px !important;
+}
+
 .custom_text_box {
 	font-size: 16px !important;
 }

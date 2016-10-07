@@ -39,14 +39,7 @@
         </label>
         <div class="form-error" ng-show="signUpForm.lName.$error.required && signUpForm.lName.$dirty" >Last name is required.</div>
         <div class="form-error" ng-show="signUpForm.lName.$error.pattern" >Last name must be in characters.</div>
-        
-        <!--<label class="item item-input">-->
-        <!--  <span class="input-label">Gender</span>-->
-        <!--  <select name="gender" ng-model="patient.gender" class="selectItem" required>-->
-        <!--      <option value="Male">Male</option>-->
-        <!--      <option value="Female">Female</option>-->
-        <!--  </select>-->
-        <!--</label>-->
+
         <!--Gender-->
         <div class="btnWrapper">
           <span class="input-label customItem">Gender</span>
@@ -58,20 +51,6 @@
             </div>
         </div>
         
-        
-        <!--<label class="item item-input item-floating-label">-->
-        <!--  <span class="input-label">Reference Code</span>-->
-        <!--  <input type="text" placeholder="Reference Code" name="parentId" ng-model="patient.parent" required>-->
-        <!--</label>-->
-        <!--<div class="form-error" ng-show="signUpForm.parentId.$invalid && !signUpForm.parentId.$pristine" >Reference Code is required.</div>-->
-
-        <!--<div ng-if="showEMRNumber">
-          <label class="item item-input item-floating-label">
-            <span class="input-label">EMR #</span>
-            <input type="text" placeholder="EMR #" name="emrNumber" ng-model="patient.emr_no" required>
-          </label>
-          <div class="form-error" ng-show="signUpForm.emrNumber.$invalid && !signUpForm.emrNumber.$pristine " >EMR # is required.</div>
-        </div>-->
 
         <!--Password-->
         <label class="item item-input item-floating-label">
@@ -129,7 +108,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.planned_bedtime" required class="reminderTime" ng-click="editTime(1)" name="planned_bedtime" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.planned_bedtime" required class="reminderTime" ng-click="editTime(1)" name="planned_bedtime" readonly />
               </span>
               <div class="form-error-right" ng-show="signUpForm.planned_bedtime.$error.required && signUpForm.planned_bedtime.$dirty" >required.</div>
             </div>
@@ -140,7 +119,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.planned_wakeup" required class="reminderTime" ng-click="editTime(2)" name="planned_wakeup" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.planned_wakeup" required class="reminderTime" ng-click="editTime(2)" name="planned_wakeup" readonly/>
               </span>
               <div class="form-error-right" ng-show="signUpForm.planned_wakeup.$error.required && signUpForm.planned_wakeup.$dirty" >required.</div>
             </div>
@@ -151,7 +130,7 @@
           <div class="responsiveCheckInDiv1 newClass">
             <div class="toggleBar">
               <span class="rateSpan">
-                <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" disabled class="reminderTime" name="wear_glasses_time" />
+                <input type="text" placeholder="HH:MM" ng-model="patient.wear_glasses_time" disabled class="reminderTime" name="wear_glasses_time" readonly/>
               </span>
             </div>
           </div>

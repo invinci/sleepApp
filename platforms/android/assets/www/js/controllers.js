@@ -10,7 +10,6 @@ angular.module('sleepapp_patient.controllers', [])
     };
     // LOCK SCREEN ORIENTATION IN PORTRAIT MODE FOR CAROUSEL SCREENS.
     document.addEventListener("deviceready", onDeviceReady, false);
-
     function onDeviceReady() {
         screen.lockOrientation('portrait');
     }
@@ -21,23 +20,12 @@ angular.module('sleepapp_patient.controllers', [])
     };
 })
 
-.controller('SignUpController', function($scope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
-    // UNLOCK SCREEN ORIENTATION
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    function onDeviceReady() {
-        screen.unlockOrientation();
-    }
-
+.controller('SignUpController', function($scope, $rootScope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-    window.localStorage['ACCESS_TOKEN'] = "";
-    window.localStorage['USER_DATA'] = "";
 
-    var animation = 'bounceInDown';
     $scope.type = 'Male';
     $scope.setType = function(event) {
         $scope.type = angular.element(event.target).text();
-        console.log($scope.type);
     };
 
     $scope.patient = {};
@@ -51,8 +39,7 @@ angular.module('sleepapp_patient.controllers', [])
      */
     $scope.signUp = function(userData) {
         $ionicLoading.show();
-        //console.log("userData = ", userData);
-
+        console.log("userData = ", userData);
         $scope.patient = userData;
         $scope.patient.user_type = 2; // Patient
         //delete $scope.patient.passwordC;
@@ -98,7 +85,7 @@ angular.module('sleepapp_patient.controllers', [])
                                     $state.go("app.tabs.checkIn");
                                 });
                             } else {
-                                showConfirm(animation);
+                                $rootScope.$broadcast('Call_Custom_Alert');
                                 var alertPopup = $ionicPopup.alert({
                                     title: 'Error!',
                                     template: SIGNUP_LOGIN,
@@ -121,7 +108,7 @@ angular.module('sleepapp_patient.controllers', [])
                             var errorMsg = EMAIL_ERROR;
                         }
                         $ionicLoading.hide();
-                        showConfirm(animation);
+                        $rootScope.$broadcast('Call_Custom_Alert');
                         var alertPopup = $ionicPopup.alert({
                             title: 'Error!',
                             template: errorMsg,
@@ -132,7 +119,7 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log(status);
                     $ionicLoading.hide();
                     if (status == 401 || status == -1) {
-                        showConfirm(animation);
+                        $rootScope.$broadcast('Call_Custom_Alert');
                         var alertPopup = $ionicPopup.alert({
                             title: 'Error!',
                             template: LOGIN_ERROR,
@@ -143,7 +130,7 @@ angular.module('sleepapp_patient.controllers', [])
             } else {
                 if (data.status == "warning-email")
                     $ionicLoading.hide();
-                showConfirm(animation);
+                $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
                     title: 'Error!',
                     template: (data.status == "warning-email") ? EMAIL_ERROR : USER_NAME_ERROR,
@@ -206,33 +193,21 @@ angular.module('sleepapp_patient.controllers', [])
         ionicTimePicker.openTimePicker(ipObj1);
     }
 
-    // animate pop up dailog
-    function showConfirm(animation) {
-        $timeout(function() {
-            var popupElements = document.getElementsByClassName("popup-container");
-            if (popupElements.length) {
-                var popupElement = angular.element(popupElements[0]);
-                popupElement.addClass('animated')
-                popupElement.addClass(animation)
-            };
-        }, 1)
-    }
-
     $scope.goBackToSignIn = function(){
         $ionicHistory.goBack();
     }
 })
 
-.controller('SignInController', function($scope, $timeout, $ionicHistory, ionicMaterialInk, $ionicPopup, $ionicLoading, $state, UserService) {
+.controller('SignInController', function($scope, $rootScope, $timeout, $ionicHistory, ionicMaterialInk, $ionicPopup, $ionicLoading, $state, UserService) {
+    // UNLOCK SCREEN ORIENTATION
+    document.addEventListener("deviceready", onDeviceReady, false);
+    function onDeviceReady() {
+        screen.unlockOrientation();
+    }
+
     ionicMaterialInk.displayEffect();
-    window.localStorage['ACCESS_TOKEN'] = "";
-    window.localStorage['USER_DATA'] = "";
     $scope.user = {};
     var animation = 'bounceInDown';
-
-    /**
-     * function to sign in user
-     **/
     $scope.signIn = function(user) {
         $ionicLoading.show();
         UserService.logInUser(user).success(function(data) {
@@ -263,7 +238,7 @@ angular.module('sleepapp_patient.controllers', [])
                         }
                     });
                 } else {
-                    showConfirm(animation);
+                    $rootScope.$broadcast('Call_Custom_Alert');
                     var alertPopup = $ionicPopup.alert({
                         title: 'Error!',
                         template: LOGIN_STATUS_ERROR,
@@ -273,7 +248,7 @@ angular.module('sleepapp_patient.controllers', [])
                     });
                 }
             } else {
-                showConfirm(animation);
+                $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
                     title: 'Error!',
                     template: LOGIN_ERROR,
@@ -285,7 +260,7 @@ angular.module('sleepapp_patient.controllers', [])
         }).error(function(error, status) {
             $ionicLoading.hide();
             if (status == 401 || status == -1) {
-                showConfirm(animation);
+                $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
                     title: 'Error!',
                     template: LOGIN_ERROR,
@@ -296,22 +271,11 @@ angular.module('sleepapp_patient.controllers', [])
     };
 
     $scope.goBackToSignUp = function() {
-            $ionicHistory.goBack();
-        }
-        // animate pop up dailog
-    function showConfirm(animation) {
-        $timeout(function() {
-            var popupElements = document.getElementsByClassName("popup-container")
-            if (popupElements.length) {
-                var popupElement = angular.element(popupElements[0]);
-                popupElement.addClass('animated')
-                popupElement.addClass(animation)
-            };
-        }, 1)
+        $ionicHistory.goBack();
     }
 })
 
-.controller('ForgotPasswordController', function($scope, ionicMaterialInk, $state, UserService, $ionicHistory) {
+.controller('ForgotPasswordController', function($scope, $rootScope, ionicMaterialInk, $state, UserService, $ionicHistory) {
     ionicMaterialInk.displayEffect();
 
     $scope.forgotPassword = function(user) {
@@ -356,6 +320,65 @@ angular.module('sleepapp_patient.controllers', [])
 
 .controller('ChangePasswordController', function($scope, $rootScope, $ionicPopup, ionicMaterialInk, $state, $ionicLoading, $ionicHistory, UserService) {
     ionicMaterialInk.displayEffect();
+
+    if(window.localStorage['USER_DATA']){
+       var userData = JSON.parse(window.localStorage['USER_DATA']);
+        console.log("userData = ", userData);
+        if(userData.user){
+            userData = userData.user;
+        }
+        var user = {};
+        $scope.patient = {};
+        user.username = userData.username;
+        var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+        var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+        decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+        user.password = decryptedOldPassword;
+
+        UserService.logInUser(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                // Check User Status Active or Inactive
+                if (data.data.user.is_status == true) {
+                    window.localStorage['ACCESS_TOKEN'] = data.access_token;
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
+                    var userData = JSON.parse(window.localStorage['USER_DATA']);
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Error!',
+                        template: LOGIN_STATUS_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                        $state.go("signin");
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        }); 
+    }else{
+        $state.go("signin");
+        return;
+    }
+
     $scope.user = {};
 
     $scope.changePassword = function() {
@@ -396,8 +419,64 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('settingsCtrl', function($scope, $state, $cordovaToast, UserService, $ionicLoading) {
-    var userData = JSON.parse(window.localStorage['USER_DATA']);
+.controller('settingsCtrl', function($scope, $rootScope, $state, $cordovaToast, UserService, $ionicLoading) {
+    if(window.localStorage['USER_DATA']){
+       var userData = JSON.parse(window.localStorage['USER_DATA']);
+        console.log("userData = ", userData);
+        if(userData.user){
+            userData = userData.user;
+        }
+        var user = {};
+        $scope.patient = {};
+        user.username = userData.username;
+        var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+        var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+        decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+        user.password = decryptedOldPassword;
+
+        UserService.logInUser(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                // Check User Status Active or Inactive
+                if (data.data.user.is_status == true) {
+                    window.localStorage['ACCESS_TOKEN'] = data.access_token;
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
+                    var userData = JSON.parse(window.localStorage['USER_DATA']);
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Error!',
+                        template: LOGIN_STATUS_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                        $state.go("signin");
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        }); 
+    }else{
+        $state.go("signin");
+        return;
+    }
     $scope.getUserSettings = function(){
         if(userData.notifications_setting == true){
             $scope.pushNotification = { checked: true };
@@ -422,39 +501,66 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('checkInCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker, $state) {
-
+.controller('checkInCtrl', function($scope, $rootScope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, $timeout, $ionicPopup, ionicTimePicker, $state) {
     ionicMaterialInk.displayEffect();
-    /* ++ custom IONIC loader functions ++ */
-        function showLoader()
-        {
-            $ionicLoading.show({
-                content: 'Loading',
-                animation: 'fade-in',
-                showBackdrop: true,
-                maxWidth: 200,
-                showDelay: 0
-            });
+    if(window.localStorage['USER_DATA']){
+       var userData = JSON.parse(window.localStorage['USER_DATA']);
+        console.log("userData = ", userData);
+        if(userData.user){
+            userData = userData.user;
         }
-        function hideLoader()
-        {
-           $ionicLoading.hide();
-        }
-    /* -- custom IONIC loader functions -- */
+        var user = {};
+        $scope.patient = {};
+        user.username = userData.username;
+        var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+        var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+        decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+        user.password = decryptedOldPassword;
 
-    var userData = JSON.parse(window.localStorage['USER_DATA']);
-    console.log("userData = ", userData);
-    if(userData.user){
-        userData = userData.user;
+        UserService.logInUser(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                // Check User Status Active or Inactive
+                if (data.data.user.is_status == true) {
+                    window.localStorage['ACCESS_TOKEN'] = data.access_token;
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
+                    var userData = JSON.parse(window.localStorage['USER_DATA']);
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Error!',
+                        template: LOGIN_STATUS_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                        $state.go("signin");
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        }); 
+    }else{
+        $state.go("signin");
+        return;
     }
-    var user = {};
-    $scope.patient = {};
-    user.username = userData.username;
-    var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
-    var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
-    decryptedOldPassword = decryptedOldPassword.slice(1, -1);
-    user.password = decryptedOldPassword;
-
+    
     /* durationPicker Configuration*/
     $scope.durationConfig = {};
     $scope.durationConfig = {
@@ -467,46 +573,6 @@ angular.module('sleepapp_patient.controllers', [])
         popupCancelButtonType: 'button-assertive',
         rtl: false
     };
-
-    UserService.logInUser(user).success(function(data) {
-        $ionicLoading.hide();
-        if (data.status == "success") {
-            // Check User Status Active or Inactive
-            if (data.data.user.is_status == true) {
-                window.localStorage['ACCESS_TOKEN'] = data.access_token;
-                window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
-                var userData = JSON.parse(window.localStorage['USER_DATA']);
-            } else {
-                showConfirm(animation);
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Error!',
-                    template: LOGIN_STATUS_ERROR,
-                });
-                alertPopup.then(function(res) {
-                    $state.go("signin");
-                });
-            }
-        } else {
-            showConfirm(animation);
-            var alertPopup = $ionicPopup.alert({
-                title: 'Error!',
-                template: LOGIN_ERROR,
-            });
-            alertPopup.then(function(res) {
-                $state.go("signin");
-            });
-        }
-    }).error(function(error, status) {
-        $ionicLoading.hide();
-        if (status == 401 || status == -1) {
-            showConfirm(animation);
-            var alertPopup = $ionicPopup.alert({
-                title: 'Error!',
-                template: LOGIN_ERROR,
-            });
-            alertPopup.then(function(res) {});
-        }
-    });
 
     $scope.noDataMessage = NO_DATA;
     $scope.dailyMetricAvailable = false;
@@ -597,7 +663,7 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.noClick = true;
     $scope.isDataAvailable = false;
     $scope.checkInDataGet = function(num, holderDate) {
-        showLoader();
+        $ionicLoading.show();
         if (num == 1 || num == 2) {
             $scope.CheckInNext = true;
             var d = new Date(holderDate);
@@ -617,7 +683,7 @@ angular.module('sleepapp_patient.controllers', [])
             inputJsonData.checkin_date = formatdate;
             CheckInService.findCheckinData(inputJsonData).success(function(response) {
                 $scope.checkinDateOne = true;
-                hideLoader();
+                $ionicLoading.hide();
                 if (response.messageId == 200) {
                     if(formatdate == $scope.todayDate){
                         console.log(">>> it's today.");
@@ -674,7 +740,7 @@ angular.module('sleepapp_patient.controllers', [])
     *   developer   :   Gurpreet
     **/
     function showTodayCheckIns(response){
-        hideLoader();
+        $ionicLoading.hide();
         $scope.isDataAvailable = true;
         $scope.showCheckInData = true;
         $scope.newDate = date;
@@ -734,7 +800,7 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.getPatientCheckInData = function() {
         CheckInService.getPatientCheckIn($scope.findPatientCheckIn).success(function(response) {
-            hideLoader();
+           $ionicLoading.hide();
             if (response.messageId == 200) {
                 if (response.data.length != 0) {
                     $scope.showCheckInData = false;
@@ -757,7 +823,7 @@ angular.module('sleepapp_patient.controllers', [])
      *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
-        showLoader();
+        $ionicLoading.show();
     console.log('$scope.patient = ', $scope.patient);
         inputJsonData = $scope.patient;
         inputJsonData.user_id = userData._id;
@@ -771,10 +837,10 @@ angular.module('sleepapp_patient.controllers', [])
 
         // Save check-in on daily basis
         CheckInService.saveCheckIn(inputJsonData).success(function(response) {
-            hideLoader();
+           $ionicLoading.hide();
             console.log("response saveeee= ", response);
             if (response.messageId == 200) {
-                showConfirm(animation);
+                $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
                     title: 'Success!',
                     template: CHECK_IN_SAVE,
@@ -790,7 +856,7 @@ angular.module('sleepapp_patient.controllers', [])
                     $state.reload('app.tabs.checkIn');
                 }
             } else {
-                showConfirm(animation);
+                $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
                     title: 'Warning!',
                     template: CHECK_IN_ERROR,
@@ -799,20 +865,6 @@ angular.module('sleepapp_patient.controllers', [])
             }
         });
         // $state.reload('tabs.checkIn');
-    }
-
-
-
-    // animate pop up dailog
-    function showConfirm(animation) {
-        $timeout(function() {
-            var popupElements = document.getElementsByClassName("popup-container");
-            if (popupElements.length) {
-                var popupElement = angular.element(popupElements[0]);
-                popupElement.addClass('animated')
-                popupElement.addClass(animation)
-            };
-        }, 1)
     }
 
     /*
@@ -890,16 +942,65 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('stateOfMindCtrl', function($scope, $state, $stateParams, UserService, CheckInService, $ionicLoading, ionicMaterialInk, $timeout, $ionicPopup, stateOfMindService) {
-    var userData = JSON.parse(window.localStorage['USER_DATA']);
-    var user = {};
-    var inputString = {};
-    user.password = userData.password;
-    user.username = userData.username;
-    var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
-    var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
-    decryptedOldPassword = decryptedOldPassword.slice(1, -1);
-    user.password = decryptedOldPassword;
+.controller('stateOfMindCtrl', function($scope, $rootScope, $state, $stateParams, UserService, CheckInService, $ionicLoading, ionicMaterialInk, $timeout, $ionicPopup, stateOfMindService) {
+    if(window.localStorage['USER_DATA']){
+       var userData = JSON.parse(window.localStorage['USER_DATA']);
+        if(userData.user){
+            userData = userData.user;
+        }
+        var user = {};
+        $scope.patient = {};
+        user.username = userData.username;
+        var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+        var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+        decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+        user.password = decryptedOldPassword;
+
+        UserService.logInUser(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                // Check User Status Active or Inactive
+                if (data.data.user.is_status == true) {
+                    window.localStorage['ACCESS_TOKEN'] = data.access_token;
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
+                    var userData = JSON.parse(window.localStorage['USER_DATA']);
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Error!',
+                        template: LOGIN_STATUS_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                        $state.go("signin");
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        }); 
+    }else{
+        $state.go("signin");
+        return;
+    }
+
+
     $scope.user_name = userData.first_name + " " + userData.last_name;
 
     $scope.showAppointmentDiv = false;
@@ -930,14 +1031,7 @@ angular.module('sleepapp_patient.controllers', [])
     // Set Appointment Date End
     
     $scope.getStateofMindData = function() {
-        $ionicLoading.show({
-            content: 'Loading',
-            animation: 'fade-in',
-            showBackdrop: true,
-            maxWidth: 200,
-            showDelay: 0
-        });
-        
+        $ionicLoading.show();
         var inputJson = {};
         inputJson.user_id = userData._id;
         $scope.chartlabels1 = []; $scope.chartlabels2 = []; $scope.chartlabels3 = [];
@@ -1004,25 +1098,67 @@ angular.module('sleepapp_patient.controllers', [])
         });        
     }
 
-    // animate pop up dailog
-    function showConfirm(animation) {
-        $timeout(function() {
-            var popupElements = document.getElementsByClassName("popup-container");
-            if (popupElements.length) {
-                var popupElement = angular.element(popupElements[0]);
-                popupElement.addClass('animated')
-                popupElement.addClass(animation)
-            };
-        }, 1)
-    }
 })
 
-/*
- *jet lag calculator controller .
- * developer : Shilpa Sharma
- */
-.controller('jetLagCtrl', function($scope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state, $http) {
-    
+.controller('jetLagCtrl', function($scope, $rootScope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state, $http) {
+    if(window.localStorage['USER_DATA']){
+       var userData = JSON.parse(window.localStorage['USER_DATA']);
+        console.log("userData = ", userData);
+        if(userData.user){
+            userData = userData.user;
+        }
+        var user = {};
+        $scope.patient = {};
+        user.username = userData.username;
+        var decryptedData = CryptoJS.AES.decrypt(userData.password, ENCRYPTION_KEY);
+        var decryptedOldPassword = decryptedData.toString(CryptoJS.enc.Utf8);
+        decryptedOldPassword = decryptedOldPassword.slice(1, -1);
+        user.password = decryptedOldPassword;
+
+        UserService.logInUser(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.status == "success") {
+                // Check User Status Active or Inactive
+                if (data.data.user.is_status == true) {
+                    window.localStorage['ACCESS_TOKEN'] = data.access_token;
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data.user);
+                    var userData = JSON.parse(window.localStorage['USER_DATA']);
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Error!',
+                        template: LOGIN_STATUS_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                        $state.go("signin");
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {
+                    $state.go("signin");
+                });
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Error!',
+                    template: LOGIN_ERROR,
+                });
+                alertPopup.then(function(res) {});
+            }
+        }); 
+    }else{
+        $state.go("signin");
+        return;
+    }
+
     $scope.timezones = {};
     $scope.timezones = [
             {"key":"-12", "value":"-12"},
@@ -1040,14 +1176,7 @@ angular.module('sleepapp_patient.controllers', [])
             {"key":"+12", "value":"12"}
     ];
     $scope.ifJetLagFilled = false;
-    /*
-    $http.get('json/timezones-even.json').success(function(data) {
-        //console.log('timezones = ', data);
-        $scope.timezones = data;
-    });
-    */
     
-    var userData = JSON.parse(window.localStorage['USER_DATA']);
     $scope.jetLag = {};
     var ipObj1 = {
         callback: function(val) {

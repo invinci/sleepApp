@@ -141,6 +141,18 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     return deferred.promise;
   };
 
+  // Check user completed Carousel Tutorial or Not
+  var checkLogin = function($q, $state, $ionicLoading, $timeout, $location){
+    var deferred = $q.defer();
+    if (window.localStorage['USER_DATA']) {
+      console.log("HERE");
+      $location.path('/app/tab/page1');
+    }else{
+      $timeout(deferred.resolve, 0);
+    }
+    return deferred.promise;
+  };
+
   // display tabs at bottom in device
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
@@ -165,7 +177,8 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     cache: false,
     url: '/signin',
     templateUrl: 'templates/user/signin.html',
-    controller: 'SignInController'
+    controller: 'SignInController',
+    resolve: {checked:checkLogin}
   })
 
   .state('forgotpassword', {
@@ -220,7 +233,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     views: {
       'tab1': {
         templateUrl: 'templates/checkIn.html',
-        controller: 'checkInCtrl'
+        controller: 'checkInCtrl',
       }
     }
   })
