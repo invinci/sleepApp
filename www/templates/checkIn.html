@@ -108,14 +108,18 @@
                         <div class="responsiveCheckInDiv">{{sq.title}} </div>
                         <div class="responsiveCheckInDiv1 newClass">
                             <div class="toggleBar">
-                <span class="rateSpan">
-                    <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' "></rating>
-                    <rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' " ></rating>
-                    <rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' " ></rating>
-                    <rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' "></rating>
-                    <rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' " ></rating>
-                </span>
-                                <span class="smiley" id="smiley{{$index}}">&#9786;</span>
+                                <span class="rateSpan">
+                                    <rating ng-model="patient.sleep_quality" max="rating.max" ng-if=" sq.id == '1' "></rating>
+                                    <rating ng-model="patient.sleep_enough" max="rating.max" ng-if=" sq.id == '2' " ></rating>
+                                    <rating ng-model="patient.energy" max="rating.max" ng-if=" sq.id == '3' " ></rating>
+                                    <rating ng-model="patient.happy" max="rating.max" ng-if=" sq.id == '4' "></rating>
+                                    <rating ng-model="patient.relaxed" max="rating.max" ng-if=" sq.id == '5' " ></rating>
+                                    <rating ng-model="patient.stress" max="rating.max" ng-if=" sq.id == '6' "></rating>
+                                    <rating ng-model="patient.irritable" max="rating.max" ng-if=" sq.id == '7' " ></rating>
+                                </span>
+                                <span class="smiley">
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" />
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -140,6 +144,13 @@
                                 </div>
                                 <div class="rateSpan">
                                     <input type="text" placeholder="HH:MM" ng-model="patient.food3" class="reminderTime fullWidth" ng-click="setTime(8)" name="food3" readonly="true" ng-disabled="checkInDisable" />
+                                </div>
+                                <div ng-repeat="input in inputs">
+                                    <input type="text" placeholder="HH:MM" ng-model="input.morefood" class="reminderTime fullWidth" name="input.name" ng-click="setTime(input.count)" readonly="true" ng-disabled="checkInDisable" />
+                                    <button ng-if="$index == inputs.length - 1" 
+                                            ng-click="addInput($index)">+</button>
+                                    <button ng-if="$index != inputs.length - 1"
+                                            ng-click="removeInput($index)">-</button>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +183,7 @@
                         </div>
                     </div>
                     <div class="containerDiv1 removePadding2">
-                        <div class="responsiveCheckInDiv2title">Alcohol (1 serving = 30ml) </div>
+                        <div class="responsiveCheckInDiv2title">Alcohol <br/><span class="subTitle">(1 beer or wine= 1, hard liquor= 2)</span></div>
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
@@ -185,8 +196,9 @@
                 <div class="containerDiv1 removePadding" ng-show="CheckIn">
                     <span class="itemText">All Fields marked with Red color are mandatory.</span>
                 </div>
-                <div class="containerDiv1">
-                    <meter value="2" min="0" max="10">2 out of 10</meter>
+                <div class="containerDiv1 removePadding">
+                    <label>Check-in's submitted {{checkInSubmittedDays}}/{{checkInTotalDays}} days.</label>
+                    <meter value="{{checkInSubmittedDays}}" min="0" max="{{checkInTotalDays}}" id="meter"></meter>
                 </div>
                 <div class="emptyDiv">&nbsp;</div>
                 <div class="containerDiv1">

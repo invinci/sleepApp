@@ -662,6 +662,8 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.checkinDateOne = true;
     $scope.noClick = true;
     $scope.isDataAvailable = false;
+	$scope.checkInSubmittedDays = 0;
+	$scope.checkInTotalDays = 0;
     $scope.checkInDataGet = function(num, holderDate) {
         $ionicLoading.show();
         if (num == 1 || num == 2) {
@@ -723,13 +725,39 @@ angular.module('sleepapp_patient.controllers', [])
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
-            inputJson.checkin_date = $scope.newDate;
-            CheckInService.findCheckinData(inputJson).success(function(response) {
+			
+			/* first find checkin count */
+			CheckInService.findCheckinCount(inputJson).success(function(response) {
+				console.log("response = ", response);
+                if (response.messageId == 200) {
+					$scope.checkInSubmittedDays = response.data.checkinCount;
+					$scope.checkInTotalDays 	= response.data.totalDays;
+					
+					inputJson.checkin_date = $scope.newDate;
+                    CheckInService.findCheckinData(inputJson).success(function(response) {
+						$ionicLoading.hide();
+						if (response.messageId == 200) {
+							showTodayCheckIns(response);
+						}
+					});
+                }
+            }).error(function(error, status) {
+				$ionicLoading.hide();
+				inputJson.checkin_date = $scope.newDate;
+                CheckInService.findCheckinData(inputJson).success(function(response) {
+					$ionicLoading.hide();
+					if (response.messageId == 200) {
+						showTodayCheckIns(response);
+					}
+				});
+			});
+			
+            /*CheckInService.findCheckinData(inputJson).success(function(response) {
             $ionicLoading.hide();
                 if (response.messageId == 200) {
                     showTodayCheckIns(response);
                 }
-            });
+            });*/
         }
     }
     /*
@@ -1210,19 +1238,19 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.timezones = {};
     $scope.timezones = [
-            {"key":"-12", "value":"-12"},
-            {"key":"-10", "value":"-10"},
-            {"key":"-8", "value":"-8"},
-            {"key":"-6", "value":"-6"},
-            {"key":"-4", "value":"-4"},
-            {"key":"-2", "value":"-2"},
+            {"key":"-12 (west)", "value":"-12"},
+            {"key":"-10 (west)", "value":"-10"},
+            {"key":"-8 (west)", "value":"-8"},
+            {"key":"-6 (west)", "value":"-6"},
+            {"key":"-4 (west)", "value":"-4"},
+            {"key":"-2 (west)", "value":"-2"},
             //{"key":"0", "value":"0"},
-            {"key":"+2", "value":"2"},
-            {"key":"+4", "value":"4"},
-            {"key":"+6", "value":"6"},
-            {"key":"+8", "value":"8"},
-            {"key":"+10", "value":"10"},
-            {"key":"+12", "value":"12"}
+            {"key":"+2 (east)", "value":"2"},
+            {"key":"+4 (east)", "value":"4"},
+            {"key":"+6 (east)", "value":"6"},
+            {"key":"+8 (east)", "value":"8"},
+            {"key":"+10 (east)", "value":"10"},
+            {"key":"+12 (east)", "value":"12"}
     ];
     $scope.ifJetLagFilled = false;
     

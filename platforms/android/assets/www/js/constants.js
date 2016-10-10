@@ -73,4 +73,5 @@ var SAVE_JET_LAGS          	= HOST +  '/jetLag/add';
 var UPDATE_JET_LAGS         = HOST + '/jetLag/updateJetLagData';
 var GET_JET_LAGS			= HOST	+'/jetLag/findJetLagData';
 var GET_CHECK_IN            = HOST +'/stateOfMind/findCheckIndata';
-var COUNT_CHECK_IN          = HOST+'/checkin/findCheckinData';
+var CHECK_IN          		= HOST+'/checkin/findCheckinData';
+var COUNT_CHECK_IN          = HOST+'/checkin/findCheckinCount';

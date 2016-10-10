@@ -172,7 +172,7 @@
                         </div>
                     </div>
                     <div class="containerDiv1 removePadding2">
-                        <div class="responsiveCheckInDiv2title">Alcohol (1 serving = 30ml) </div>
+                        <div class="responsiveCheckInDiv2title">Alcohol <br/><span class="subTitle">(1 beer or wine= 1, hard liquor= 2)</span></div>
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <span class="rateSpan">
@@ -184,6 +184,10 @@
                 
                 <div class="containerDiv1 removePadding" ng-show="CheckIn">
                     <span class="itemText">All Fields marked with Red color are mandatory.</span>
+                </div>
+                <div class="containerDiv1 removePadding">
+                    <label>Check-in's submitted {{checkInSubmittedDays}}/{{checkInTotalDays}} days.</label>
+                    <meter value="{{checkInSubmittedDays}}" min="0" max="{{checkInTotalDays}}" id="meter"></meter>
                 </div>
                 <div class="emptyDiv">&nbsp;</div>
                 <div class="containerDiv1">

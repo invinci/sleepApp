@@ -410,9 +410,9 @@ h4{
 }
 .smiley{
 	float: left;
-	font-size: 25px;
-    line-height: 25px;
-	color: #a9a9a9;
+	/*font-size: 25px;*/
+    /*line-height: 25px;*/
+	/*color: #a9a9a9;*/
 }
 
 .DailyMetricBottom{
@@ -752,4 +752,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
     margin-top: 0;
     margin-bottom: 0;
     width: 100% !important;
+}
+.subTitle{color: #7a7a7a;font-size: small;}
+#meter{
+	width: 100%;
 }

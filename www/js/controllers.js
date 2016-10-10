@@ -635,7 +635,117 @@ angular.module('sleepapp_patient.controllers', [])
         "id": "5",
         "title": "Happy?",
         "rating": 0
+    }, {
+        "id": "6",
+        "title": "Stress?",
+        "rating": 0
+    }, {
+        "id": "7",
+        "title": "Irritable?",
+        "rating": 0
     }];
+	
+	/* Watchers for Smileys */
+	$scope.$watch('patient.sleep_quality', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley0").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley0").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley0").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.sleep_enough', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley1").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley1").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley1").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.energy', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley2").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley2").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley2").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.happy', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley3").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley3").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley3").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.relaxed', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley4").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley4").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley4").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.stress', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley5").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley5").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley5").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.irritable', function(newValue, oldValue){
+		console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley6").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley6").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley6").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	
+	//----------Add more functionality for Food-------------------//
+		$scope.inputs = [
+			{ morefood: null, count : 0}
+		];
+		
+		$scope.addInput = function (index) {
+			console.log('index = ', index);
+			var newIndex = index + 10;
+			$scope.inputs.push({ morefood: null, count : newIndex, name : 'food'+newIndex });
+		}
+		
+		$scope.removeInput = function (index) {
+			$scope.inputs.splice(index, 1);
+		}
+	//--------------------------------------------------//
 
     $scope.next = function() {
         $ionicSlideBoxDelegate.next();
@@ -662,6 +772,8 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.checkinDateOne = true;
     $scope.noClick = true;
     $scope.isDataAvailable = false;
+	$scope.checkInSubmittedDays = 0;
+	$scope.checkInTotalDays = 0;
     $scope.checkInDataGet = function(num, holderDate) {
         $ionicLoading.show();
         if (num == 1 || num == 2) {
@@ -723,13 +835,32 @@ angular.module('sleepapp_patient.controllers', [])
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
-            inputJson.checkin_date = $scope.newDate;
-            CheckInService.findCheckinData(inputJson).success(function(response) {
-            $ionicLoading.hide();
+			
+			/* first find checkin count */
+			CheckInService.findCheckinCount(inputJson).success(function(response) {
+				console.log("response = ", response);
                 if (response.messageId == 200) {
-                    showTodayCheckIns(response);
+					$scope.checkInSubmittedDays = response.data.checkinCount;
+					$scope.checkInTotalDays 	= response.data.totalDays;
+					
+					inputJson.checkin_date = $scope.newDate;
+                    CheckInService.findCheckinData(inputJson).success(function(response) {
+						$ionicLoading.hide();
+						if (response.messageId == 200) {
+							showTodayCheckIns(response);
+						}
+					});
                 }
-            });
+            }).error(function(error, status) {
+				$ionicLoading.hide();
+				inputJson.checkin_date = $scope.newDate;
+                CheckInService.findCheckinData(inputJson).success(function(response) {
+					$ionicLoading.hide();
+					if (response.messageId == 200) {
+						showTodayCheckIns(response);
+					}
+				});
+			});
         }
     }
     /*
@@ -1210,19 +1341,19 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.timezones = {};
     $scope.timezones = [
-            {"key":"-12", "value":"-12"},
-            {"key":"-10", "value":"-10"},
-            {"key":"-8", "value":"-8"},
-            {"key":"-6", "value":"-6"},
-            {"key":"-4", "value":"-4"},
-            {"key":"-2", "value":"-2"},
+            {"key":"-12 (west)", "value":"-12"},
+            {"key":"-10 (west)", "value":"-10"},
+            {"key":"-8 (west)", "value":"-8"},
+            {"key":"-6 (west)", "value":"-6"},
+            {"key":"-4 (west)", "value":"-4"},
+            {"key":"-2 (west)", "value":"-2"},
             //{"key":"0", "value":"0"},
-            {"key":"+2", "value":"2"},
-            {"key":"+4", "value":"4"},
-            {"key":"+6", "value":"6"},
-            {"key":"+8", "value":"8"},
-            {"key":"+10", "value":"10"},
-            {"key":"+12", "value":"12"}
+            {"key":"+2 (east)", "value":"2"},
+            {"key":"+4 (east)", "value":"4"},
+            {"key":"+6 (east)", "value":"6"},
+            {"key":"+8 (east)", "value":"8"},
+            {"key":"+10 (east)", "value":"10"},
+            {"key":"+12 (east)", "value":"12"}
     ];
     $scope.ifJetLagFilled = false;
     
