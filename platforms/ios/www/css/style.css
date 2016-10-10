@@ -627,9 +627,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 .rateSpan .item-button-right .button.button-positive.button-outline{color: inherit;font-size: 14px;}
 .idp-control button{padding: 0;}
 .popup-sub-title{font-size: medium}
-.popup-buttons .button.button-assertive{border-color: #e42112;
+/*.popup-buttons .button.button-assertive{border-color: #e42112;
     background-color: #ef473a;
-    color: #fff;}
+    color: #fff;}*/
 
 /* durationPicker CSS */
 /*added by shilpa*/
@@ -673,8 +673,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
   -webkit-animation-duration: 750ms;
   animation-duration: 750ms;
 }*/
-
-
+.borderBottomRed{border-bottom: 1px solid red !important;color: #ff0000 !important;}
 .toggle-text > .track {
   width: auto;
   padding-left: 25px;
@@ -712,6 +711,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
   font-size: 16px;
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.toggle-small .track {
+	
+	height:30px !important;
+}
+
+.toggle-small .handle{
+	
+	top:9px !important;
+}
+
+.toggle-text .handle-text{
+	top:0px !important;
 }
 
 .custom_text_box {

@@ -495,7 +495,7 @@ angular.module('sleepapp_patient.controllers', [])
             $ionicLoading.hide();
             if (data.status == "success") {
                 console.log("HERE in SUCCESS");
-                $cordovaToast.showLongBottom('Push notifications setting changed successfully.');
+                $cordovaToast.showLongBottom('Push notifications setting changed.');
             }
         });
     }
@@ -719,16 +719,13 @@ angular.module('sleepapp_patient.controllers', [])
                         }
                     }
                 }
-                
-                
             });
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
             inputJson.checkin_date = $scope.newDate;
-            //console.log('inputJson = ', inputJson);
             CheckInService.findCheckinData(inputJson).success(function(response) {
-            console.log("findCheckinData... ", response);
+            $ionicLoading.hide();
                 if (response.messageId == 200) {
                     showTodayCheckIns(response);
                 }
@@ -740,7 +737,7 @@ angular.module('sleepapp_patient.controllers', [])
     *   developer   :   Gurpreet
     **/
     function showTodayCheckIns(response){
-        $ionicLoading.hide();
+        $ionicLoading.show();
         $scope.isDataAvailable = true;
         $scope.showCheckInData = true;
         $scope.newDate = date;
@@ -748,10 +745,11 @@ angular.module('sleepapp_patient.controllers', [])
         $scope.checkinDateOne = true; // console.log("count",response.data[0].checkin_count);
         console.log("response.data.length = ", response.data.length);
         if (response.data.length == 0) {
+            $ionicLoading.hide();
             $scope.CheckIn = true;
             $scope.patient = {};
         }else if (response.data.length == 1) {
-            console.log("in 1");
+            $ionicLoading.hide();
             $scope.isMessage = false;
             $scope.CheckIn = true;
             $scope.CheckInOne = false;
@@ -759,7 +757,7 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.isMessage = true;
             $scope.boxMessageText = ONE_CHECK_IN_MESSAGE;
         } else if (response.data.length == 2) {
-            console.log("in 2");
+            $ionicLoading.hide();
             $scope.checkInDisable = true;
             $scope.isMessage = true;
             $scope.CheckIn = false;

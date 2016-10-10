@@ -2,8 +2,8 @@
 var DOWNLOAD_LINK = 'http://google.com';
 
 // HOSTs
-//var HOST = 'http://52.39.212.226:4021';
-var HOST = 'http://localhost:3000';
+var HOST = 'http://52.39.212.226:4021';
+//var HOST = 'http://localhost:3000';
 
 // MESSAGES
 var SIGNUP_LOGIN = "Your account has been created. Please login.";
@@ -28,6 +28,10 @@ var ONE_CHECK_IN_MESSAGE		= "You have submitted 1(2) check-ins for today.";
 var PREV_ONE_CHECK_IN_MESSAGE	= "You have submitted 1(2) check-ins for today. Check-ins cannot be submitted for previous days.";
 var PREV_ALL_CHECK_IN_MESSAGE	= "You have submitted your allowed number(2) of check-ins for today. Check-ins cannot be submitted for previous days.";
 
+var OLD_NEW_PASSWORD_ERROR = "Old password and new password can't be same.";
+var PASSWORD_CHANGE_SUCCESS = "Password has been changed successfully. Please login again to continue.";
+var OLD_PASSWORD_ERROR = "Old password is incorrect.";
+
 // jet lag messages
 var JET_LAG_MESSAGE = "You have already submitted your jet lag for today.";
 var JET_LAG_SUCCESS = "Jet Lag  saved successfully.";
@@ -40,7 +44,7 @@ var NO_DATA = "This page becomes active once you see your clinician. Thanks for 
 
 var INSTRUCTION_NOTE = "Note : If you are moving to a timezone which is not listed above, you can select the nearest timezone difference.";
 var COMPLETE_BUTTON_MSG = "Note : Your jet lag is active now. You will receive notifications based on new timings. Complete button will become active on travel date. Do complete the jet lag once travel is done.";
-
+var LOGOUT_MSG = "After Log Out you won\'t be able to receive any Jet Lag related notifications.";
 // DIRECTORY PATH
 var PROFILE_PIC       = HOST + 'images/profile/';
 
@@ -53,6 +57,8 @@ var CHECKUSER_URL   		= HOST + '/users/checkUser'; // Check if username & email 
 var ADD_USER_DATA_URL   	= HOST + '/users/signUp'; // Save user data into data during sign up
 var SAVE_DEVICE_ID_URL		= HOST + '/users/updateUser'
 var SAVE_CHECK_IN_URL		= HOST + '/checkin/add';
+var CHANGE_PASSWORD			= HOST + '/adminlogin/change_password';
+var LOG_OUT					= HOST + '/adminlogin/logout_mobile_app_user';
 
 
 var FIND_PATIENT_FOR_CAREGIVER = HOST + '/users/findPatientByCaregiverId';

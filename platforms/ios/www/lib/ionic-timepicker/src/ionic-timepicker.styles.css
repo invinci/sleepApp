@@ -39,7 +39,8 @@
 }
 .ionic_timepicker_popup .time_picker_arrows {
   width: 100%;
-  margin-left: -15px;
+  margin-left: 0px;
+  padding: 0px !important;
 }
 .ionic_timepicker_popup .time_picker_box_text {
   height: 40px;

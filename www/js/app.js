@@ -129,6 +129,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
 /* all routing here */
 .config(function($stateProvider, $ionicConfigProvider, $urlRouterProvider) {
 
+  $ionicConfigProvider.views.swipeBackEnabled(false);
   // Check user completed Carousel Tutorial or Not
   var checkSlider = function($q, $state, $ionicLoading, $timeout, $location){
     var deferred = $q.defer();
