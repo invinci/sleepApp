@@ -93,57 +93,67 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     /* PUSH NOTIFICATIONS CONFIGURATION -- end. */
 
     /* HANDLE ANDROID DEVICE BACK BUTTON -- start. */
-    // $ionicPlatform.registerBackButtonAction(function (event) {  
-    //   var animation = 'bounceInRight';
-    //   console.log($state.current.name);
-    //   if($state.current.name == "tabs.assessment" || $state.current.name == "signup"){
-    //     showConfirm(animation);
-    //     var confirmPopup = $ionicPopup.confirm({
-    //       title: 'Warning!',
-    //       template: 'Are you sure you want to exit?'
-    //     });
-    //     confirmPopup.then(function(res) {
-    //       if(res) {
-    //         navigator.app.exitApp();
-    //       } else {
-    //         console.log('You are not sure');
-    //       }
-    //     });   
-    //   }else if($state.current.name == "signin"){
-    //     showConfirm(animation);
-    //     var confirmPopup = $ionicPopup.confirm({
-    //       title: 'Warning!',
-    //       template: 'Are you sure you want to exit?'
-    //     });
-    //     confirmPopup.then(function(res) {
-    //       if(res) {
-    //         navigator.app.exitApp();
-    //       } else {
-    //         console.log('You are not sure');
-    //       }
-    //     });   
-    //   }else{ 
-    //     navigator.app.backHistory();
-    //   }
-    // }, 100);
+    $ionicPlatform.registerBackButtonAction(function (event) {  
+      if($state.current.name == "app.tabs.checkIn" || $state.current.name == "signin"){
+        $rootScope.$broadcast('Call_Custom_Alert');
+        var confirmPopup = $ionicPopup.confirm({
+          title: 'Warning!',
+          template: 'Are you sure you want to exit?'
+        });
+        confirmPopup.then(function(res) {
+          if(res) {
+            navigator.app.exitApp();
+          }
+        });   
+      }else{ 
+        navigator.app.backHistory();
+      }
+    }, 100);
     /* HANDLE ANDROID DEVICE BACK BUTTON -- end. */
     
-    // A confirm dialog
-    function showConfirm(animation) {
-      $timeout(function(){
-        var popupElements = document.getElementsByClassName("popup-container")
+    // Broadcast method for Custom pop up
+    $rootScope.$on('Call_Custom_Alert', function(events, args){
+      var animation = 'bounceInDown';
+      $timeout(function() {
+        var popupElements = document.getElementsByClassName("popup-container");
         if (popupElements.length) {
           var popupElement = angular.element(popupElements[0]);
-            popupElement.addClass('animated')
-            popupElement.addClass(animation)
-          };
+          popupElement.addClass('animated')
+          popupElement.addClass(animation)
+        };
       }, 1)
-    }
+    });
     
   });
 })
 /* all routing here */
 .config(function($stateProvider, $ionicConfigProvider, $urlRouterProvider) {
+
+  $ionicConfigProvider.views.swipeBackEnabled(false);
+  // Check user completed Carousel Tutorial or Not
+  var checkSlider = function($q, $state, $ionicLoading, $timeout, $location){
+    var deferred = $q.defer();
+    var IsCompleted = window.localStorage['IsCompleted'];
+    if (IsCompleted) {
+      $location.path('/signin');
+    }else{
+      $timeout(deferred.resolve, 0);
+    }
+    return deferred.promise;
+  };
+
+  // Check user completed Carousel Tutorial or Not
+  var checkLogin = function($q, $state, $ionicLoading, $timeout, $location){
+    var deferred = $q.defer();
+    if (window.localStorage['USER_DATA']) {
+      console.log("HERE");
+      $location.path('/app/tab/page1');
+    }else{
+      $timeout(deferred.resolve, 0);
+    }
+    return deferred.promise;
+  };
+
   // display tabs at bottom in device
   $ionicConfigProvider.tabs.position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
@@ -153,7 +163,8 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     cache: false,
     url: '/welcome',
     templateUrl: 'templates/welcome.html',
-    controller: 'welcomeCtrl'
+    controller: 'welcomeCtrl',
+    resolve: {checked:checkSlider}
   })
 
   .state('signup', {
@@ -167,7 +178,8 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     cache: false,
     url: '/signin',
     templateUrl: 'templates/user/signin.html',
-    controller: 'SignInController'
+    controller: 'SignInController',
+    resolve: {checked:checkLogin}
   })
 
   .state('forgotpassword', {
@@ -222,7 +234,7 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     views: {
       'tab1': {
         templateUrl: 'templates/checkIn.html',
-        controller: 'checkInCtrl'
+        controller: 'checkInCtrl',
       }
     }
   })

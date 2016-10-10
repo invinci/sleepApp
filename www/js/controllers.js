@@ -305,7 +305,7 @@ angular.module('sleepapp_patient.controllers', [])
                 UserService.logOutUser(inputJSON).success(function(data) {
                     $ionicLoading.hide();
                     if(data.status == "success"){
-                        localStorage.removeItem('userData');
+                        localStorage.removeItem('USER_DATA');
                         $state.go("signin");
                     }else{
                         $cordovaToast.showLongBottom('Sorry! Something went wrong. Please again later.');

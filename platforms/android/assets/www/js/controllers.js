@@ -305,7 +305,7 @@ angular.module('sleepapp_patient.controllers', [])
                 UserService.logOutUser(inputJSON).success(function(data) {
                     $ionicLoading.hide();
                     if(data.status == "success"){
-                        localStorage.removeItem('userData');
+                        localStorage.removeItem('USER_DATA');
                         $state.go("signin");
                     }else{
                         $cordovaToast.showLongBottom('Sorry! Something went wrong. Please again later.');
@@ -938,6 +938,45 @@ angular.module('sleepapp_patient.controllers', [])
         };
         ionicTimePicker.openTimePicker(ipObj1);
     }
+	
+	/* Check if a entered string is a valid two digit numeric */
+	function checkNumRegex(val){
+		var reg = new RegExp('^[0-9]{0,2}$');
+		console.log('regex test result = ', reg.test(val));
+		return reg.test(val);
+	}
+	
+	$scope.enableErrClass1 = false;
+	$scope.$watch('patient.caffeine1', function(newValue, oldValue){
+		$scope.enableErrClass1 = false;
+		if((typeof newValue != 'undefined') && (isNaN(newValue) || newValue < 0 || !checkNumRegex(newValue))){
+			$scope.enableErrClass1 = true;
+		}
+    });
+	$scope.$watch('patient.caffeine2', function(newValue, oldValue){
+		$scope.enableErrClass2 = false;
+		if((typeof newValue != 'undefined') && (isNaN(newValue) || newValue < 0 || !checkNumRegex(newValue))){
+			$scope.enableErrClass2 = true;
+		}
+    });
+	$scope.$watch('patient.caffeine3', function(newValue, oldValue){
+		$scope.enableErrClass3 = false;
+		if((typeof newValue != 'undefined') && (isNaN(newValue) || newValue < 0 || !checkNumRegex(newValue))){
+			$scope.enableErrClass3 = true;
+		}
+    });
+	$scope.$watch('patient.medication', function(newValue, oldValue){
+		$scope.enableErrClass4 = false;
+		if((typeof newValue != 'undefined') && (isNaN(newValue) || newValue < 0 || !checkNumRegex(newValue))){
+			$scope.enableErrClass4 = true;
+		}
+    });
+	$scope.$watch('patient.alcohol', function(newValue, oldValue){
+		$scope.enableErrClass5 = false;
+		if((typeof newValue != 'undefined') && (isNaN(newValue) || newValue < 0 || !checkNumRegex(newValue))){
+			$scope.enableErrClass5 = true;
+		}
+    });
 })
 
 .controller('stateOfMindCtrl', function($scope, $rootScope, $state, $stateParams, UserService, CheckInService, $ionicLoading, ionicMaterialInk, $timeout, $ionicPopup, stateOfMindService) {
@@ -1096,6 +1135,18 @@ angular.module('sleepapp_patient.controllers', [])
         });        
     }
 
+    // animate pop up dailog
+    function showConfirm(animation) {
+        $timeout(function() {
+            var popupElements = document.getElementsByClassName("popup-container");
+            if (popupElements.length) {
+                var popupElement = angular.element(popupElements[0]);
+                popupElement.addClass('animated')
+                popupElement.addClass(animation)
+            };
+        }, 1)
+    }
+	
 })
 
 .controller('jetLagCtrl', function($scope, $rootScope, $ionicLoading, $stateParams, ionicMaterialInk, UserService, CheckInService, jetLagService, $timeout, $ionicPopup, ionicTimePicker, ionicDatePicker, $state, $http) {
