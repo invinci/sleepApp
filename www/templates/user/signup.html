@@ -14,7 +14,7 @@
         <!--Username-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Username</span>
-          <input type="text" class="custom_text_box" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required autofocus/>
+          <input type="text" class="custom_text_box" placeholder="Username" name="username" ng-model="patient.username" ng-pattern="/^[a-zA-Z0-9]*$/" ng-trim="false" ng-minlength="5" ng-maxlength="15" required/>
         </label>
         <div class="form-error" ng-show="signUpForm.username.$error.required && signUpForm.username.$dirty" >Username is required.</div>
         <div class="form-error" ng-show="signUpForm.username.$error.pattern">Username must be letters and numbers only.</div>
@@ -22,9 +22,10 @@
         <!--Email-->
         <label class="item item-input item-floating-label">
           <span class="input-label">Email</span>
-          <input type="email" class="custom_text_box" placeholder="Email" name="email" ng-model="patient.email" required>
+          <input type="email" class="custom_text_box" placeholder="Email" name="email" ng-model="patient.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{1,}[a-zA-Z]$/" required>
         </label>
-        <div class="form-error" ng-show="signUpForm.email.$invalid && !signUpForm.email.$pristine" >Email address is required.</div>
+        <div class="form-error" ng-show="signUpForm.email.$dirty && signUpForm.email.$error.required" >Email is required.</div>
+        <div class="form-error" ng-show="signUpForm.email.$dirty && (signUpForm.email.$error.pattern || signUpForm.email.$error.email)" >Email is invalid.</div>
         <!--First Name-->
         <label class="item item-input item-floating-label">
           <span class="input-label">First Name</span>
@@ -51,6 +52,22 @@
             </div>
         </div>
         
+        <!--Last Name-->
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Age</span>
+          <input type="text" class="custom_text_box" placeholder="Age" name="age" ng-model="patient.age" maxlength="2" numbers-only required>
+        </label>
+        <div class="form-error" ng-show="signUpForm.age.$dirty && signUpForm.age.$error.parse" >Age is required.</div>
+        <div class="form-error" ng-show="ageValidationError">Age must be between 13 to 99.</div>
+
+
+        <!-- <label class="item item-input item-floating-label">
+          <span class="input-label">Age</span>
+          <input type="number" class="custom_text_box" placeholder="Age" name="age" ng-model="patient.age" ng-min="13" ng-max="99" required>
+        </label> -->
+<!--         <div class="form-error" ng-show="signUpForm.age.$dirty && signUpForm.age.$error.required" >Age is required.</div>
+        <div class="form-error" ng-show="signUpForm.age.$invalid && !signUpForm.age.$pristine && !signUpForm.age.$error.required" >Age must be between 13 to 99.</div> -->
 
         <!--Password-->
         <label class="item item-input item-floating-label">
@@ -102,7 +119,11 @@
         </div>
         
         <!--Alarms-->
-        <div class="largeText dailyReminderTitle">Alarms</div>
+        <div class="largeText dailyReminderTitle">Alarms 
+          <i class="icon ion-help-circled tooltip">
+            <span class="tooltiptext">Time when to start the bedtime routine.</span>
+          </i>
+        </div>
         <div class="containerDiv1 removePadding">
           <div class="responsiveCheckInDiv">Planned Bedtime </div>
           <div class="responsiveCheckInDiv1 newClass">
