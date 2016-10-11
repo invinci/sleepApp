@@ -118,7 +118,40 @@
                                     <rating ng-model="patient.irritable" max="rating.max" ng-if=" sq.id == '7' " ></rating>
                                 </span>
                                 <span class="smiley">
-                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" />
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '1' && patient.sleep_quality == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '1' && patient.sleep_quality <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '1' && patient.sleep_quality == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '1' && patient.sleep_quality >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '2' && patient.sleep_enough == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '2' && patient.sleep_enough <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '2' && patient.sleep_enough == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '2' && patient.sleep_enough >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '3' && patient.energy == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '3' && patient.energy <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '3' && patient.energy == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '3' && patient.energy >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '4' && patient.happy == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '4' && patient.happy <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '4' && patient.happy == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '4' && patient.happy >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '5' && patient.relaxed == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '5' && patient.relaxed <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '5' && patient.relaxed == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '5' && patient.relaxed >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '6' && patient.stress == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '6' && patient.stress <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '6' && patient.stress == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '6' && patient.stress >= 4" />
+                                    
+                                    <img src="img/grey.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '7' && patient.irritable == undefined" />
+                                    <img src="img/sad.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '7' && patient.irritable <= 2" />
+                                    <img src="img/normal.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '7' && patient.irritable == 3" />
+                                    <img src="img/happy.png" id="smiley{{$index}}" alt="smiley" ng-if=" sq.id == '7' && patient.irritable >= 4" />
                                 </span>
                             </div>
                         </div>
