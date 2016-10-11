@@ -769,7 +769,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
     background-color: #555;
     color: #fff;
     text-align: center;
-    padding: 5px 0;
+    padding: 5px;
     border-radius: 6px;
     font-size: 13px !important;
     font-weight: normal !important;
@@ -801,3 +801,45 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
     visibility: visible;
     opacity: 1;
 }
+
+.alarmTitle{
+	margin-top: 30px !important;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.addFoodTextBox{
+	width: 50%;
+	float: left;
+}
+
+.addButton{
+	/*background-color: #3c1e69;*/
+	color: #3c1e69;
+	border: none;
+	width: 20px;
+	height: 20px;
+	font-size: 20px !important;
+	padding: 0px !important;
+	line-height: 0px !important;
+}
+.redButton{
+	/*background-color: red;*/
+	color: red;
+	border: none;
+	width: 20px;
+	height: 34px;
+	font-size: 20px !important;
+	padding: 0px !important;
+	padding-bottom: 6px !important;
+	line-height: 34px !important;
+	margin-top: 7px;
+}
+
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+	padding-top: 20px !important;margin-top: 0px !important;
+}
+.bar .title {
+	height: auto !important;
+}
+

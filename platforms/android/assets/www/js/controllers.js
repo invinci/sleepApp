@@ -22,7 +22,17 @@ angular.module('sleepapp_patient.controllers', [])
 
 .controller('SignUpController', function($scope, $rootScope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-
+    // $scope.toolTip = false;
+    // $scope.showToolTip = function () {  
+    //     console.log("HERE");
+    //     if($scope.toolTip == true){
+    //         console.log($scope.toolTip);
+    //         $scope.toolTip = false;
+    //     }else{
+    //         $scope.toolTip = true;
+    //     }
+    // }
+    
     $scope.type = 'Male';
     $scope.setType = function(event) {
         $scope.type = angular.element(event.target).text();
@@ -192,6 +202,15 @@ angular.module('sleepapp_patient.controllers', [])
 
         ionicTimePicker.openTimePicker(ipObj1);
     }
+
+    $scope.ageValidationError = false;
+    $scope.$watch('patient.age', function(newValue, oldValue){
+        if(newValue < 13){
+            $scope.ageValidationError = true;
+        }else{
+            $scope.ageValidationError = false;
+        }
+    });
 
     $scope.goBackToSignIn = function(){
         $ionicHistory.goBack();
@@ -635,7 +654,135 @@ angular.module('sleepapp_patient.controllers', [])
         "id": "5",
         "title": "Happy?",
         "rating": 0
+    }, {
+        "id": "6",
+        "title": "Stress?",
+        "rating": 0
+    }, {
+        "id": "7",
+        "title": "Irritable?",
+        "rating": 0
     }];
+	
+	/* Watchers for Smileys */
+	$scope.$watch('patient.sleep_quality', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley0").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley0").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley0").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.sleep_enough', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley1").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley1").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley1").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.energy', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley2").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley2").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley2").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.happy', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley3").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley3").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley3").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.relaxed', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley4").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley4").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley4").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.stress', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley5").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley5").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley5").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.irritable', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley6").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley6").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley6").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	
+	//----------Add more functionality for Food-------------------//
+        $scope.patient1 = {};
+        // new Implementation
+        $scope.inputsData = [
+            {
+                name: "food1",
+                settime: 7
+            },
+            {
+                name: "food2",
+                settime: 8
+            },
+            {
+                name: "food3",
+                settime: 9
+            }
+        ];
+
+        $scope.addNewFoodChoice = function () {
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            console.log(newItemNo);
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+
+        $scope.removeFoodChoice = function () {
+            var lastItem = $scope.inputsData.length-1;
+            $scope.inputsData.splice(lastItem);
+        }
+	//--------------------------------------------------//
 
     $scope.next = function() {
         $ionicSlideBoxDelegate.next();
@@ -751,13 +898,6 @@ angular.module('sleepapp_patient.controllers', [])
 					}
 				});
 			});
-			
-            /*CheckInService.findCheckinData(inputJson).success(function(response) {
-            $ionicLoading.hide();
-                if (response.messageId == 200) {
-                    showTodayCheckIns(response);
-                }
-            });*/
         }
     }
     /*
@@ -849,14 +989,32 @@ angular.module('sleepapp_patient.controllers', [])
      *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
+        if($scope.patient1.food1){
+            $scope.patient.food1 = $scope.patient1.food1;
+        }
+        if($scope.patient1.food2){
+            $scope.patient.food2 = $scope.patient1.food2;
+        }
+        if($scope.patient1.food3){
+            $scope.patient.food3 = $scope.patient1.food3;
+        }
+        if($scope.patient1.food4){
+            $scope.patient.food4 = $scope.patient1.food4;
+        }
+        if($scope.patient1.food5){
+            $scope.patient.food5 = $scope.patient1.food5;
+        }
+        if($scope.patient1.food6){
+            $scope.patient.food6 = $scope.patient1.food6;
+        }
         $ionicLoading.show();
-    console.log('$scope.patient = ', $scope.patient);
+        console.log('$scope.patient = ', $scope.patient);
         inputJsonData = $scope.patient;
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
         inputJsonData.checkin_count = $scope.patient.checkin_count;
-    console.log("check in data = ", inputJsonData);
+        console.log("check in data = ", inputJsonData);
         if (inputJsonData.checkin_count == 1) {
             inputJsonData.checkin_count += 1;
         }
@@ -871,7 +1029,7 @@ angular.module('sleepapp_patient.controllers', [])
                     title: 'Success!',
                     template: CHECK_IN_SAVE,
                 });
-            console.log('response.data.checkin_count = ', response.data.checkin_count);
+                console.log('response.data.checkin_count = ', response.data.checkin_count);
                 alertPopup.then(function(res) {
                     $scope.boxMessageText = CHECK_IN_MESSAGE;
                 });
@@ -879,8 +1037,8 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("response.data.checkin_count", response.data.checkin_count);
                     $scope.checkIn = false;
                     $scope.checkInDisable = true;
-                    $state.reload('app.tabs.checkIn');
                 }
+                $state.reload('app.tabs.checkIn');
             } else {
                 $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
@@ -898,6 +1056,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : GpSingh
      */
     $scope.setTime = function(num) {
+        console.log(num);
         var ipObj1 = {
 
             callback: function(val) { //Mandatory
@@ -948,13 +1107,71 @@ angular.module('sleepapp_patient.controllers', [])
                     } else if (num == 5) {
                         $scope.patient.up_at_night = timeString;
                     } else if (num == 6) {
-                        $scope.patient.food1 = timeString;
-                    } else if (num == 7) {
-                        $scope.patient.food2 = timeString;
-                    } else if (num == 8) {
-                        $scope.patient.food3 = timeString;
-                    } else if (num == 9) {
                         $scope.patient.nap = timeString;
+                    }
+                }
+                // console.log($scope.patient);
+            },
+            //inputTime: 50400, //Optional
+            format: 12, //Optional
+            step: 1, //Optional
+            setLabel: 'Set' //Optional
+        };
+        ionicTimePicker.openTimePicker(ipObj1);
+    }
+
+    $scope.setFoodTime = function(num, name) {
+        console.log(num, name);
+        var ipObj1 = {
+            callback: function(val) { //Mandatory
+                if (typeof(val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    if ($scope.patient === undefined) {
+                        $scope.patient = {};
+                    }
+                    var selectedTime = new Date(val * 1000);
+                    var d = new Date(selectedTime);
+                    var d2 = new Date();
+
+                    d.setMonth(d2.getMonth());
+                    d.setDate(d2.getDate());
+                    d.setFullYear(d2.getFullYear());
+                    d.setHours(d.getUTCHours());
+                    d.setMinutes(d.getUTCMinutes());
+                    // Check if User have selected previous time
+                    if (d2.getTime() > d.getTime()) {
+                        d.setDate(d2.getDate() + 1);
+                        console.log(d.setDate(d2.getDate() + 1));
+                    }
+
+                    var hours = d.getHours();
+                    var hours2 = hours - 2; /* subtracting 2 hours to automatically get glasses wear time */
+                    var minutes = d.getMinutes();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    var ampm2 = hours2 >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    hours2 = hours2 % 12;
+                    hours2 = hours2 ? hours2 : 12; // the hour '0' should be '12'
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    var timeString = hours + ":" + minutes + " " + ampm;
+                    var timeString2 = hours2 + ":" + minutes + " " + ampm2;
+                    if (num == 7 && name == "food1") {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 8) {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 9) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 10) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 11) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 12) {
+                        $scope.patient1[name] = timeString;
                     }
                 }
                 // console.log($scope.patient);
