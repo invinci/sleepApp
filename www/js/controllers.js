@@ -22,7 +22,17 @@ angular.module('sleepapp_patient.controllers', [])
 
 .controller('SignUpController', function($scope, $rootScope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-
+    // $scope.toolTip = false;
+    // $scope.showToolTip = function () {  
+    //     console.log("HERE");
+    //     if($scope.toolTip == true){
+    //         console.log($scope.toolTip);
+    //         $scope.toolTip = false;
+    //     }else{
+    //         $scope.toolTip = true;
+    //     }
+    // }
+    
     $scope.type = 'Male';
     $scope.setType = function(event) {
         $scope.type = angular.element(event.target).text();
@@ -192,6 +202,15 @@ angular.module('sleepapp_patient.controllers', [])
 
         ionicTimePicker.openTimePicker(ipObj1);
     }
+
+    $scope.ageValidationError = false;
+    $scope.$watch('patient.age', function(newValue, oldValue){
+        if(newValue < 13){
+            $scope.ageValidationError = true;
+        }else{
+            $scope.ageValidationError = false;
+        }
+    });
 
     $scope.goBackToSignIn = function(){
         $ionicHistory.goBack();
