@@ -22,23 +22,13 @@ angular.module('sleepapp_patient.controllers', [])
 
 .controller('SignUpController', function($scope, $rootScope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-    // $scope.toolTip = false;
-    // $scope.showToolTip = function () {  
-    //     console.log("HERE");
-    //     if($scope.toolTip == true){
-    //         console.log($scope.toolTip);
-    //         $scope.toolTip = false;
-    //     }else{
-    //         $scope.toolTip = true;
-    //     }
-    // }
-    
     $scope.type = 'Male';
     $scope.setType = function(event) {
         $scope.type = angular.element(event.target).text();
     };
 
     $scope.patient = {};
+    $scope.patient.country_code = "+1";
     $scope.rating = {};
     $scope.rating.max = 5;
     $scope.reminderTime = "09:00 PM";
@@ -334,16 +324,199 @@ angular.module('sleepapp_patient.controllers', [])
     }
 })
 
-.controller('ForgotPasswordController', function($scope, $rootScope, ionicMaterialInk, $state, UserService, $ionicHistory) {
+.controller('ForgotPasswordController', function($scope, $rootScope, $ionicPopup, ionicMaterialInk, $ionicLoading, $state, UserService, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-
+    $scope.user = {};
     $scope.forgotPassword = function(user) {
-        console.log(user);
-        $state.go("signin");
+        $ionicLoading.show();
+        UserService.ForgotPassword(user).success(function(data) {
+            $ionicLoading.hide();
+            if (data.messageId == 203) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: data.message
+                });
+                alertPopup.then(function(res) {});
+            } else {
+                if (data.data.phone) {
+                    window.localStorage['USER_DATA'] = JSON.stringify(data.data);
+                    window.localStorage['OTP_DATA'] = JSON.stringify(data.otpdata);
+                    $state.go("enterOTP");
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Warning!',
+                        template: NO_MOBILE_NUMBER
+                    });
+                    alertPopup.then(function(res) {});
+                }
+            }
+        }).error(function(error, status) {
+            $ionicLoading.hide();
+            if (status == 401 || status == -1) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'OOPS!',
+                    template: SERVER_ERROR,
+                });
+                alertPopup.then(function(res) {
+                });
+            }
+        });
     }
 
     $scope.goBackToSignIn = function() {
         $ionicHistory.goBack();
+    }
+})
+
+.controller('enterOTPController', function($scope, $rootScope, ionicMaterialInk, $ionicPopup, $timeout, $state, $ionicLoading, UserService, $ionicHistory) {
+        ionicMaterialInk.displayEffect();
+        $scope.userData = JSON.parse(window.localStorage['USER_DATA']);
+        var otpData = JSON.parse(window.localStorage['OTP_DATA']);
+        $scope.showAfterOtpExpire = false;
+        $scope.verify = {};
+
+        $scope.checkCode = function() {
+            var inputJSON = {};
+            inputJSON._id = otpData._id;
+            inputJSON.otp_code = $scope.verify.otp_code;
+            UserService.checkOtp(inputJSON).success(function(data) {
+                if (data.messageId == 203) {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Warning!',
+                        template: OTP_NOT_MATCH
+                    });
+                    alertPopup.then(function(res) {});
+                } else if (data.messageId == 204) {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Warning!',
+                        template: OTP_EXPIRED
+                    });
+                    alertPopup.then(function(res) {});
+                } else if (data.messageId == 200) {
+                    // OTP macthed successfully
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Success!',
+                        template: OTP_MATHCED
+                    });
+                    alertPopup.then(function(res) {});
+                    window.localStorage["RESET_PASSWORD_USER_DATA"] = JSON.stringify(data.data[0]);
+                    $state.go("resetpassword");
+                } else {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Warning!',
+                        template: SOMETHING_WENT_WRONG
+                    });
+                    alertPopup.then(function(res) {});
+                }
+            }).error(function(error, status) {
+                $ionicLoading.hide();
+                if (status == 401 || status == -1) {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'OOPS!',
+                        template: SERVER_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                    });
+                }
+            });
+        }
+        $scope.goBackToForgot = function() {
+            $ionicHistory.goBack();
+        }
+
+        $scope.resendOtp = function() {
+            $ionicLoading.show();
+            var user = {};
+            user.email = $scope.userData.email;
+            UserService.ForgotPassword(user).success(function(data) {
+                $ionicLoading.hide();
+                if (data.messageId == 203) {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Warning!',
+                        template: data.message
+                    });
+                    alertPopup.then(function(res) {});
+                } else {
+                    if (data.data.phone) {
+                        window.localStorage['USER_DATA'] = JSON.stringify(data.data);
+                        window.localStorage['OTP_DATA'] = JSON.stringify(data.otpdata);
+                        $rootScope.$broadcast('Call_Custom_Alert');
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Success!',
+                            template: OTP_RESEND
+                        });
+                        alertPopup.then(function(res) {});
+                        $state.go($state.current, {}, {
+                            reload: true
+                        });
+                    } else {
+                        $rootScope.$broadcast('Call_Custom_Alert');
+                        var alertPopup = $ionicPopup.alert({
+                            title: 'Warning!',
+                            template: NO_MOBILE_NUMBER
+                        });
+                        alertPopup.then(function(res) {});
+                    }
+                }
+            }).error(function(error, status) {
+                $ionicLoading.hide();
+                if (status == 401 || status == -1) {
+                    $rootScope.$broadcast('Call_Custom_Alert');
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'OOPS!',
+                        template: SERVER_ERROR,
+                    });
+                    alertPopup.then(function(res) {
+                    });
+                }
+            });
+        }
+})
+
+.controller('resetPasswordController', function($scope, $rootScope, ionicMaterialInk, $ionicPopup, $timeout, $state, $ionicLoading, UserService, $ionicHistory) {
+    ionicMaterialInk.displayEffect();
+    var userData = JSON.parse(window.localStorage["RESET_PASSWORD_USER_DATA"]);
+    $scope.user = {};
+
+    $scope.resetPassword = function() {
+        var inputString = {};
+        inputString._id = userData.user;
+        inputString.password = $scope.user.newpassword;
+        inputString.originalPassword = $scope.user.newpassword;
+        var passwordEncrpt = CryptoJS.AES.encrypt(JSON.stringify(inputString.password), ENCRYPTION_KEY);
+        inputString.password = passwordEncrpt.toString();
+        var ciphertext = CryptoJS.AES.encrypt(JSON.stringify(inputString), ENCRYPTION_KEY);
+        var encryptedJSON = {};
+        encryptedJSON.inputData = ciphertext.toString();
+        UserService.updatePassword(encryptedJSON).success(function(data) {
+            if (data.messageId == 200) {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Success!',
+                    template: PASSWORD_RESET_SUCCESS
+                });
+                alertPopup.then(function(res) {
+                    localStorage.removeItem('USER_DATA');
+                    $state.go("signin");
+                });
+            } else {
+                $rootScope.$broadcast('Call_Custom_Alert');
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Warning!',
+                    template: PASSWORD_RESET_ERROR
+                });
+                alertPopup.then(function(res) {});
+            }
+        })
     }
 })
 

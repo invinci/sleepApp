@@ -61,6 +61,8 @@
 		3AB5818F58B34F7AA9F41DAA /* Toast+UIView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8D0647A06614D40BC9B0C4B /* Toast+UIView.m */; };
 		C5ECBC0D5F7C4412A3764784 /* Toast.m in Sources */ = {isa = PBXBuildFile; fileRef = 5924631AA39D446CB2EA1155 /* Toast.m */; };
 		7FA716EEC2FB4B25AD412999 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9761BA7D50AF497886CECF5F /* QuartzCore.framework */; };
+		C2460A5E65DB47BD88362CF3 /* APPBackgroundMode.m in Sources */ = {isa = PBXBuildFile; fileRef = A21A573793C14EBF9181B1F0 /* APPBackgroundMode.m */; };
+		F0A8E88EB1A8417E89637A11 /* appbeep.wav in Resources */ = {isa = PBXBuildFile; fileRef = 82B4BF98DCDD4C27A6CE3570 /* appbeep.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,6 +177,9 @@
 		59D6C7E1349F4DCAAFC082F1 /* Toast+UIView.h */ = {isa = PBXFileReference; name = "Toast+UIView.h"; path = "cordova-plugin-x-toast/Toast+UIView.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		1866A3E84ED1499FB5EC7C44 /* Toast.h */ = {isa = PBXFileReference; name = "Toast.h"; path = "cordova-plugin-x-toast/Toast.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		9761BA7D50AF497886CECF5F /* QuartzCore.framework */ = {isa = PBXFileReference; name = "QuartzCore.framework"; path = "System/Library/Frameworks/QuartzCore.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		A21A573793C14EBF9181B1F0 /* APPBackgroundMode.m */ = {isa = PBXFileReference; name = "APPBackgroundMode.m"; path = "cordova-plugin-background-mode/APPBackgroundMode.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		6A2BDE3D4CD04FE5A1C991C4 /* APPBackgroundMode.h */ = {isa = PBXFileReference; name = "APPBackgroundMode.h"; path = "cordova-plugin-background-mode/APPBackgroundMode.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		82B4BF98DCDD4C27A6CE3570 /* appbeep.wav */ = {isa = PBXFileReference; name = "appbeep.wav"; path = "appbeep.wav"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -276,6 +281,7 @@
 				0207DA571B56EA530066E2B4 /* Images.xcassets */,
 				3047A50E1AB8057F00498E2A /* config */,
 				8D1107310486CEB800E47090 /* Sleep App-Info.plist */,
+				82B4BF98DCDD4C27A6CE3570 /* appbeep.wav */,
 			);
 			name = Resources;
 			path = "Sleep App/Resources";
@@ -384,6 +390,8 @@
 				5924631AA39D446CB2EA1155 /* Toast.m */,
 				59D6C7E1349F4DCAAFC082F1 /* Toast+UIView.h */,
 				1866A3E84ED1499FB5EC7C44 /* Toast.h */,
+				A21A573793C14EBF9181B1F0 /* APPBackgroundMode.m */,
+				6A2BDE3D4CD04FE5A1C991C4 /* APPBackgroundMode.h */,
 			);
 			name = Plugins;
 			path = "Sleep App/Plugins";
@@ -467,6 +475,7 @@
 				3047A5141AB8059700498E2A /* build.xcconfig in Resources */,
 				0207DA581B56EA530066E2B4 /* Images.xcassets in Resources */,
 				3047A5121AB8059700498E2A /* build-debug.xcconfig in Resources */,
+				F0A8E88EB1A8417E89637A11 /* appbeep.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -512,6 +521,7 @@
 				767937371B824AA6A8A95845 /* CDVReachability.m in Sources */,
 				3AB5818F58B34F7AA9F41DAA /* Toast+UIView.m in Sources */,
 				C5ECBC0D5F7C4412A3764784 /* Toast.m in Sources */,
+				C2460A5E65DB47BD88362CF3 /* APPBackgroundMode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

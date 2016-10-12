@@ -43,6 +43,14 @@
                         {
                             "xml": "<feature name=\"Toast\"><param name=\"android-package\" value=\"nl.xservices.plugins.Toast\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"BackgroundMode\"><param name=\"android-package\" value=\"de.appplant.cordova.plugin.background.BackgroundMode\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<preference name=\"KeepRunning\" value=\"true\" />",
+                            "count": 1
                         }
                     ]
                 }
@@ -70,7 +78,7 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
-                            "count": 1
+                            "count": 2
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
@@ -112,6 +120,10 @@
                         },
                         {
                             "xml": "<service android:exported=\"false\" android:name=\"com.adobe.phonegap.push.RegistrationIntentService\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<service android:name=\"de.appplant.cordova.plugin.background.ForegroundService\" />",
                             "count": 1
                         }
                     ],
@@ -155,6 +167,9 @@
             "PACKAGE_NAME": "com.sleepapp.patient"
         },
         "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "com.sleepapp.patient"
+        },
+        "cordova-plugin-background-mode": {
             "PACKAGE_NAME": "com.sleepapp.patient"
         }
     },
@@ -235,6 +250,14 @@
         {
             "file": "plugins/cordova-plugin-x-toast/test/tests.js",
             "id": "cordova-plugin-x-toast.tests"
+        },
+        {
+            "file": "plugins/cordova-plugin-background-mode/www/background-mode.js",
+            "id": "cordova-plugin-background-mode.BackgroundMode",
+            "clobbers": [
+                "cordova.plugins.backgroundMode",
+                "plugin.backgroundMode"
+            ]
         }
     ]
 }

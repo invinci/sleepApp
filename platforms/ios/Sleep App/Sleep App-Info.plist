@@ -42,6 +42,7 @@
     <key>UIBackgroundModes</key>
     <array>
       <string>remote-notification</string>
+      <string>audio</string>
     </array>
     <key>GCM_SENDER_ID</key>
     <string>117882864904</string>

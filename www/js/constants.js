@@ -13,7 +13,13 @@ var USER_NAME_ERROR = "Username already exist. Please try another.";
 var EMAIL_ERROR = "Email already exist. Please try another.";
 var EMAIL_SERVER_ERROR = 'email already exists.';
 var PARENT_ID_ERROR = "Reference code does not match.";
-
+var NO_MOBILE_NUMBER = "Sorry! No mobile number exist for this registered email id. Please contact your admin."
+var OTP_NOT_MATCH = "One time password does not match.";
+var OTP_MATHCED = "One time password matched."
+var OTP_EXPIRED = "One time password has been expired, Please request new one time password.";
+var OTP_RESEND = "One time password has been resent."
+var PASSWORD_RESET_SUCCESS = "Your password has been reset.";
+var PASSWORD_RESET_ERROR = "Password can't reset. Please try again.";
 // assessment messages
 var ASSESSMENT_SUBMITTED_MESSAGE = "You have already submitted your assessment.";
 var NO_ASSESSMENT_MESSAGE = "No assessments available right now for you.";
@@ -59,10 +65,11 @@ var SAVE_DEVICE_ID_URL		= HOST + '/users/updateUser'
 var SAVE_CHECK_IN_URL		= HOST + '/checkin/add';
 var CHANGE_PASSWORD			= HOST + '/adminlogin/change_password';
 var LOG_OUT					= HOST + '/adminlogin/logout_mobile_app_user';
-
+var FORGOTPASSWORD			= HOST + '/users/forgotPassword';
+var CHECK_OTP				= HOST + '/users/checkOtp';
+var RESET_PASSWORD			= HOST + '/users/resetPassword';
 
 var FIND_PATIENT_FOR_CAREGIVER = HOST + '/users/findPatientByCaregiverId';
-var FORGOTPASSWORD			= HOST + '';
 var UPDATE_PROFILE			= HOST + '/users/update';
 var GET_PATIENT_CHECK_IN    = HOST + '/checkin/list';
 var GET_GENERAL_QUESTIONS 	= HOST + '/generalquestions/patientGeneralQuestion';

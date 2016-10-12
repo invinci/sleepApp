@@ -1,0 +1,33 @@
+<ion-view>
+  <ion-header-bar class="bar-header custom-header">
+    <h1 class="title headerTitle">Enter OTP</h1>
+  </ion-header-bar>
+  <ion-content class="custom-content padding">
+    <div class="text-center">
+        <div class="setwidth-md">
+          <p>We have sent an one time password to phone number <b>xxxxxxx{{userData.phone | limitTo: -4}}</b></p>
+          <p>Enter the code to verify your email.</p>
+          <p class="tag-span">This code will be valid for 15 minutes only.</p>
+          <p class="tag-span" my-repeat-directive>Time left : <span id="countdown" style="color:green">{{countDown}}</span></p>
+        </div>
+
+        <form class="list" name="verify_form" id="verify_form">
+            <div class="list">
+                <span class="otp-label-span">Enter OTP </span>
+                <div class="row">
+                    <div class="col">
+                        <input name="otp_code" id="otp_code1" ng-model="verify.otp_code" value="" required class="inputs" type="tel" maxlength="6" placeholder="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                        <div class="form-error inputError" ng-show="verify_form.otp_code.$dirty && verify_form.otp_code.$error.required" >Required.</div>
+                    </div>
+                </div>
+            </div>
+            <button ng-disabled="verify_form.$invalid" ng-click="checkCode();" class="button button-block custom-button-otp ink">Verify</button>
+        </form>
+        <div class="list" ng-show="showAfterOtpExpire">
+          <div class="button-wrapper">
+            <button class="button button-block resend-button ink" type="submit" ng-click="resendOtp()">Resend OTP</button>
+          </div>
+        </div>
+    </div>
+  </ion-content>
+</ion-view>

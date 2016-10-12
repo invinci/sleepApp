@@ -113,3 +113,42 @@ angular.module('sleepapp_patient.directives', [])
     }
   };
 })
+
+.directive('myRepeatDirective', function($state) {
+  return function(scope, element, attrs) {
+    var seconds1 = (900000 / 1000).toFixed(1);
+    //var seconds1 = (30000 / 1000).toFixed(1); 30 //Seconds for Test purpose
+    if(seconds1 < 0){
+      scope.countDown = "OTP Expired";
+      scope.minutes = 0
+      scope.seconds = 0
+      console.log("Expired",scope.countDown)
+    }else{
+      var fifteen = seconds1;
+      var timer = fifteen, minutes, seconds;
+      var Interval = setInterval(function () {
+      countDownTimer();
+      }, 1000);
+    }
+    function countDownTimer(){
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      scope.countDown = minutes + ":" + seconds;
+      scope.minutes = minutes
+      scope.seconds = seconds
+      if(scope.countDown == '00' + ":" + '00') {
+        clearInterval(Interval);
+        scope.countDown = "OTP Expired";
+        scope.minutes = 0
+        scope.seconds = 0
+        scope.showAfterOtpExpire = true;
+      }
+      if (--timer < 0) {
+        timer = fifteen;
+      }
+      scope.$apply();
+    }
+  }
+})

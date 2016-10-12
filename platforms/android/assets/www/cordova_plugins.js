@@ -75,6 +75,14 @@ module.exports = [
     {
         "file": "plugins/cordova-plugin-x-toast/test/tests.js",
         "id": "cordova-plugin-x-toast.tests"
+    },
+    {
+        "file": "plugins/cordova-plugin-background-mode/www/background-mode.js",
+        "id": "cordova-plugin-background-mode.BackgroundMode",
+        "clobbers": [
+            "cordova.plugins.backgroundMode",
+            "plugin.backgroundMode"
+        ]
     }
 ];
 module.exports.metadata = 

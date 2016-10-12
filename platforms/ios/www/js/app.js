@@ -8,7 +8,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'sleepapp_patient' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker','chart.js'])
+angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','sleepapp_patient.services','sleepapp_patient.directives','ngCordova','ionic.rating', 'ionic-material', 'ionic-timepicker','ionic-durationpicker','ionic-datepicker','chart.js', 'ngMask'])
 
 .run(function($ionicPlatform, $state, $ionicPopup, $rootScope, $timeout, $cordovaStatusbar, $cordovaNetwork, $cordovaToast) {
   $ionicPlatform.ready(function() {
@@ -187,6 +187,20 @@ angular.module('sleepapp_patient', ['ionic','sleepapp_patient.controllers','slee
     url: '/forgotpassword',
     templateUrl: 'templates/user/forgotpassword.html',
     controller: 'ForgotPasswordController'
+  })
+
+  .state('enterOTP', {
+    cache: false,
+    url: '/enterOTP',
+    templateUrl: 'templates/user/enterOTP.html',
+    controller: 'enterOTPController'
+  })
+
+  .state('resetpassword', {
+    cache: false,
+    url: '/resetpassword',
+    templateUrl: 'templates/user/resetpassword.html',
+    controller: 'resetPasswordController'
   })
 
   .state('app', {

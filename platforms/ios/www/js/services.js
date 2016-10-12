@@ -93,6 +93,38 @@ angular.module('sleepapp_patient.services', [])
                 }
             }).success(function(data, status, headers, config) {
                 return data;
+            }).error(function (error, status){
+                return status;
+            });
+            return promise;
+        },
+        checkOtp: function(data){
+            var promise = $http({
+                url: CHECK_OTP,
+                method: 'POST',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            }).success(function(data, status, headers, config) {
+                return data;
+            }).error(function (error, status){
+                return status;
+            });
+            return promise;
+        },
+        updatePassword: function(data){
+            var promise = $http({
+                url: RESET_PASSWORD,
+                method: 'POST',
+                data: data,
+                headers: {
+                    'Content-Type': 'application/json' 
+                }
+            }).success(function(data, status, headers, config) {
+                return data;
+            }).error(function (error, status){
+                return status;
             });
             return promise;
         },

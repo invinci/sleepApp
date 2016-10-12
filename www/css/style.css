@@ -836,6 +836,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 	margin-top: 7px;
 }
 
+.countryCodeField{
+	width: 30% !important;
+	float: left;
+}
+
+.phoneNumberField{
+	width: 60% !important;
+	float: right !important;
+}
+
 .platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
 	padding-top: 20px !important;margin-top: 0px !important;
 }
@@ -843,3 +853,39 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
 	height: auto !important;
 }
 
+.otp-label-span{
+	font-weight: bold;
+}
+.inputs{
+	border: 1px solid #ddd !important;
+	width: 62%;
+	text-align: center !important;
+	font-size: 16px !important;
+	margin: 0 auto;
+}
+
+.inputError{
+	padding: 5px 0px;
+	width: 70%;
+	margin: 0 auto;
+}
+
+.custom-button-otp{
+	background-color: #3d7822;
+	color: #fff;
+	border-radius: 5px;
+	width: 60% !important;
+	margin: 0 auto !important;
+}
+
+.resend-button{
+	background-color:#387ef5;
+	color: #fff;
+	border-radius: 5px;
+	width: 60% !important;
+	margin: 0 auto !important;
+}
+.resend-button:hover{
+	background-color:#387ef5 !important;
+	color: #fff !important;
+}
