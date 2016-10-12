@@ -133,14 +133,20 @@
                 
                     <div class="largeText dailyReminderTitle checkInTitle">Daily Activities</div>
                     <div class="containerDiv1 removePadding">
-                        <div class="responsiveCheckInDiv2title"> Food </div>
+                        <div class="responsiveCheckInDiv2title"> Food
+                        <span ng-hide="checkInDisable">
+                            <i class="icon ion-plus-circled addButton" ng-click="addNewFoodChoice()" ng-if="inputsData.length < 6"></i></span>
+                        </div>
                         <div class="responsiveCheckInDiv2 newClass">
                             <div class="toggleBar">
                                 <div class="rateSpan" ng-repeat="inputs in inputsData">
-                                    <input type="text" placeholder="HH:MM" ng-model="patient1[inputs.name]" class="reminderTime fullWidth" ng-click="setFoodTime(inputs.settime, inputs.name)" name="inputs.name" readonly="true" ng-disabled="checkInDisable" />
+                                    <input type="text" placeholder="HH:MM" ng-model="patient1[inputs.name]" class="addFoodTextBox" ng-click="setFoodTime(inputs.settime, inputs.name)" name="inputs.name" readonly="true" ng-disabled="checkInDisable" />
+                                    <span ng-hide="checkInDisable">
+                                        <span ng-show="inputsData.length > 3">
+                                            <i class="icon ion-minus-circled redButton"  ng-click="removeFoodChoice(inputs)" ng-if="inputsData.length-1 == $index"></i>
+                                        </span>
+                                    </span>
                                 </div>
-                                <button ng-click="addNewFoodChoice()" ng-if="inputsData.length < 6">+</button>
-                                <button ng-click="removeFoodChoice()" ng-if="inputsData.length >= 4">-</button>
                             </div>
                         </div>
                     </div>

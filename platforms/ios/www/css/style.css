@@ -410,9 +410,9 @@ h4{
 }
 .smiley{
 	float: left;
-	font-size: 25px;
-    line-height: 25px;
-	color: #a9a9a9;
+	/*font-size: 25px;*/
+    /*line-height: 25px;*/
+	/*color: #a9a9a9;*/
 }
 
 .DailyMetricBottom{
@@ -753,3 +753,93 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcecfc', end
     margin-bottom: 0;
     width: 100% !important;
 }
+
+.subTitle{color: #7a7a7a;font-size: small;}
+#meter{width: 100%;}
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: 13px !important;
+    font-weight: normal !important;
+    /* Position the tooltip text */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    /* Fade in tooltip */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.alarmTitle{
+	margin-top: 30px !important;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.addFoodTextBox{
+	width: 50%;
+	float: left;
+}
+
+.addButton{
+	/*background-color: #3c1e69;*/
+	color: #3c1e69;
+	border: none;
+	width: 20px;
+	height: 20px;
+	font-size: 20px !important;
+	padding: 0px !important;
+	line-height: 0px !important;
+}
+.redButton{
+	/*background-color: red;*/
+	color: red;
+	border: none;
+	width: 20px;
+	height: 34px;
+	font-size: 20px !important;
+	padding: 0px !important;
+	padding-bottom: 6px !important;
+	line-height: 34px !important;
+	margin-top: 7px;
+}
+
+.platform-ios.platform-cordova:not(.fullscreen) .bar-header:not(.bar-subheader) > * {
+	padding-top: 20px !important;margin-top: 0px !important;
+}
+.bar .title {
+	height: auto !important;
+}
+

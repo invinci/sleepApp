@@ -157,6 +157,22 @@ angular.module('sleepapp_patient.services', [])
                 'Authorization' : 'Bearer ' + token
             };
             var promise = $http({
+                url: CHECK_IN,
+                method: 'POST',
+                data:   dataJSON,
+                headers: AUTH_HEADER
+            }).success(function(data, status, headers, config) {
+                return data;
+            });
+            return promise;
+        },
+        findCheckinCount: function(dataJSON) {
+            var token = window.localStorage['ACCESS_TOKEN'];
+            var AUTH_HEADER = {
+                'Content-Type': 'application/json',
+                'Authorization' : 'Bearer ' + token
+            };
+            var promise = $http({
                 url: COUNT_CHECK_IN,
                 method: 'POST',
                 data:   dataJSON,

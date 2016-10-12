@@ -2,8 +2,8 @@
 var DOWNLOAD_LINK = 'http://google.com';
 
 // HOSTs
-var HOST = 'http://52.39.212.226:4021';
-//var HOST = 'http://localhost:3000';
+// var HOST = 'http://52.39.212.226:4021';
+var HOST = 'http://localhost:3000';
 
 // MESSAGES
 var SIGNUP_LOGIN = "Your account has been created. Please login.";
@@ -73,4 +73,5 @@ var SAVE_JET_LAGS          	= HOST +  '/jetLag/add';
 var UPDATE_JET_LAGS         = HOST + '/jetLag/updateJetLagData';
 var GET_JET_LAGS			= HOST	+'/jetLag/findJetLagData';
 var GET_CHECK_IN            = HOST +'/stateOfMind/findCheckIndata';
-var COUNT_CHECK_IN          = HOST+'/checkin/findCheckinData';
+var CHECK_IN          		= HOST+'/checkin/findCheckinData';
+var COUNT_CHECK_IN          = HOST+'/checkin/findCheckinCount';

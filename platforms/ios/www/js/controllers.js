@@ -22,7 +22,17 @@ angular.module('sleepapp_patient.controllers', [])
 
 .controller('SignUpController', function($scope, $rootScope, $state, ionicMaterialInk, $timeout, $ionicLoading, $ionicPopup, UserService, ionicTimePicker, $ionicHistory) {
     ionicMaterialInk.displayEffect();
-
+    // $scope.toolTip = false;
+    // $scope.showToolTip = function () {  
+    //     console.log("HERE");
+    //     if($scope.toolTip == true){
+    //         console.log($scope.toolTip);
+    //         $scope.toolTip = false;
+    //     }else{
+    //         $scope.toolTip = true;
+    //     }
+    // }
+    
     $scope.type = 'Male';
     $scope.setType = function(event) {
         $scope.type = angular.element(event.target).text();
@@ -192,6 +202,15 @@ angular.module('sleepapp_patient.controllers', [])
 
         ionicTimePicker.openTimePicker(ipObj1);
     }
+
+    $scope.ageValidationError = false;
+    $scope.$watch('patient.age', function(newValue, oldValue){
+        if(newValue < 13){
+            $scope.ageValidationError = true;
+        }else{
+            $scope.ageValidationError = false;
+        }
+    });
 
     $scope.goBackToSignIn = function(){
         $ionicHistory.goBack();
@@ -635,7 +654,145 @@ angular.module('sleepapp_patient.controllers', [])
         "id": "5",
         "title": "Happy?",
         "rating": 0
+    }, {
+        "id": "6",
+        "title": "Stress?",
+        "rating": 0
+    }, {
+        "id": "7",
+        "title": "Irritable?",
+        "rating": 0
     }];
+	
+	/* Watchers for Smileys */
+	$scope.$watch('patient.sleep_quality', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley0").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley0").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley0").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.sleep_enough', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley1").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley1").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley1").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.energy', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley2").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley2").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley2").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.happy', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley3").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley3").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley3").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.relaxed', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley4").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley4").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley4").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.stress', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley5").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley5").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley5").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.irritable', function(newValue, oldValue){
+		//console.log('==', newValue, oldValue);
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley6").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley6").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley6").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	
+	//----------Add more functionality for Food-------------------//
+        $scope.patient1 = {};
+        // new Implementation
+        $scope.inputsData = [
+            {
+                name: "food1",
+                settime: 7
+            },
+            {
+                name: "food2",
+                settime: 8
+            },
+            {
+                name: "food3",
+                settime: 9
+            }
+        ];
+
+        $scope.addNewFoodChoice = function () {
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+
+        $scope.removeFoodChoice = function (data) {
+            console.log(data);
+            if (data.settime == 10) {
+                delete $scope.patient1[data.name];
+            }
+             else if (data.settime == 11) {
+                delete $scope.patient1[data.name];
+            }
+             else if (data.settime == 12) {
+                delete $scope.patient1[data.name];
+            }
+
+            var lastItem = $scope.inputsData.length-1;
+            $scope.inputsData.splice(lastItem);
+        }
+	//--------------------------------------------------//
 
     $scope.next = function() {
         $ionicSlideBoxDelegate.next();
@@ -662,6 +819,8 @@ angular.module('sleepapp_patient.controllers', [])
     $scope.checkinDateOne = true;
     $scope.noClick = true;
     $scope.isDataAvailable = false;
+	$scope.checkInSubmittedDays = 0;
+	$scope.checkInTotalDays = 0;
     $scope.checkInDataGet = function(num, holderDate) {
         $ionicLoading.show();
         if (num == 1 || num == 2) {
@@ -705,6 +864,8 @@ angular.module('sleepapp_patient.controllers', [])
                             $scope.newDate = formatdate;
                             $scope.isDataAvailable = true;
                             $scope.patient = response.data[0];
+                            $scope.patient1 = response.data[0];
+                            newInputFoodArray($scope.patient1);
                             $scope.showCheckInData = true;
                             $scope.CheckIn = false;
                             $scope.isMessage = true;
@@ -723,13 +884,32 @@ angular.module('sleepapp_patient.controllers', [])
         } else if (num == 0) {
             var inputJson = {};
             inputJson.user_id = userData._id;
-            inputJson.checkin_date = $scope.newDate;
-            CheckInService.findCheckinData(inputJson).success(function(response) {
-            $ionicLoading.hide();
+			
+			/* first find checkin count */
+			CheckInService.findCheckinCount(inputJson).success(function(response) {
+				console.log("response = ", response);
                 if (response.messageId == 200) {
-                    showTodayCheckIns(response);
+					$scope.checkInSubmittedDays = response.data.checkinCount;
+					$scope.checkInTotalDays 	= response.data.totalDays;
+					
+					inputJson.checkin_date = $scope.newDate;
+                    CheckInService.findCheckinData(inputJson).success(function(response) {
+						$ionicLoading.hide();
+						if (response.messageId == 200) {
+							showTodayCheckIns(response);
+						}
+					});
                 }
-            });
+            }).error(function(error, status) {
+				$ionicLoading.hide();
+				inputJson.checkin_date = $scope.newDate;
+                CheckInService.findCheckinData(inputJson).success(function(response) {
+					$ionicLoading.hide();
+					if (response.messageId == 200) {
+						showTodayCheckIns(response);
+					}
+				});
+			});
         }
     }
     /*
@@ -754,6 +934,8 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.CheckIn = true;
             $scope.CheckInOne = false;
             $scope.patient = response.data[0];
+            $scope.patient1 = response.data[0];
+            newInputFoodArray($scope.patient1);
             $scope.isMessage = true;
             $scope.boxMessageText = ONE_CHECK_IN_MESSAGE;
         } else if (response.data.length == 2) {
@@ -764,7 +946,36 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.CheckInOne = false;
             $scope.checkinDateOne = true;
             $scope.patient = response.data[0];
+            $scope.patient1 = response.data[0];
+            newInputFoodArray($scope.patient1);
             $scope.boxMessageText = CHECK_IN_MESSAGE;
+        }
+    }
+
+    function newInputFoodArray (val) {
+        if(val.food4){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+        if(val.food5){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+        if(val.food6){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
         }
     }
     
@@ -821,14 +1032,46 @@ angular.module('sleepapp_patient.controllers', [])
      *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
+
+        console.log($scope.patient1);
+        var foodDataJson = {};
+        for(key in $scope.patient1){
+            if(key == "food1"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food2"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food3"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food4"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food5"){
+                foodDataJson[key] = $scope.patient1[key];
+            }if(key == "food6"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+        }
+
+        console.log("foodDataJson",  foodDataJson); 
+        var i = 1;
+        var j = "food";
+        for(key in foodDataJson){
+            $scope.patient[j+i] = foodDataJson[key];
+            i++;
+        }
+
+        console.log('$scope.patient = ', $scope.patient);
+
         $ionicLoading.show();
-    console.log('$scope.patient = ', $scope.patient);
         inputJsonData = $scope.patient;
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
         inputJsonData.checkin_count = $scope.patient.checkin_count;
-    console.log("check in data = ", inputJsonData);
+        console.log("check in data = ", inputJsonData);
         if (inputJsonData.checkin_count == 1) {
             inputJsonData.checkin_count += 1;
         }
@@ -843,7 +1086,7 @@ angular.module('sleepapp_patient.controllers', [])
                     title: 'Success!',
                     template: CHECK_IN_SAVE,
                 });
-            console.log('response.data.checkin_count = ', response.data.checkin_count);
+                console.log('response.data.checkin_count = ', response.data.checkin_count);
                 alertPopup.then(function(res) {
                     $scope.boxMessageText = CHECK_IN_MESSAGE;
                 });
@@ -851,8 +1094,8 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("response.data.checkin_count", response.data.checkin_count);
                     $scope.checkIn = false;
                     $scope.checkInDisable = true;
-                    $state.reload('app.tabs.checkIn');
                 }
+                $state.reload('app.tabs.checkIn');
             } else {
                 $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
@@ -870,6 +1113,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : GpSingh
      */
     $scope.setTime = function(num) {
+        console.log(num);
         var ipObj1 = {
 
             callback: function(val) { //Mandatory
@@ -920,13 +1164,71 @@ angular.module('sleepapp_patient.controllers', [])
                     } else if (num == 5) {
                         $scope.patient.up_at_night = timeString;
                     } else if (num == 6) {
-                        $scope.patient.food1 = timeString;
-                    } else if (num == 7) {
-                        $scope.patient.food2 = timeString;
-                    } else if (num == 8) {
-                        $scope.patient.food3 = timeString;
-                    } else if (num == 9) {
                         $scope.patient.nap = timeString;
+                    }
+                }
+                // console.log($scope.patient);
+            },
+            //inputTime: 50400, //Optional
+            format: 12, //Optional
+            step: 1, //Optional
+            setLabel: 'Set' //Optional
+        };
+        ionicTimePicker.openTimePicker(ipObj1);
+    }
+
+    $scope.setFoodTime = function(num, name) {
+        console.log(num, name);
+        var ipObj1 = {
+            callback: function(val) { //Mandatory
+                if (typeof(val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    if ($scope.patient === undefined) {
+                        $scope.patient = {};
+                    }
+                    var selectedTime = new Date(val * 1000);
+                    var d = new Date(selectedTime);
+                    var d2 = new Date();
+
+                    d.setMonth(d2.getMonth());
+                    d.setDate(d2.getDate());
+                    d.setFullYear(d2.getFullYear());
+                    d.setHours(d.getUTCHours());
+                    d.setMinutes(d.getUTCMinutes());
+                    // Check if User have selected previous time
+                    if (d2.getTime() > d.getTime()) {
+                        d.setDate(d2.getDate() + 1);
+                        console.log(d.setDate(d2.getDate() + 1));
+                    }
+
+                    var hours = d.getHours();
+                    var hours2 = hours - 2; /* subtracting 2 hours to automatically get glasses wear time */
+                    var minutes = d.getMinutes();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    var ampm2 = hours2 >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    hours2 = hours2 % 12;
+                    hours2 = hours2 ? hours2 : 12; // the hour '0' should be '12'
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    var timeString = hours + ":" + minutes + " " + ampm;
+                    var timeString2 = hours2 + ":" + minutes + " " + ampm2;
+                    if (num == 7 && name == "food1") {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 8) {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 9) {
+                        $scope.patient1[name] = timeString;
+                    }
+                    else if (num == 10) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 11) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 12) {
+                        $scope.patient1[name] = timeString;
                     }
                 }
                 // console.log($scope.patient);
@@ -1210,19 +1512,19 @@ angular.module('sleepapp_patient.controllers', [])
 
     $scope.timezones = {};
     $scope.timezones = [
-            {"key":"-12", "value":"-12"},
-            {"key":"-10", "value":"-10"},
-            {"key":"-8", "value":"-8"},
-            {"key":"-6", "value":"-6"},
-            {"key":"-4", "value":"-4"},
-            {"key":"-2", "value":"-2"},
+            {"key":"-12 (west)", "value":"-12"},
+            {"key":"-10 (west)", "value":"-10"},
+            {"key":"-8 (west)", "value":"-8"},
+            {"key":"-6 (west)", "value":"-6"},
+            {"key":"-4 (west)", "value":"-4"},
+            {"key":"-2 (west)", "value":"-2"},
             //{"key":"0", "value":"0"},
-            {"key":"+2", "value":"2"},
-            {"key":"+4", "value":"4"},
-            {"key":"+6", "value":"6"},
-            {"key":"+8", "value":"8"},
-            {"key":"+10", "value":"10"},
-            {"key":"+12", "value":"12"}
+            {"key":"+2 (east)", "value":"2"},
+            {"key":"+4 (east)", "value":"4"},
+            {"key":"+6 (east)", "value":"6"},
+            {"key":"+8 (east)", "value":"8"},
+            {"key":"+10 (east)", "value":"10"},
+            {"key":"+12 (east)", "value":"12"}
     ];
     $scope.ifJetLagFilled = false;
     
