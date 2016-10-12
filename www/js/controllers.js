@@ -784,19 +784,47 @@ angular.module('sleepapp_patient.controllers', [])
     });
 	
 	//----------Add more functionality for Food-------------------//
-		$scope.inputs = [
-			{ morefood: null, count : 0}
-		];
-		
-		$scope.addInput = function (index) {
-			console.log('index = ', index);
-			var newIndex = index + 10;
-			$scope.inputs.push({ morefood: null, count : newIndex, name : 'food'+newIndex });
-		}
-		
-		$scope.removeInput = function (index) {
-			$scope.inputs.splice(index, 1);
-		}
+        $scope.patient1 = {};
+        // new Implementation
+        $scope.inputsData = [
+            {
+                name: "food1",
+                settime: 7
+            },
+            {
+                name: "food2",
+                settime: 8
+            },
+            {
+                name: "food3",
+                settime: 9
+            }
+        ];
+
+        $scope.addNewFoodChoice = function () {
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+
+        $scope.removeFoodChoice = function (data) {
+            console.log(data);
+            if (data.settime == 10) {
+                delete $scope.patient1[data.name];
+            }
+             else if (data.settime == 11) {
+                delete $scope.patient1[data.name];
+            }
+             else if (data.settime == 12) {
+                delete $scope.patient1[data.name];
+            }
+
+            var lastItem = $scope.inputsData.length-1;
+            $scope.inputsData.splice(lastItem);
+        }
 	//--------------------------------------------------//
 
     $scope.next = function() {
@@ -869,6 +897,8 @@ angular.module('sleepapp_patient.controllers', [])
                             $scope.newDate = formatdate;
                             $scope.isDataAvailable = true;
                             $scope.patient = response.data[0];
+                            $scope.patient1 = response.data[0];
+                            newInputFoodArray($scope.patient1);
                             $scope.showCheckInData = true;
                             $scope.CheckIn = false;
                             $scope.isMessage = true;
@@ -937,6 +967,8 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.CheckIn = true;
             $scope.CheckInOne = false;
             $scope.patient = response.data[0];
+            $scope.patient1 = response.data[0];
+            newInputFoodArray($scope.patient1);
             $scope.isMessage = true;
             $scope.boxMessageText = ONE_CHECK_IN_MESSAGE;
         } else if (response.data.length == 2) {
@@ -947,7 +979,36 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.CheckInOne = false;
             $scope.checkinDateOne = true;
             $scope.patient = response.data[0];
+            $scope.patient1 = response.data[0];
+            newInputFoodArray($scope.patient1);
             $scope.boxMessageText = CHECK_IN_MESSAGE;
+        }
+    }
+
+    function newInputFoodArray (val) {
+        if(val.food4){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+        if(val.food5){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
+        }
+        if(val.food6){
+            var newItemNo = $scope.inputsData.length+1;
+            var lastSettime = $scope.inputsData[$scope.inputsData.length-1].settime;
+            $scope.inputsData.push({
+                name: "food"+newItemNo,
+                settime: lastSettime+1
+            });
         }
     }
     
@@ -1004,14 +1065,46 @@ angular.module('sleepapp_patient.controllers', [])
      *  developer : Shilpa Sharma
      **/
     $scope.saveCheckInData = function() {
+
+        console.log($scope.patient1);
+        var foodDataJson = {};
+        for(key in $scope.patient1){
+            if(key == "food1"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food2"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food3"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food4"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+            if(key == "food5"){
+                foodDataJson[key] = $scope.patient1[key];
+            }if(key == "food6"){
+                foodDataJson[key] = $scope.patient1[key];
+            }
+        }
+
+        console.log("foodDataJson",  foodDataJson); 
+        var i = 1;
+        var j = "food";
+        for(key in foodDataJson){
+            $scope.patient[j+i] = foodDataJson[key];
+            i++;
+        }
+
+        console.log('$scope.patient = ', $scope.patient);
+
         $ionicLoading.show();
-    console.log('$scope.patient = ', $scope.patient);
         inputJsonData = $scope.patient;
         inputJsonData.user_id = userData._id;
         inputJsonData.checkin_date = date;
         inputJsonData.static_metric = [];
         inputJsonData.checkin_count = $scope.patient.checkin_count;
-    console.log("check in data = ", inputJsonData);
+        console.log("check in data = ", inputJsonData);
         if (inputJsonData.checkin_count == 1) {
             inputJsonData.checkin_count += 1;
         }
@@ -1026,7 +1119,7 @@ angular.module('sleepapp_patient.controllers', [])
                     title: 'Success!',
                     template: CHECK_IN_SAVE,
                 });
-            console.log('response.data.checkin_count = ', response.data.checkin_count);
+                console.log('response.data.checkin_count = ', response.data.checkin_count);
                 alertPopup.then(function(res) {
                     $scope.boxMessageText = CHECK_IN_MESSAGE;
                 });
@@ -1034,8 +1127,8 @@ angular.module('sleepapp_patient.controllers', [])
                     console.log("response.data.checkin_count", response.data.checkin_count);
                     $scope.checkIn = false;
                     $scope.checkInDisable = true;
-                    $state.reload('app.tabs.checkIn');
                 }
+                $state.reload('app.tabs.checkIn');
             } else {
                 $rootScope.$broadcast('Call_Custom_Alert');
                 var alertPopup = $ionicPopup.alert({
@@ -1053,6 +1146,7 @@ angular.module('sleepapp_patient.controllers', [])
      * developer : GpSingh
      */
     $scope.setTime = function(num) {
+        console.log(num);
         var ipObj1 = {
 
             callback: function(val) { //Mandatory
@@ -1103,13 +1197,71 @@ angular.module('sleepapp_patient.controllers', [])
                     } else if (num == 5) {
                         $scope.patient.up_at_night = timeString;
                     } else if (num == 6) {
-                        $scope.patient.food1 = timeString;
-                    } else if (num == 7) {
-                        $scope.patient.food2 = timeString;
-                    } else if (num == 8) {
-                        $scope.patient.food3 = timeString;
-                    } else if (num == 9) {
                         $scope.patient.nap = timeString;
+                    }
+                }
+                // console.log($scope.patient);
+            },
+            //inputTime: 50400, //Optional
+            format: 12, //Optional
+            step: 1, //Optional
+            setLabel: 'Set' //Optional
+        };
+        ionicTimePicker.openTimePicker(ipObj1);
+    }
+
+    $scope.setFoodTime = function(num, name) {
+        console.log(num, name);
+        var ipObj1 = {
+            callback: function(val) { //Mandatory
+                if (typeof(val) === 'undefined') {
+                    console.log('Time not selected');
+                } else {
+                    if ($scope.patient === undefined) {
+                        $scope.patient = {};
+                    }
+                    var selectedTime = new Date(val * 1000);
+                    var d = new Date(selectedTime);
+                    var d2 = new Date();
+
+                    d.setMonth(d2.getMonth());
+                    d.setDate(d2.getDate());
+                    d.setFullYear(d2.getFullYear());
+                    d.setHours(d.getUTCHours());
+                    d.setMinutes(d.getUTCMinutes());
+                    // Check if User have selected previous time
+                    if (d2.getTime() > d.getTime()) {
+                        d.setDate(d2.getDate() + 1);
+                        console.log(d.setDate(d2.getDate() + 1));
+                    }
+
+                    var hours = d.getHours();
+                    var hours2 = hours - 2; /* subtracting 2 hours to automatically get glasses wear time */
+                    var minutes = d.getMinutes();
+                    var ampm = hours >= 12 ? 'PM' : 'AM';
+                    var ampm2 = hours2 >= 12 ? 'PM' : 'AM';
+                    hours = hours % 12;
+                    hours = hours ? hours : 12; // the hour '0' should be '12'
+                    hours2 = hours2 % 12;
+                    hours2 = hours2 ? hours2 : 12; // the hour '0' should be '12'
+                    minutes = minutes < 10 ? '0' + minutes : minutes;
+                    var timeString = hours + ":" + minutes + " " + ampm;
+                    var timeString2 = hours2 + ":" + minutes + " " + ampm2;
+                    if (num == 7 && name == "food1") {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 8) {
+                        $scope.patient1[name] = timeString;
+                    } else if (num == 9) {
+                        $scope.patient1[name] = timeString;
+                    }
+                    else if (num == 10) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 11) {
+                        $scope.patient1[name] = timeString;
+                    }
+                     else if (num == 12) {
+                        $scope.patient1[name] = timeString;
                     }
                 }
                 // console.log($scope.patient);
