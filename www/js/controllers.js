@@ -302,9 +302,15 @@ angular.module('sleepapp_patient.controllers', [])
                 }
             } else {
                 $rootScope.$broadcast('Call_Custom_Alert');
+				var errMsg = '';
+				if(data.message){
+					errMsg = data.message;
+				}else{
+					errMsg = LOGIN_ERROR;
+				}
                 var alertPopup = $ionicPopup.alert({
                     title: 'Error!',
-                    template: LOGIN_ERROR,
+                    template: errMsg,
                 });
                 alertPopup.then(function(res) {
                     $state.go("signin");

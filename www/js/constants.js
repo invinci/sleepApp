@@ -52,7 +52,7 @@ var PROFILE_PIC       = HOST + 'images/profile/';
 var ENCRYPTION_KEY = "GFYUFGTYGFTYTY64564545acvbvrttyFG@%#%#%#%#TTRR";
 
 /*  SERVICE URLs Starts Here  */
-var LOGIN_URL   			= HOST + '/adminlogin/authenticate';
+var LOGIN_URL   			= HOST + '/adminlogin/authenticate_user';
 var CHECKUSER_URL   		= HOST + '/users/checkUser'; // Check if username & email already register or not
 var ADD_USER_DATA_URL   	= HOST + '/users/signUp'; // Save user data into data during sign up
 var SAVE_DEVICE_ID_URL		= HOST + '/users/updateUser'
