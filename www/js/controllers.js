@@ -204,6 +204,7 @@ angular.module('sleepapp_patient.controllers', [])
     }
 
     $scope.ageValidationError = false;
+	/* signup page watchers */
     $scope.$watch('patient.age', function(newValue, oldValue){
         if(newValue < 13){
             $scope.ageValidationError = true;
@@ -211,7 +212,40 @@ angular.module('sleepapp_patient.controllers', [])
             $scope.ageValidationError = false;
         }
     });
-
+	$scope.$watch('patient.energy', function(newValue, oldValue){
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley1").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley1").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley1").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.relaxed', function(newValue, oldValue){
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley2").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley2").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley2").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	$scope.$watch('patient.happy', function(newValue, oldValue){
+		if(typeof newValue != 'undefined'){
+			if(newValue >= 4){
+				document.getElementById("smiley3").setAttribute("src", "img/happy.png");
+			} else if(newValue <= 2){
+				document.getElementById("smiley3").setAttribute("src", "img/sad.png");
+			} else {
+				document.getElementById("smiley3").setAttribute("src", "img/normal.png");
+			}
+		}
+    });
+	/* signup page watchers END */
     $scope.goBackToSignIn = function(){
         $ionicHistory.goBack();
     }
@@ -268,9 +302,15 @@ angular.module('sleepapp_patient.controllers', [])
                 }
             } else {
                 $rootScope.$broadcast('Call_Custom_Alert');
+				var errMsg = '';
+				if(data.message){
+					errMsg = data.message;
+				}else{
+					errMsg = LOGIN_ERROR;
+				}
                 var alertPopup = $ionicPopup.alert({
                     title: 'Error!',
-                    template: LOGIN_ERROR,
+                    template: errMsg,
                 });
                 alertPopup.then(function(res) {
                     $state.go("signin");
@@ -666,8 +706,7 @@ angular.module('sleepapp_patient.controllers', [])
 	
 	/* Watchers for Smileys */
 	$scope.$watch('patient.sleep_quality', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley0") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley0").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -678,8 +717,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.sleep_enough', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley1") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley1").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -690,8 +728,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.energy', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley2") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley2").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -702,8 +739,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.happy', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley3") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley3").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -714,8 +750,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.relaxed', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley4") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley4").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -726,8 +761,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.stress', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley5") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley5").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -738,8 +772,7 @@ angular.module('sleepapp_patient.controllers', [])
 		}
     });
 	$scope.$watch('patient.irritable', function(newValue, oldValue){
-		//console.log('==', newValue, oldValue);
-		if(typeof newValue != 'undefined'){
+		if(typeof newValue != 'undefined' && document.getElementById("smiley6") != null){
 			if(newValue >= 4){
 				document.getElementById("smiley6").setAttribute("src", "img/happy.png");
 			} else if(newValue <= 2){
@@ -1244,7 +1277,7 @@ angular.module('sleepapp_patient.controllers', [])
 	/* Check if a entered string is a valid two digit numeric */
 	function checkNumRegex(val){
 		var reg = new RegExp('^[0-9]{0,2}$');
-		console.log('regex test result = ', reg.test(val));
+		//console.log('regex test result = ', reg.test(val));
 		return reg.test(val);
 	}
 	
